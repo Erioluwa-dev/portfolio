@@ -169,14 +169,17 @@ function ProjectCard({ project }) {
   );
 }
 
-function Navbar({ activeSection, onNavClick }) {
+function Navbar({ activeSection, onNavClick, visible }) {
   return (
     <nav
       style={{
         position: "fixed",
         top: 16,
         left: "50%",
-        transform: "translateX(-50%)",
+        transform: visible
+          ? "translateX(-50%)"
+          : "translateX(-50%) translateY(-120%)",
+        transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
         zIndex: 100,
         background: "#0d0d0d",
         border: "1px solid #2a2a2a",
@@ -403,7 +406,9 @@ function CTASection({ onNavClick }) {
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("");
+  const [navbarVisible, setNavbarVisible] = useState(true);
   const observerRef = useRef(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -423,8 +428,25 @@ export default function Portfolio() {
     return () => observerRef.current?.disconnect();
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY < 60) {
+        setNavbarVisible(true);
+      } else if (currentY > lastScrollY.current + 8) {
+        setNavbarVisible(false);
+      } else if (currentY < lastScrollY.current - 8) {
+        setNavbarVisible(true);
+      }
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleNavClick = (e, href) => {
     e.preventDefault();
+    setNavbarVisible(true);
     const id = href.replace("#", "");
     const el = document.getElementById(id);
     if (el) {
@@ -456,7 +478,7 @@ export default function Portfolio() {
       />
 
       {/* Navbar */}
-      <Navbar activeSection={activeSection} onNavClick={handleNavClick} />
+      <Navbar activeSection={activeSection} onNavClick={handleNavClick} visible={navbarVisible} />
 
       {/* Main content offset for fixed nav */}
       <main className="page-content" style={{
