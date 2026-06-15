@@ -27,7 +27,7 @@ const projects = [
     name: "Todo App",
     desc: "CRUD fundamentals. Where it started.",
     tag: "Public",
-    tagColor: "#FF8C00",
+    tagColor: "#00DC82",
     stack: ["React", "TypeScript"],
   },
   {
@@ -42,7 +42,7 @@ const projects = [
     name: "CourtVision",
     desc: "A conversational AI basketball analyst. Watches game footage, tracks players with YOLOv8 + DeepSORT, analyzes movement with MediaPipe, builds per-player tendency profiles in Supabase, and delivers real-time play-by-play commentary via Groq LLM and LangChain. The gap it fills: no public tool combines live film study, player tendency modeling, and a conversational analyst interface. Built solo. $0 budget.",
     tag: "In Progress",
-    tagColor: "#E63946",
+    tagColor: "#54C5F8",
     stack: ["Python", "YOLOv8", "DeepSORT", "MediaPipe", "Groq API", "LangChain", "Supabase", "Streamlit"],
     isFlagship: true,
     mission: '"Film study. Tendency engine. Real-time intelligence."',
@@ -57,12 +57,12 @@ function ProjectCard({ project }) {
       id={project.name === "CourtVision" ? "courtvision" : undefined}
       style={{
         border: project.isFlagship
-          ? "1px solid #E6394640"
-          : "1px solid #1a1210",
-        borderLeft: project.isFlagship ? "3px solid #E63946" : "1px solid #1a1210",
+          ? "1px solid #54C5F840"
+          : "1px solid #1a1a1a",
+        borderLeft: project.isFlagship ? "3px solid #54C5F8" : "1px solid #1a1a1a",
         padding: "1.2rem",
         borderRadius: 3,
-        background: project.isFlagship ? "#E6394608" : "#0b0d1a",
+        background: project.isFlagship ? "#54C5F808" : "#0d0d0d",
         position: "relative",
       }}
     >
@@ -79,7 +79,7 @@ function ProjectCard({ project }) {
         <div
           style={{
             fontSize: "1rem",
-            color: project.isFlagship ? "#E63946" : "#fff",
+            color: project.isFlagship ? "#54C5F8" : "#fff",
             fontWeight: 600,
           }}
         >
@@ -90,8 +90,8 @@ function ProjectCard({ project }) {
             <span
               style={{
                 fontSize: "0.7rem",
-                color: "#E63946",
-                border: "1px solid #E6394660",
+                color: "#54C5F8",
+                border: "1px solid #54C5F860",
                 padding: "0.15rem 0.45rem",
                 borderRadius: 2,
                 letterSpacing: 1.5,
@@ -136,7 +136,7 @@ function ProjectCard({ project }) {
         <div
           style={{
             fontSize: "1rem",
-            color: "#E63946",
+            color: "#54C5F8",
             fontStyle: "italic",
             marginBottom: "0.6rem",
             opacity: 0.85,
@@ -155,7 +155,7 @@ function ProjectCard({ project }) {
               style={{
                 fontSize: "0.95rem",
                 color: "#999",
-                border: "1px solid #332520",
+                border: "1px solid #333333",
                 padding: "0.15rem 0.5rem",
                 borderRadius: 2,
               }}
@@ -178,8 +178,8 @@ function Navbar({ activeSection, onNavClick }) {
         left: "50%",
         transform: "translateX(-50%)",
         zIndex: 100,
-        background: "#0b0d1a",
-        border: "1px solid #2a1f15",
+        background: "#0d0d0d",
+        border: "1px solid #2a2a2a",
         borderRadius: 8,
         padding: "0.5rem 1.5rem",
         display: "flex",
@@ -197,7 +197,7 @@ function Navbar({ activeSection, onNavClick }) {
           height: 36,
           borderRadius: "50%",
           border: "1px solid #555",
-          background: "#1a1210",
+          background: "#1a1a1a",
           flexShrink: 0,
           overflow: "hidden",
         }}
@@ -234,7 +234,7 @@ function Navbar({ activeSection, onNavClick }) {
         style={{
           width: 1,
           height: 16,
-          background: "#2a1f15",
+          background: "#2a2a2a",
           margin: "0 1rem",
           flexShrink: 0,
         }}
@@ -325,7 +325,7 @@ function TypewriterQuote({ text }) {
       }}
     >
       &mdash; {text.slice(0, count)}
-      <span style={{ color: "#FF8C00", opacity: tick ? 1 : 0 }}>{"\u258C"}</span>
+      <span style={{ color: "#00DC82", opacity: tick ? 1 : 0 }}>{"\u258C"}</span>
     </div>
   );
 }
@@ -341,7 +341,7 @@ function CTASection({ onNavClick }) {
     fontSize: "0.85rem",
     color: "#aaa",
     background: "transparent",
-    border: "1px solid #2a1f15",
+    border: "1px solid #2a2a2a",
     padding: "0.4rem 1rem",
     borderRadius: 2,
     cursor: "pointer",
@@ -358,7 +358,7 @@ function CTASection({ onNavClick }) {
     justifyContent: "center",
     width: 34,
     height: 34,
-    border: "1px solid #2a1f15",
+    border: "1px solid #2a2a2a",
     borderRadius: 2,
     transition: "all 0.18s ease",
   };
@@ -436,7 +436,7 @@ export default function Portfolio() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#0a0a12",
+        background: "#0a0a0a",
         fontFamily: "'Courier New', 'Lucida Console', monospace",
         color: "#e0e0e0",
         margin: 0,
@@ -451,28 +451,9 @@ export default function Portfolio() {
           pointerEvents: "none",
           zIndex: 10,
           background:
-            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,140,0,0.03) 2px, rgba(255,140,0,0.06) 4px)",
+            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)",
         }}
       />
-
-      {/* Hidden Leaf watermark */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 20,
-          right: 24,
-          zIndex: 5,
-          fontSize: "0.65rem",
-          color: "#FF8C00",
-          opacity: 0.12,
-          letterSpacing: 2,
-          fontFamily: "'Courier New', 'Lucida Console', monospace",
-          userSelect: "none",
-          pointerEvents: "none",
-        }}
-      >
-        &lt;HIDDEN LEAF/&gt;
-      </div>
 
       {/* Navbar */}
       <Navbar activeSection={activeSection} onNavClick={handleNavClick} />
@@ -504,9 +485,9 @@ export default function Portfolio() {
               style={{
                 width: 200,
                 height: 200,
-                border: "1px solid #1e1410",
+                border: "1px solid #1e1e1e",
                 borderRadius: 4,
-                background: "#0b0d1a",
+                background: "#0d0d0d",
                 overflow: "hidden",
               }}
             >
@@ -553,7 +534,7 @@ export default function Portfolio() {
             <div
               style={{
                 fontSize: "1rem",
-                color: "#FF8C00",
+                color: "#00DC82",
                 marginBottom: "1rem",
                 textAlign: "center",
               }}
@@ -598,7 +579,7 @@ export default function Portfolio() {
           <div
             style={{
               fontSize: "0.75rem",
-              color: "#FF8C00",
+              color: "#00DC82",
               letterSpacing: 3,
               textTransform: "uppercase",
               marginBottom: "0.8rem",
@@ -614,7 +595,7 @@ export default function Portfolio() {
                 style={{
                   fontSize: "0.85rem",
                   color: "#999",
-                  border: "1px solid #332520",
+                  border: "1px solid #333333",
                   padding: "0.25rem 0.7rem",
                   borderRadius: 3,
                   background: "transparent",
@@ -647,7 +628,7 @@ export default function Portfolio() {
           <div
             style={{
               fontSize: "0.75rem",
-              color: "#FF8C00",
+              color: "#00DC82",
               letterSpacing: 3,
               textTransform: "uppercase",
               marginBottom: "0.8rem",
@@ -674,9 +655,9 @@ export default function Portfolio() {
         >
           <div
             style={{
-              border: "1px solid #1a1210",
+              border: "1px solid #1a1a1a",
               padding: "2rem",
-              background: "#0b0d1a",
+              background: "#0d0d0d",
               maxWidth: 620,
             }}
           >
@@ -685,13 +666,13 @@ export default function Portfolio() {
                 fontSize: "0.95rem",
                 letterSpacing: 4,
                 color: "#fff",
-                borderBottom: "1px solid #1a1210",
+                borderBottom: "1px solid #1a1a1a",
                 paddingBottom: "0.8rem",
                 marginBottom: "1.2rem",
                 textTransform: "uppercase",
               }}
             >
-              <span style={{ color: "#E63946" }}>ISSUE #001</span> <span style={{ color: "#FF8C00" }}>&mdash;</span> ORIGIN STORY
+              <span style={{ color: "#54C5F8" }}>ISSUE #001</span> <span style={{ color: "#00DC82" }}>&mdash;</span> ORIGIN STORY
             </div>
 
             <div
@@ -750,7 +731,7 @@ export default function Portfolio() {
               </p>
             </div>
 
-            <div style={{ borderTop: "1px solid #1a1210", paddingTop: "1rem", marginTop: "1.2rem" }}>
+            <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: "1rem", marginTop: "1.2rem" }}>
               <a
                 href="mailto:erioluwafawehinmi@gmail.com"
                 style={{
@@ -772,7 +753,7 @@ export default function Portfolio() {
         <footer
           style={{
             padding: "1.2rem 2.5rem",
-            borderTop: "1px solid #1a1210",
+            borderTop: "1px solid #1a1a1a",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -795,8 +776,8 @@ export default function Portfolio() {
               style={{
                 fontSize: "0.95rem",
                 color: "#fff",
-                background: "#0d0f1a",
-                border: "1px solid #2a1f15",
+                background: "#111111",
+                border: "1px solid #2a2a2a",
                 padding: "0.4rem 0.8rem",
                 borderRadius: 2,
                 textDecoration: "none",
@@ -814,8 +795,8 @@ export default function Portfolio() {
               style={{
                 fontSize: "0.95rem",
                 color: "#fff",
-                background: "#0d0f1a",
-                border: "1px solid #2a1f15",
+                background: "#111111",
+                border: "1px solid #2a2a2a",
                 padding: "0.4rem 0.8rem",
                 borderRadius: 2,
                 textDecoration: "none",
@@ -841,17 +822,17 @@ export default function Portfolio() {
         }
         html { scroll-behavior: smooth; }
         * { box-sizing: border-box; }
-        body { margin: 0; background: #0a0a12; }
-        ::-webkit-scrollbar { width: 4px; background: #0a0a12; }
-        ::-webkit-scrollbar-thumb { background: #FF8C00; opacity: 0.3; }
-        a:hover { color: #FF8C00 !important; }
-        button:hover { border-color: #FF8C00 !important; color: #FF8C00 !important; }
+        body { margin: 0; background: #0a0a0a; }
+        ::-webkit-scrollbar { width: 4px; background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #1e1e1e; }
+        a:hover { color: #54C5F8 !important; }
+        button:hover { border-color: #54C5F8 !important; color: #54C5F8 !important; }
         .page-content section { animation: fadeIn 0.5s ease both; }
-        .tech-chip:hover { border-color: #FF8C00 !important; color: #FF8C00 !important; }
-        .nav-link:hover { color: #FF8C00 !important; }
-        .project-card:hover { border-color: #FF8C0060 !important; }
-        .footer-btn:hover { border-color: #FF8C00 !important; color: #FF8C00 !important; }
-        .social-icon:hover { border-color: #FF8C00 !important; }
+        .tech-chip:hover { border-color: #54C5F8 !important; color: #54C5F8 !important; }
+        .nav-link:hover { color: #54C5F8 !important; }
+        .project-card:hover { border-color: #54C5F840 !important; }
+        .footer-btn:hover { border-color: #54C5F8 !important; color: #54C5F8 !important; }
+        .social-icon:hover { border-color: #54C5F8 !important; }
         @media (max-width: 700px) {
           nav { overflow-x: auto; }
           nav::-webkit-scrollbar { height: 2px; }
