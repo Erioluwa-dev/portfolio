@@ -188,7 +188,7 @@ function Navbar({ activeSection, onNavClick, visible }) {
         display: "flex",
         alignItems: "center",
         gap: "1rem",
-        fontFamily: "'Courier New', 'Lucida Console', monospace",
+        fontFamily: "'Lora', Georgia, serif",
         width: "fit-content",
         maxWidth: 680,
       }}
@@ -459,7 +459,7 @@ export default function Portfolio() {
       style={{
         minHeight: "100vh",
         background: "#0a0a0a",
-        fontFamily: "'Courier New', 'Lucida Console', monospace",
+        fontFamily: "'Lora', Georgia, serif",
         color: "#e0e0e0",
         margin: 0,
         position: "relative",
@@ -535,7 +535,7 @@ export default function Portfolio() {
                 margin: "0 0 0.3rem",
                 color: "#fff",
                 lineHeight: 1.15,
-                fontFamily: "Georgia, 'Times New Roman', serif",
+                fontFamily: "'Lora', Georgia, serif",
                 textAlign: "center",
               }}
             >
@@ -556,7 +556,8 @@ export default function Portfolio() {
             <div
               style={{
                 fontSize: "1rem",
-                color: "#00DC82",
+                color: "#fff",
+                fontWeight: 700,
                 marginBottom: "1rem",
                 textAlign: "center",
               }}
@@ -601,11 +602,11 @@ export default function Portfolio() {
           <div
             style={{
               fontSize: "0.75rem",
-              color: "#00DC82",
+              color: "#fff",
+              fontWeight: 700,
               letterSpacing: 3,
               textTransform: "uppercase",
               marginBottom: "0.8rem",
-              opacity: 0.7,
             }}
           >
             // technologies
@@ -650,11 +651,11 @@ export default function Portfolio() {
           <div
             style={{
               fontSize: "0.75rem",
-              color: "#00DC82",
+              color: "#fff",
+              fontWeight: 700,
               letterSpacing: 3,
               textTransform: "uppercase",
               marginBottom: "0.8rem",
-              opacity: 0.7,
             }}
           >
             // projects
@@ -713,7 +714,7 @@ export default function Portfolio() {
                 fontSize: "0.95rem",
                 color: "#fff",
                 lineHeight: 2,
-                fontFamily: "'Courier New', 'Lucida Console', monospace",
+                fontFamily: "'Lora', Georgia, serif",
               }}
             >
               <p style={{ margin: "0 0 1.2rem" }}>
@@ -762,7 +763,7 @@ export default function Portfolio() {
                   textDecoration: "none",
                   letterSpacing: 2,
                   transition: "color 0.18s ease",
-                  fontFamily: "'Courier New', 'Lucida Console', monospace",
+                  fontFamily: "'Lora', Georgia, serif",
                 }}
               >
                 &rarr; erioluwafawehinmi@gmail.com
