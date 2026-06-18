@@ -29,6 +29,7 @@ const projects = [
     tag: "Public",
     tagColor: "#00DC82",
     stack: ["React", "TypeScript"],
+    github: "https://github.com/erioluwafawehinmi/todo-app",
   },
   {
     name: "YEMS",
@@ -55,6 +56,7 @@ const projects = [
     ],
     isFlagship: true,
     mission: '"Film study. Tendency engine. Real-time intelligence."',
+    github: "https://github.com/erioluwafawehinmi/courtvision",
   },
 ];
 
@@ -170,6 +172,7 @@ function ProjectCard({ project }) {
             alignItems: "center",
             gap: "0.4rem",
             flexWrap: "wrap",
+            marginBottom: "0.8rem",
           }}
         >
           {project.stack.map((tech) => (
@@ -187,6 +190,54 @@ function ProjectCard({ project }) {
             </span>
           ))}
         </div>
+      )}
+
+      {/* Project link icon (bottom-right) */}
+      {(project.url || project.github) && (
+        <a
+          href={project.url || project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="project-link-icon"
+          style={{
+            position: "absolute",
+            bottom: "0.6rem",
+            right: "0.6rem",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 28,
+            height: 28,
+            borderRadius: 3,
+            background: "#1a1a1a",
+            border: "1px solid #333",
+            textDecoration: "none",
+            transition: "all 0.18s ease",
+          }}
+          title={project.url ? "View live site" : "View source code"}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#999"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {project.url ? (
+              <>
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </>
+            ) : (
+              <>
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+              </>
+            )}
+          </svg>
+        </a>
       )}
     </div>
   );
@@ -970,6 +1021,8 @@ export default function Portfolio() {
         .icon-instagram:hover { border-color: #E4405F !important; }
         .icon-instagram:hover img { filter: brightness(1.4) sepia(1) hue-rotate(-30deg) saturate(4); }
         .footer-icon { width: auto; height: auto; }
+        .project-link-icon:hover { border-color: #54C5F8 !important; background: #54C5F815 !important; }
+        .project-link-icon:hover svg { stroke: #54C5F8 !important; }
         .page-content section { animation: fadeIn 0.5s ease both; }
         .tech-chip:hover { border-color: #54C5F8 !important; color: #54C5F8 !important; }
         .nav-link:hover { color: #54C5F8 !important; }
