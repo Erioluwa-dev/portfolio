@@ -29,7 +29,7 @@ const projects = [
     tag: "Public",
     tagColor: "#00DC82",
     stack: ["React", "TypeScript"],
-    github: "https://github.com/erioluwafawehinmi/todo-app",
+    github: "https://github.com/Erioluwa-dev/todo-app",
   },
   {
     name: "YEMS",
@@ -56,7 +56,7 @@ const projects = [
     ],
     isFlagship: true,
     mission: '"Film study. Tendency engine. Real-time intelligence."',
-    github: "https://github.com/erioluwafawehinmi/courtvision",
+    github: "https://github.com/Erioluwa-dev/CourtVision",
   },
 ];
 
