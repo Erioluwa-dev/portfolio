@@ -7,19 +7,19 @@ const navLinks = [
 ];
 
 const technologies = [
-  { name: "TypeScript",    icon: "typescript" },
-  { name: "Python",        icon: "python" },
-  { name: "React",         icon: "react" },
-  { name: "Next.js",       icon: "nextdotjs" },
-  { name: "Nuxt.js",       icon: "nuxtdotjs" },
-  { name: "Flutter/Dart",  icon: "flutter" },
-  { name: "PostgreSQL",    icon: "postgresql" },
-  { name: "MongoDB",       icon: "mongodb" },
-  { name: "Docker",        icon: "docker" },
-  { name: "Git",           icon: "git" },
-  { name: "Figma",         icon: "figma" },
-  { name: "LangChain",     icon: "langchain" },
-  { name: "Supabase",      icon: "supabase" },
+  { name: "TypeScript", icon: "typescript" },
+  { name: "Python", icon: "python" },
+  { name: "React", icon: "react" },
+  { name: "Next.js", icon: "nextdotjs" },
+  { name: "Nuxt.js", icon: "nuxtdotjs" },
+  { name: "Flutter/Dart", icon: "flutter" },
+  { name: "PostgreSQL", icon: "postgresql" },
+  { name: "MongoDB", icon: "mongodb" },
+  { name: "Docker", icon: "docker" },
+  { name: "Git", icon: "git" },
+  { name: "Figma", icon: "figma" },
+  { name: "LangChain", icon: "langchain" },
+  { name: "Supabase", icon: "supabase" },
 ];
 
 const projects = [
@@ -43,13 +43,20 @@ const projects = [
     desc: "A conversational AI basketball analyst. Watches game footage, tracks players with YOLOv8 + DeepSORT, analyzes movement with MediaPipe, builds per-player tendency profiles in Supabase, and delivers real-time play-by-play commentary via Groq LLM and LangChain. The gap it fills: no public tool combines live film study, player tendency modeling, and a conversational analyst interface. Built solo. $0 budget.",
     tag: "In Progress",
     tagColor: "#54C5F8",
-    stack: ["Python", "YOLOv8", "DeepSORT", "MediaPipe", "Groq API", "LangChain", "Supabase", "Streamlit"],
+    stack: [
+      "Python",
+      "YOLOv8",
+      "DeepSORT",
+      "MediaPipe",
+      "Groq API",
+      "LangChain",
+      "Supabase",
+      "Streamlit",
+    ],
     isFlagship: true,
     mission: '"Film study. Tendency engine. Real-time intelligence."',
   },
 ];
-
-
 
 function ProjectCard({ project }) {
   return (
@@ -59,7 +66,9 @@ function ProjectCard({ project }) {
         border: project.isFlagship
           ? "1px solid #54C5F840"
           : "1px solid #1a1a1a",
-        borderLeft: project.isFlagship ? "3px solid #54C5F8" : "1px solid #1a1a1a",
+        borderLeft: project.isFlagship
+          ? "3px solid #54C5F8"
+          : "1px solid #1a1a1a",
         padding: "1.2rem",
         borderRadius: 3,
         background: project.isFlagship ? "#54C5F808" : "#0d0d0d",
@@ -85,7 +94,14 @@ function ProjectCard({ project }) {
         >
           {project.name}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            flexShrink: 0,
+          }}
+        >
           {project.isFlagship && (
             <span
               style={{
@@ -118,7 +134,7 @@ function ProjectCard({ project }) {
         </div>
       </div>
 
-        {/* Description */}
+      {/* Description */}
       <p
         style={{
           margin: "0 0 0.6rem",
@@ -148,7 +164,14 @@ function ProjectCard({ project }) {
 
       {/* Stack chips */}
       {project.stack && project.stack.length > 0 && (
-        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            flexWrap: "wrap",
+          }}
+        >
           {project.stack.map((tech) => (
             <span
               key={tech}
@@ -244,7 +267,14 @@ function Navbar({ activeSection, onNavClick, visible }) {
       />
 
       {/* Nav links */}
-      <div style={{ display: "flex", alignItems: "center", gap: "1.2rem", flexShrink: 0 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1.2rem",
+          flexShrink: 0,
+        }}
+      >
         {navLinks.map((link) => (
           <a
             key={link.label}
@@ -252,7 +282,10 @@ function Navbar({ activeSection, onNavClick, visible }) {
             onClick={(e) => onNavClick(e, link.href)}
             style={{
               fontSize: "0.9rem",
-              color: activeSection === link.href.replace("#", "") ? "#f0ebe3" : "#d4cfc8",
+              color:
+                activeSection === link.href.replace("#", "")
+                  ? "#f0ebe3"
+                  : "#d4cfc8",
               textDecoration: "none",
               letterSpacing: 1,
               fontWeight: 600,
@@ -328,7 +361,9 @@ function TypewriterQuote({ text }) {
       }}
     >
       &mdash; {text.slice(0, count)}
-      <span style={{ color: "#00DC82", opacity: tick ? 1 : 0 }}>{"\u258C"}</span>
+      <span style={{ color: "#00DC82", opacity: tick ? 1 : 0 }}>
+        {"\u258C"}
+      </span>
     </div>
   );
 }
@@ -367,12 +402,21 @@ function CTASection({ onNavClick }) {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap", justifyContent: "center" }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "0.6rem",
+        flexWrap: "wrap",
+        justifyContent: "center",
+      }}
+    >
       {buttons.map((b) => (
         <a
           key={b.label}
           href={b.href}
           onClick={(e) => onNavClick(e, b.href)}
+          className="cta-btn"
           style={btnStyle}
         >
           {b.label}
@@ -382,23 +426,34 @@ function CTASection({ onNavClick }) {
         href="https://github.com/erioluwafawehinmi"
         target="_blank"
         rel="noopener noreferrer"
+        className="icon-btn icon-github"
         style={iconStyle}
       >
-        <img src="https://cdn.simpleicons.org/github/aaa" alt="GitHub" style={{ width: 16, height: 16, display: "block" }} />
+        <img
+          src="https://cdn.simpleicons.org/github/aaa"
+          alt="GitHub"
+          style={{ width: 16, height: 16, display: "block" }}
+        />
       </a>
-      <a
-        href="mailto:erioluwafawehinmi@gmail.com"
-        style={iconStyle}
-      >
-        <img src="https://cdn.simpleicons.org/gmail/aaa" alt="Email" style={{ width: 16, height: 16, display: "block" }} />
+      <a href="mailto:erioluwafawehinmi@gmail.com" className="icon-btn icon-email" style={iconStyle}>
+        <img
+          src="https://cdn.simpleicons.org/gmail/aaa"
+          alt="Email"
+          style={{ width: 16, height: 16, display: "block" }}
+        />
       </a>
       <a
         href="https://instagram.com/stay.with.eri"
         target="_blank"
         rel="noopener noreferrer"
+        className="icon-btn icon-instagram"
         style={iconStyle}
       >
-        <img src="https://cdn.simpleicons.org/instagram/aaa" alt="Instagram" style={{ width: 16, height: 16, display: "block" }} />
+        <img
+          src="https://cdn.simpleicons.org/instagram/aaa"
+          alt="Instagram"
+          style={{ width: 16, height: 16, display: "block" }}
+        />
       </a>
     </div>
   );
@@ -407,6 +462,7 @@ function CTASection({ onNavClick }) {
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("");
   const [navbarVisible, setNavbarVisible] = useState(true);
+  const [aboutOpen, setAboutOpen] = useState(true);
   const observerRef = useRef(null);
   const lastScrollY = useRef(0);
 
@@ -419,7 +475,7 @@ export default function Portfolio() {
           }
         });
       },
-      { rootMargin: "-45% 0px -45% 0px" }
+      { rootMargin: "-45% 0px -45% 0px" },
     );
 
     const sections = document.querySelectorAll("section[id]");
@@ -478,16 +534,23 @@ export default function Portfolio() {
       />
 
       {/* Navbar */}
-      <Navbar activeSection={activeSection} onNavClick={handleNavClick} visible={navbarVisible} />
+      <Navbar
+        activeSection={activeSection}
+        onNavClick={handleNavClick}
+        visible={navbarVisible}
+      />
 
       {/* Main content offset for fixed nav */}
-      <main className="page-content" style={{
-        paddingTop: "72px",
-        paddingLeft: "200px",
-        paddingRight: "4rem",
-        position: "relative",
-        zIndex: 1,
-      }}>
+      <main
+        className="page-content"
+        style={{
+          paddingTop: "72px",
+          paddingLeft: "200px",
+          paddingRight: "4rem",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
         {/* ── Hero Section ── */}
         <section
           id="top"
@@ -502,7 +565,15 @@ export default function Portfolio() {
           }}
         >
           {/* Avatar above text */}
-          <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "1.5rem" }}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              marginBottom: "1.5rem",
+            }}
+          >
             <div
               style={{
                 width: 200,
@@ -575,16 +646,28 @@ export default function Portfolio() {
                 textAlign: "center",
               }}
             >
-              Building offline-first systems, AI-powered tools, and frontend interfaces from Lagos, Nigeria.
-              Self-taught. Always learning. Currently deep in a 26-week solo build of CourtVision &mdash;
-              a computer vision basketball analyst.
+              Building offline-first systems, AI-powered tools, and frontend
+              interfaces from Lagos, Nigeria. Self-taught. Always learning.
+              Currently deep in a 26-week solo build of CourtVision &mdash; a
+              computer vision basketball analyst.
             </p>
 
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <TypewriterQuote text={'\u201cThe first step to greatness is taking action.\u201d'} />
+              <TypewriterQuote
+                text={
+                  "\u201cThe first step to greatness is taking action.\u201d"
+                }
+              />
             </div>
 
-            <div style={{ marginTop: "1rem", paddingBottom: "2.5rem", display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                marginTop: "1rem",
+                paddingBottom: "2.5rem",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <CTASection onNavClick={handleNavClick} />
             </div>
           </div>
@@ -630,7 +713,12 @@ export default function Portfolio() {
                 <img
                   src={`https://cdn.simpleicons.org/${t.icon}`}
                   alt=""
-                  style={{ width: 14, height: 14, display: "block", flexShrink: 0 }}
+                  style={{
+                    width: 14,
+                    height: 14,
+                    display: "block",
+                    flexShrink: 0,
+                  }}
                   onError={(e) => (e.target.style.display = "none")}
                 />
                 {t.name}
@@ -660,7 +748,9 @@ export default function Portfolio() {
           >
             // projects
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}
+          >
             {projects.map((p) => (
               <ProjectCard key={p.name} project={p} />
             ))}
@@ -679,82 +769,99 @@ export default function Portfolio() {
           <div
             style={{
               border: "1px solid #1a1a1a",
-              padding: "2rem",
               background: "#0d0d0d",
               maxWidth: 620,
             }}
           >
             <div
+              onClick={() => setAboutOpen(!aboutOpen)}
               style={{
                 fontSize: "0.95rem",
                 letterSpacing: 4,
                 color: "#fff",
-                borderBottom: "1px solid #1a1a1a",
-                paddingBottom: "0.8rem",
-                marginBottom: "1.2rem",
+                borderBottom: aboutOpen ? "1px solid #1a1a1a" : "none",
+                padding: "1.2rem 2rem",
                 textTransform: "uppercase",
+                cursor: "pointer",
+                userSelect: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
               }}
             >
-              <span style={{ color: "#54C5F8" }}>ISSUE #001</span> <span style={{ color: "#00DC82" }}>&mdash;</span> ORIGIN STORY
+              <div>
+                <span style={{ color: "#54C5F8" }}>ISSUE #001</span>{" "}
+                <span style={{ color: "#00DC82" }}>&mdash;</span> ORIGIN STORY
+              </div>
+              <span style={{ fontSize: "1.2rem", color: "#555", transition: "transform 0.2s", transform: aboutOpen ? "rotate(90deg)" : "rotate(0deg)" }}>
+                &#9654;
+              </span>
             </div>
 
-            <div
-              style={{
-                fontSize: "1rem",
-                color: "#ddd",
-                letterSpacing: 2,
-                marginBottom: "1.5rem",
-              }}
-            >
-              by Fawehinmi Erioluwa &middot; Lagos, Nigeria &middot; 2026
-            </div>
+            {aboutOpen && (
+              <div style={{ padding: "1.5rem 2rem 2rem" }}>
+                <div
+                  style={{
+                    fontSize: "1rem",
+                    color: "#ddd",
+                    letterSpacing: 2,
+                    marginBottom: "1.5rem",
+                  }}
+                >
+                  by Fawehinmi Erioluwa
+                </div>
 
-            <div
-              style={{
-                fontSize: "0.95rem",
-                color: "#fff",
-                lineHeight: 2,
-                fontFamily: "'Lora', Georgia, serif",
-              }}
-            >
-              <p style={{ margin: "0 0 1.2rem" }}>
-                It started with laziness, honestly.
-              </p>
-              <p style={{ margin: "0 0 1.2rem" }}>
-                I was 14, stuck with a bad PC, and wanted to make Roblox
-                animations &mdash; not because I had some grand vision, but
-                because it seemed easier than actually learning to script. I
-                was skeptical. Why would I write code when I could just drag
-                and drop things around?
-              </p>
-              <p style={{ margin: "0 0 1.2rem" }}>
-                Then someone pointed me toward a bootcamp. HTML. CSS.
-                JavaScript. I went in with zero expectations and came out
-                genuinely surprised &mdash; not because it was easy, but
-                because for the first time something clicked. The web wasn't
-                just something I browsed. It was something I could build.
-              </p>
-              <p style={{ margin: "0 0 1.2rem" }}>
-                But what really hooked me wasn't the syntax or the tutorials.
-                It was the moment I realized I could write something that
-                solved an actual problem. Not a todo app exercise. A real
-                problem &mdash; mine, or someone else's. That's when
-                programming stopped being a skill and started being a tool I
-                actually wanted to carry.
-              </p>
-              <p style={{ margin: "0 0 1.2rem" }}>
-                Three years later, at 17, I'm still building. An offline-first
-                school system for environments where connectivity can't be
-                assumed. A basketball AI that watches film and thinks like an
-                analyst. Small things and large ones. All of it self-taught,
-                all of it solo, all of it from Lagos.
-              </p>
-              <p style={{ margin: 0, color: "#fff" }}>
-                I'm not done. I'm just getting started.
-              </p>
-            </div>
+                <div
+                  style={{
+                    fontSize: "0.95rem",
+                    color: "#fff",
+                    lineHeight: 2,
+                    fontFamily: "'Lora', Georgia, serif",
+                  }}
+                >
+                  <p style={{ margin: "0 0 1.2rem" }}>
+                    It started with laziness, honestly.
+                  </p>
+                  <p style={{ margin: "0 0 1.2rem" }}>
+                    I was 14, stuck with a bad PC, and wanted to make Roblox
+                    animations &mdash; not because I had some grand vision, but
+                    because it seemed easier than actually learning to script. I was
+                    skeptical. Why would I write code when I could just drag and
+                    drop things around?
+                  </p>
+                  <p style={{ margin: "0 0 1.2rem" }}>
+                    Then someone pointed me toward a bootcamp. HTML. CSS.
+                    JavaScript. I went in with zero expectations and came out
+                    genuinely surprised &mdash; not because it was easy, but because
+                    for the first time something clicked. The web wasn't just
+                    something I browsed. It was something I could build.
+                  </p>
+                  <p style={{ margin: "0 0 1.2rem" }}>
+                    But what really hooked me wasn't the syntax or the tutorials. It
+                    was the moment I realized I could write something that solved an
+                    actual problem. Not a todo app exercise. A real problem &mdash;
+                    mine, or someone else's. That's when programming stopped being a
+                    skill and started being a tool I actually wanted to carry.
+                  </p>
+                  <p style={{ margin: "0 0 1.2rem" }}>
+                    Three years later, at 17, I'm still building. An offline-first
+                    school system for environments where connectivity can't be
+                    assumed. A basketball AI that watches film and thinks like an
+                    analyst. Small things and large ones. All of it self-taught, all
+                    of it solo.
+                  </p>
+                  <p style={{ margin: 0, color: "#fff" }}>
+                    I'm not done. I'm just getting started.
+                  </p>
+                </div>
 
-            <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: "1rem", marginTop: "1.2rem" }}>
+                <div
+                  style={{
+                    borderTop: "1px solid #1a1a1a",
+                    paddingTop: "1rem",
+                    marginTop: "1.2rem",
+                  }}
+                >
               <a
                 href="mailto:erioluwafawehinmi@gmail.com"
                 style={{
@@ -769,6 +876,8 @@ export default function Portfolio() {
                 &rarr; erioluwafawehinmi@gmail.com
               </a>
             </div>
+          </div>
+            )}
           </div>
         </section>
 
@@ -791,44 +900,46 @@ export default function Portfolio() {
               letterSpacing: 2,
             }}
           >
-            Fawehinmi Erioluwa &middot; Lagos, NG &middot; 2026
+            Fawehinmi Erioluwa &middot; 2026
           </div>
           <div style={{ display: "flex", gap: "0.6rem" }}>
             <a
               href="mailto:erioluwafawehinmi@gmail.com"
+              className="icon-btn icon-email footer-icon"
               style={{
-                fontSize: "0.95rem",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 color: "#fff",
                 background: "#111111",
                 border: "1px solid #2a2a2a",
-                padding: "0.4rem 0.8rem",
+                padding: "0.45rem",
                 borderRadius: 2,
                 textDecoration: "none",
-                letterSpacing: 2,
-                textTransform: "uppercase",
-                transition: "border-color 0.2s",
+                transition: "all 0.2s",
               }}
             >
-              &rarr; email
+              <img src="https://cdn.simpleicons.org/gmail/fff" alt="Email" style={{ width: 18, height: 18, display: "block" }} />
             </a>
             <a
               href="https://github.com/erioluwafawehinmi"
               target="_blank"
               rel="noopener noreferrer"
+              className="icon-btn icon-github footer-icon"
               style={{
-                fontSize: "0.95rem",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 color: "#fff",
                 background: "#111111",
                 border: "1px solid #2a2a2a",
-                padding: "0.4rem 0.8rem",
+                padding: "0.45rem",
                 borderRadius: 2,
                 textDecoration: "none",
-                letterSpacing: 2,
-                textTransform: "uppercase",
-                transition: "border-color 0.2s",
+                transition: "all 0.2s",
               }}
             >
-              &rarr; github
+              <img src="https://cdn.simpleicons.org/github/fff" alt="GitHub" style={{ width: 18, height: 18, display: "block" }} />
             </a>
           </div>
         </footer>
@@ -850,6 +961,15 @@ export default function Portfolio() {
         ::-webkit-scrollbar-thumb { background: #1e1e1e; }
         a:hover { color: #54C5F8 !important; }
         button:hover { border-color: #54C5F8 !important; color: #54C5F8 !important; }
+        .cta-btn:hover { color: #54C5F8 !important; border-color: #54C5F8 !important; }
+        .icon-btn { transition: all 0.18s ease !important; }
+        .icon-github:hover { border-color: #c9d1d9 !important; }
+        .icon-github:hover img { filter: brightness(1.4); }
+        .icon-email:hover { border-color: #EA4335 !important; }
+        .icon-email:hover img { filter: brightness(1.4) sepia(1) hue-rotate(-10deg) saturate(5); }
+        .icon-instagram:hover { border-color: #E4405F !important; }
+        .icon-instagram:hover img { filter: brightness(1.4) sepia(1) hue-rotate(-30deg) saturate(4); }
+        .footer-icon { width: auto; height: auto; }
         .page-content section { animation: fadeIn 0.5s ease both; }
         .tech-chip:hover { border-color: #54C5F8 !important; color: #54C5F8 !important; }
         .nav-link:hover { color: #54C5F8 !important; }
