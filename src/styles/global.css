@@ -1,0 +1,57 @@
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: none; }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  font-family: 'Lora', Georgia, serif;
+  color: #e0e0e0;
+}
+
+::-webkit-scrollbar { width: 4px; background: #000; }
+::-webkit-scrollbar-thumb { background: #1e1e1e; }
+
+a:hover { color: #54C5F8 !important; }
+button:hover { border-color: #54C5F8 !important; color: #54C5F8 !important; }
+
+.cta-btn:hover { color: #54C5F8 !important; border-color: #54C5F8 !important; }
+
+.icon-btn { transition: all 0.18s ease !important; }
+.icon-github:hover { border-color: #c9d1d9 !important; }
+.icon-github:hover img { filter: brightness(1.4); }
+.icon-email:hover { border-color: #EA4335 !important; }
+.icon-email:hover img { filter: brightness(1.4) sepia(1) hue-rotate(-10deg) saturate(5); }
+.icon-instagram:hover { border-color: #E4405F !important; }
+.icon-instagram:hover img { filter: brightness(1.4) sepia(1) hue-rotate(-30deg) saturate(4); }
+
+.footer-icon { width: auto; height: auto; }
+
+.project-link-icon:hover { border-color: #54C5F8 !important; background: #54C5F815 !important; }
+.project-link-icon:hover svg { stroke: #54C5F8 !important; }
+
+.page-content section { animation: fadeIn 0.5s ease both; }
+
+.tech-chip:hover { border-color: #54C5F8 !important; color: #54C5F8 !important; }
+.nav-link:hover { color: #54C5F8 !important; }
+.project-card:hover { border-color: #54C5F840 !important; }
+.footer-btn:hover { border-color: #54C5F8 !important; color: #54C5F8 !important; }
+.social-icon:hover { border-color: #54C5F8 !important; }
+
+@media (max-width: 700px) {
+  nav { overflow-x: auto; }
+  nav::-webkit-scrollbar { height: 2px; }
+}
+
+@media (max-width: 768px) {
+  .page-content { padding-left: 1.5rem !important; }
+}

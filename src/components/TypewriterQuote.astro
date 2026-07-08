@@ -1,0 +1,80 @@
+---
+const quote = "\u201cThe first step to greatness is taking action.\u201d";
+---
+
+<div class="typewriter-container">
+  <span class="typewriter-text">&mdash; </span>
+  <span class="typewriter-cursor" style="color: #00DC82;">{"\u258C"}</span>
+</div>
+
+<style>
+  .typewriter-container {
+    font-size: 0.9rem;
+    color: #ccc;
+    font-style: italic;
+    margin-bottom: 1.2rem;
+    padding: 0 0.5rem;
+    min-height: 1.2rem;
+  }
+
+  .typewriter-cursor {
+    opacity: 1;
+    transition: opacity 0.1s;
+  }
+
+  .typewriter-cursor.hidden {
+    opacity: 0;
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    var text = "\u201cThe first step to greatness is taking action.\u201d";
+    var count = 0;
+    var phase = 'forward';
+    var textEl = null;
+    var cursorEl = null;
+
+    function init() {
+      textEl = document.querySelector('.typewriter-text');
+      cursorEl = document.querySelector('.typewriter-cursor');
+      if (textEl && cursorEl) {
+        tick();
+        setInterval(function() {
+          cursorEl.classList.toggle('hidden');
+        }, 530);
+      }
+    }
+
+    function tick() {
+      if (!textEl) return;
+
+      if (phase === 'forward') {
+        if (count < text.length) {
+          count++;
+          textEl.textContent = '\u2014 ' + text.slice(0, count);
+          setTimeout(tick, 45);
+          return;
+        }
+        phase = 'pause';
+        setTimeout(function() { phase = 'backward'; tick(); }, 2500);
+      } else if (phase === 'backward') {
+        if (count > 0) {
+          count--;
+          textEl.textContent = count > 0 ? '\u2014 ' + text.slice(0, count) : '\u2014 ';
+          setTimeout(tick, 25);
+          return;
+        }
+        textEl.textContent = '\u2014 ';
+        phase = 'wait';
+        setTimeout(function() { phase = 'forward'; tick(); }, 1000);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>

@@ -1,0 +1,136 @@
+---
+import TypewriterQuote from './TypewriterQuote.astro';
+import CTASection from './CTASection.astro';
+---
+
+<section id="top" class="hero-section">
+  <div class="hero-avatar">
+    <img src="/brand.jpg" alt="Fawehinmi Erioluwa" />
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-name">Fawehinmi Erioluwa</h1>
+    <div class="hero-role">17 years old &middot; Frontend Engineer</div>
+    <div class="hero-tagline">&gt; Frontend Engineer (+ backend instincts)</div>
+
+    <p class="hero-bio">
+      Building offline-first systems, AI-powered tools, and frontend
+      interfaces from Lagos, Nigeria. Self-taught. Always learning.
+      Currently deep in a 26-week solo build of CourtVision &mdash; a
+      computer vision basketball analyst.
+    </p>
+
+    <div class="hero-quote">
+      <TypewriterQuote />
+    </div>
+
+    <div class="hero-cta">
+      <CTASection />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    max-width: 860px;
+    margin: 0;
+    padding: 3rem 0 0;
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+
+  .hero-avatar {
+    flex-shrink: 0;
+    width: 180px;
+    height: 180px;
+    border: 1px solid #1e1e1e;
+    border-radius: 4px;
+    background: #111;
+    overflow: hidden;
+  }
+
+  .hero-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hero-name {
+    font-size: clamp(1.8rem, 4vw, 2.7rem);
+    font-weight: 800;
+    margin: 0 0 0.3rem;
+    color: #fff;
+    line-height: 1.15;
+    font-family: 'Lora', Georgia, serif;
+  }
+
+  .hero-role {
+    font-size: 0.95rem;
+    color: #555;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .hero-tagline {
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .hero-bio {
+    font-size: 0.97rem;
+    color: #e0e0e0;
+    line-height: 1.8;
+    margin: 0 0 0.6rem;
+    max-width: 520px;
+  }
+
+  .hero-quote {
+    display: flex;
+  }
+
+  .hero-cta {
+    margin-top: 1rem;
+    padding-bottom: 2.5rem;
+    display: flex;
+  }
+
+  @media (max-width: 600px) {
+    .hero-section {
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .hero-avatar {
+      width: 160px;
+      height: 160px;
+    }
+
+    .hero-name,
+    .hero-role,
+    .hero-tagline,
+    .hero-bio {
+      text-align: center;
+    }
+
+    .hero-bio {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-quote,
+    .hero-cta {
+      justify-content: center;
+    }
+  }
+</style>

@@ -1,0 +1,162 @@
+---
+import Layout from './Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+
+interface Props {
+  title: string;
+  date: string;
+}
+
+const { title, date } = Astro.props;
+---
+
+<Layout title={`${title} — Letters`}>
+  <Navbar />
+  <CommandPalette />
+
+  <main class="blog-post-page">
+    <article class="blog-post">
+      <a href="/letters" class="back-link">&larr; Back to Letters</a>
+
+      <header class="post-header">
+        <time class="post-date">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+        <h1 class="post-title">{title}</h1>
+      </header>
+
+      <div class="post-content">
+        <slot />
+      </div>
+    </article>
+
+    <Footer />
+  </main>
+</Layout>
+
+<style>
+  .blog-post-page {
+    padding-top: 72px;
+    padding-left: 200px;
+    padding-right: 4rem;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+  }
+
+  .blog-post {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: #555;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    margin-bottom: 3rem;
+    transition: color 0.15s;
+  }
+
+  .back-link:hover {
+    color: #00DC82;
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+  }
+
+  .post-date {
+    font-size: 0.8rem;
+    color: #555;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    color: #f0ebe3;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  .post-content {
+    font-size: 1.05rem;
+    color: #ccc;
+    line-height: 1.8;
+  }
+
+  .post-content :global(h2) {
+    font-size: 1.5rem;
+    color: #f0ebe3;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .post-content :global(h3) {
+    font-size: 1.25rem;
+    color: #f0ebe3;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+
+  .post-content :global(p) {
+    margin-bottom: 1.5rem;
+  }
+
+  .post-content :global(a) {
+    color: #00DC82;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+
+  .post-content :global(a:hover) {
+    border-bottom-color: #00DC82;
+  }
+
+  .post-content :global(code) {
+    background: #1a1a1a;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+
+  .post-content :global(pre) {
+    background: #111;
+    border: 1px solid #1a1a1a;
+    border-radius: 6px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .post-content :global(pre code) {
+    background: transparent;
+    padding: 0;
+  }
+
+  .post-content :global(blockquote) {
+    border-left: 3px solid #00DC82;
+    padding-left: 1.25rem;
+    margin: 1.5rem 0;
+    color: #999;
+    font-style: italic;
+  }
+
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .post-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+</style>

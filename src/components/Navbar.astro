@@ -1,0 +1,137 @@
+---
+const navLinks = [
+  { label: "Projects", href: "/#projects" },
+  { label: "About", href: "/#about" },
+  { label: "Letters", href: "/letters" },
+];
+---
+
+<nav id="main-nav" class="main-nav">
+  <div class="nav-avatar">
+    <img src="/brand.jpg" alt="" />
+  </div>
+
+  <a href="/" class="nav-name">Fawehinmi Erioluwa</a>
+
+  <div class="nav-divider"></div>
+
+  <div class="nav-links">
+    {navLinks.map((link) => (
+      <a href={link.href} class="nav-link">{link.label}</a>
+    ))}
+  </div>
+
+  <a
+    href="https://github.com/erioluwafawehinmi"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="nav-github"
+  >
+    &#x2328;
+  </a>
+</nav>
+
+<style>
+  .main-nav {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Lora', Georgia, serif;
+    width: fit-content;
+    max-width: 680px;
+  }
+
+  .main-nav.hidden {
+    transform: translateX(-50%) translateY(-120%);
+  }
+
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #555;
+    background: #222;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .nav-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .nav-name {
+    font-size: 0.97rem;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+    font-weight: 700;
+  }
+
+  .nav-divider {
+    width: 1px;
+    height: 16px;
+    background: #2a2a2a;
+    margin: 0 1rem;
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .nav-link {
+    font-size: 0.9rem;
+    color: #d4cfc8;
+    text-decoration: none;
+    letter-spacing: 1px;
+    font-weight: 600;
+    transition: color 0.15s;
+  }
+
+  .nav-link:hover {
+    color: #f0ebe3;
+  }
+
+  .nav-github {
+    font-size: 0.95rem;
+    color: #555;
+    text-decoration: none;
+    transition: color 0.15s;
+    margin-left: 0.3rem;
+  }
+</style>
+
+<script>
+  let lastScrollY = 0;
+  const nav = document.getElementById('main-nav');
+
+  window.addEventListener('scroll', () => {
+    const currentY = window.scrollY;
+    if (!nav) return;
+
+    if (currentY < 60) {
+      nav.classList.remove('hidden');
+    } else if (currentY > lastScrollY + 8) {
+      nav.classList.add('hidden');
+    } else if (currentY < lastScrollY - 8) {
+      nav.classList.remove('hidden');
+    }
+    lastScrollY = currentY;
+  }, { passive: true });
+</script>

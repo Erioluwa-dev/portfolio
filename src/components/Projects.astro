@@ -1,0 +1,75 @@
+---
+import ProjectCard from './ProjectCard.astro';
+
+const projects = [
+  {
+    name: "Todo App",
+    desc: "CRUD fundamentals. Where it started.",
+    tag: "Public",
+    tagColor: "#00DC82",
+    stack: ["React", "TypeScript"],
+    github: "https://github.com/Erioluwa-dev/todo-app",
+  },
+  {
+    name: "YEMS",
+    fullName: "Youth Educational Management System",
+    desc: "Offline-first school management system built for low-connectivity environments. Six-container Docker setup, real constraints, real solutions.",
+    tag: "Private",
+    tagColor: "#555",
+    stack: ["Next.js", "PostgreSQL", "Docker", "TypeScript"],
+  },
+  {
+    name: "CourtVision",
+    desc: "A conversational AI basketball analyst. Watches game footage, tracks players with YOLOv8 + DeepSORT, analyzes movement with MediaPipe, builds per-player tendency profiles in Supabase, and delivers real-time play-by-play commentary via Groq LLM and LangChain. The gap it fills: no public tool combines live film study, player tendency modeling, and a conversational analyst interface. Built solo. $0 budget.",
+    tag: "In Progress",
+    tagColor: "#54C5F8",
+    stack: ["Python", "YOLOv8", "DeepSORT", "MediaPipe", "Groq API", "LangChain", "Supabase", "Streamlit"],
+    isFlagship: true,
+    mission: '"Film study. Tendency engine. Real-time intelligence."',
+    github: "https://github.com/Erioluwa-dev/CourtVision",
+    id: "courtvision",
+  },
+];
+---
+
+<section id="projects" class="projects-section">
+  <div class="section-label">// projects</div>
+  <div class="projects-grid">
+    {projects.map((p) => (
+      <ProjectCard
+        name={p.name}
+        desc={p.desc}
+        tag={p.tag}
+        tagColor={p.tagColor}
+        stack={p.stack}
+        isFlagship={p.isFlagship}
+        mission={p.mission}
+        github={p.github}
+        id={p.id}
+      />
+    ))}
+  </div>
+</section>
+
+<style>
+  .projects-section {
+    max-width: 860px;
+    margin: 0;
+    padding: 0 0 2.5rem;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .projects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+</style>
