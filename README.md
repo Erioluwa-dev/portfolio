@@ -1,16 +1,44 @@
-# React + Vite
+# Erioluwa Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimalist, dark-themed personal portfolio for **Fawehinmi Erioluwa** — a 17-year-old, self-taught frontend engineer based in Lagos, Nigeria.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Astro** `^7.0.6` — static site generator (zero client-side JavaScript by default)
+- Plain CSS via scoped `<style>` blocks per component, plus small vanilla `<script>` blocks for interactivity
+- Google Fonts: *Lora* (serif)
 
-## React Compiler
+There is no UI framework, no Tailwind, and no CSS modules. Everything compiles down to static HTML and CSS.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- Single-page homepage (`/`) with a hero, technology chips, collapsible project cards, an "about" block, and a footer
+- A "Letters" blog section (`/letters`) with individual post pages
+- A Ctrl+K command palette for navigation and quick actions
+- A subtle CRT scanline overlay
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Project structure
+
+```
+src/
+  components/   # Navbar, Hero, Technologies, Projects, ProjectCard, About, Footer, CommandPalette, CTASection, TypewriterQuote
+  layouts/      # Layout (base), BlogPost
+  pages/        # index.astro, letters.astro, letters/<slug>.astro
+  styles/       # global.css
+public/         # static assets (brand.jpg, favicon.svg, icons.svg)
+```
+
+## Commands
+
+| Command           | Action                                |
+| ----------------- | ------------------------------------- |
+| `npm install`     | Install dependencies                  |
+| `npm run dev`     | Start the dev server (`astro dev`)    |
+| `npm run build`   | Build the static site to `dist/`      |
+| `npm run preview` | Preview the built site locally        |
+
+> This project ships a `bun.lock`, so `bun install` / `bun run dev` work too.
+
+## Notes
+
+`prompt.md` in this repo is the original AI generation spec. The finished site diverged from it (Astro + serif theme rather than the React/terminal spec), so treat `prompt.md` as historical context, not current documentation.

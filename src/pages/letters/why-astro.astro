@@ -1,0 +1,23 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+---
+
+<BlogPost title="Why I Chose Astro for My Portfolio" date="2026-06-15">
+  <p>
+    Before this site existed, I'd already rebuilt my portfolio three times. Next.js first — powerful, but heavy for a handful of mostly static pages. Then a Vite single-page app, which felt closer, but still shipped JavaScript I didn't actually need. Plain HTML was tempting for its simplicity, yet I wanted components and a content workflow that wouldn't rot the moment I walked away.
+  </p>
+
+  <h2>What I actually needed</h2>
+  <p>
+    A portfolio is mostly static: a hero, a few project cards, some writing. The interactivity I wanted — a command palette, collapsible sections, a typewriter line — is tiny and doesn't need a framework runtime. I needed something that shipped zero JavaScript by default and let me drop in a script only where it earned its place.
+  </p>
+
+  <h2>Why Astro won</h2>
+  <p>
+    Astro builds to plain HTML and CSS, then hydrates nothing unless you ask it to. Components keep the code organized without dragging a runtime into the browser. For a site like this, that's the whole game: fast, simple, and easy to come back to months later without relearning anything.
+  </p>
+
+  <p>
+    If you're building your own, start with what you'll actually ship. The framework matters far less than whether the result loads instantly and stays out of your way.
+  </p>
+</BlogPost>

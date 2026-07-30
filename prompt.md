@@ -1,5 +1,7 @@
 # Portfolio Build Prompt — Fawehinmi Erioluwa
 
+> **Note:** This file is the original generation spec. The site that was actually built diverged from it — it is implemented in **Astro** (not a single-file React `.jsx` app) with an elegant *Lora* serif theme rather than the monospace terminal aesthetic described below. See `README.md` for the real stack and structure.
+
 ## Overview
 
 Build a **minimalist, dark-themed developer portfolio** as a single-page React app (`.jsx`). The design language is already established in the reference component provided — terminal aesthetics, monospaced fonts, near-black backgrounds, tight letter-spacing, and muted accents. Extend and complete it into a full portfolio.
