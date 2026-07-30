@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
+import DynamicIslandHeader from '../components/DynamicIslandHeader.astro';
 import Hero from '../components/Hero.astro';
 import Technologies from '../components/Technologies.astro';
 import Projects from '../components/Projects.astro';
@@ -10,7 +10,7 @@ import CommandPalette from '../components/CommandPalette.astro';
 ---
 
 <Layout title="Erioluwa — Portfolio">
-  <Navbar />
+  <DynamicIslandHeader />
   <CommandPalette />
 
   <main class="page-content">
@@ -24,7 +24,7 @@ import CommandPalette from '../components/CommandPalette.astro';
 
 <style>
   .page-content {
-    padding-top: 72px;
+    padding-top: 96px;
     padding-left: 230px;
     padding-right: 4rem;
     position: relative;
