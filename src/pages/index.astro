@@ -3,29 +3,109 @@ import Layout from '../layouts/Layout.astro';
 import DynamicIslandHeader from '../components/DynamicIslandHeader.astro';
 import Hero from '../components/Hero.astro';
 import Technologies from '../components/Technologies.astro';
-import Projects from '../components/Projects.astro';
-import About from '../components/About.astro';
-import Footer from '../components/Footer.astro';
+import Repos from '../components/Repos.astro';
+import Philosophy from '../components/Philosophy.astro';
+import CardFooter from '../components/CardFooter.astro';
+import CommandPalette from '../components/CommandPalette.astro';
 ---
 
 <Layout title="Erioluwa — Portfolio">
   <DynamicIslandHeader />
+  <CommandPalette />
 
-  <main class="page-content">
-    <Hero />
-    <Technologies />
-    <Projects />
-    <About />
-    <Footer />
+  <main class="stage">
+    <div class="content-card">
+      <Hero />
+      <Technologies />
+
+      <div class="split">
+        <Repos />
+        <Philosophy />
+      </div>
+
+      <CardFooter />
+    </div>
   </main>
 </Layout>
 
+<style is:global>
+  /* ── Homepage-only overrides. ── */
+  body {
+    background: linear-gradient(160deg, #d9d9d9 0%, #b4b4b4 48%, #a6a6a6 100%) !important;
+    color: #2a2a2a;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  html[data-theme="dark"] body {
+    background: #000 !important;
+    color: #e0e0e0;
+  }
+
+  /* The scanline overlay belongs to the dark editorial theme — hide on light. */
+  .scanline-overlay { display: none !important; }
+  html[data-theme="dark"] .scanline-overlay { display: block !important; }
+</style>
+
 <style>
-  .page-content {
-    padding-top: 96px;
-    padding-left: 230px;
-    padding-right: 4rem;
+  .stage {
+    flex: 1;
+    padding: 108px 5vw 48px;
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* The page background is now the grey itself — no floating card.
+       Content flows edge-to-edge (within page padding) across the full screen. */
+  .content-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 3vw, 2rem);
+    flex: 1;
+  }
+
+  /* Repos (wide) + Philosophy (narrow) side by side. */
+  .split {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: clamp(1.25rem, 3vw, 2rem);
+    align-items: stretch;
+  }
+
+  @media (max-width: 820px) {
+    .split { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .stage { padding: 92px 14px 28px; }
+  }
+
+  /* ── Shared card primitives used across sections on this page ── */
+  .stage :global(.surface-card) {
+    background: var(--bg-card);
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    padding: clamp(1.4rem, 3vw, 2rem);
+    box-shadow:
+      0 10px 24px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  html[data-theme="dark"] .stage :global(.surface-card) {
+    box-shadow:
+      0 10px 24px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .stage :global(.card-label) {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
   }
 </style>
