@@ -1,1410 +1,345 @@
 ---
-const logoText = "Erioluwa";
-
-const defaultLinks = [
-  { label: "About", href: "/#about" },
-  { label: "Projects", href: "/#projects" },
-  { label: "Skills", href: "/#technologies" },
-  { label: "Contact", href: "/#contact" },
-];
-
-const rawLinks = Astro.props.navLinks;
-const links = rawLinks ?? defaultLinks;
-
-// Command palette items
-const paletteNavItems = [
-  { icon: "\u25CF", label: "Projects", href: "/#projects", shortcut: "P" },
-  { icon: "\u25CF", label: "About", href: "/#about", shortcut: "A" },
-  { icon: "\u25CF", label: "Letters", href: "/letters", shortcut: "L" },
-  { icon: "\u25CF", label: "Skills", href: "/#technologies", shortcut: "T" },
-];
-
-const paletteActionItems = [
-  { icon: "\u2709", label: "Email", href: "mailto:erioluwafawehinmi@gmail.com", shortcut: "E", external: false },
-  { icon: "\u260D", label: "GitHub", href: "https://github.com/erioluwafawehinmi", shortcut: "G", external: true },
-  { icon: "\u2609", label: "Instagram", href: "https://instagram.com/stay.with.eri", shortcut: "I", external: true },
-];
-
-const socialItems = [
-  { label: "GitHub", href: "https://github.com/erioluwafawehinmi", icon: "GH" },
-  { label: "Instagram", href: "https://instagram.com/stay.with.eri", icon: "IG" },
-  { label: "Email", href: "mailto:erioluwafawehinmi@gmail.com", icon: "EM" },
+// Monochrome Dynamic Island — a compact pill that expands to reveal nav links.
+// The deep near-black capsule against the light content card is the signature contrast.
+const links = [
+  { label: "Home", href: "#top" },
+  { label: "Repos", href: "#repos" },
+  { label: "About", href: "#about" },
+  { label: "Contact", href: "#contact" },
 ];
 ---
 
-<header
-  id="di-header"
-  class="di-header"
-  data-state="compact"
-  data-nav-open="false"
-  data-palette-open="false"
-  role="navigation"
-  aria-label="Main navigation"
->
-  <!-- ====== GLASS CAPSULE (morphs between states) ====== -->
-  <div class="di-container" id="di-container">
-    <!-- ====== MAIN ROW ====== -->
-    <div class="di-main-row">
-      <!-- Logo (always visible) -->
-      <a href="/" class="di-logo" aria-label="Go to homepage">
-        <span class="di-logo-text">{logoText}</span>
-      </a>
+<header id="di" class="di" data-open="false" aria-label="Main navigation">
+  <div
+    class="di-pill"
+    id="di-pill"
+    role="navigation"
+    tabindex="0"
+    aria-label="Navigation menu"
+    aria-expanded="false"
+  >
+    <!-- Compact state: status dot + slider bar hint -->
+    <div class="di-compact" aria-hidden="true">
+      <span class="di-dot"></span>
+      <span class="di-bar"></span>
+    </div>
 
-      <!-- Desktop nav links -->
-      <nav class="di-nav" id="di-nav">
-        <div class="di-indicator" id="di-indicator" aria-hidden="true"></div>
-        {links.map((link, i) => (
-          <a
-            href={link.href}
-            class="di-nav-link"
-            data-section={link.href.replace("/#", "")}
-            style={`--i: ${i}`}
-          >
-            {link.label}
-          </a>
-        ))}
-      </nav>
-
-      <!-- Desktop actions (social + search) -->
-      <div class="di-actions" id="di-actions">
-        {socialItems.map((s) => (
-          <a
-            href={s.href}
-            class="di-social-btn"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={s.label}
-          >
-            {s.icon === "GH" && (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12 24 5.37 18.63 0 12 0z"/>
-              </svg>
-            )}
-            {s.icon === "IG" && (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-              </svg>
-            )}
-            {s.icon === "EM" && (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="M22 4L12 13 2 4"/>
-              </svg>
-            )}
-          </a>
-        ))}
-        <button class="di-search-btn" id="di-search-btn" aria-label="Open command palette (⌘K)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Compact-only ⌘K trigger (visible only in compact pill) -->
-      <button class="di-compact-search" id="di-compact-search" aria-label="Open command palette">
-        <span class="di-compact-search-key">&#8984;K</span>
+    <!-- Expanded state: nav links -->
+    <nav class="di-nav" aria-label="Sections">
+      {links.map((link, i) => (
+        <a href={link.href} class="di-link" style={`--i:${i}`}>{link.label}</a>
+      ))}
+      <button
+        id="theme-toggle"
+        class="di-theme-toggle"
+        style={`--i:${links.length}`}
+        title="Toggle light/dark mode"
+        aria-label="Toggle theme"
+      >
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
       </button>
-    </div>
-
-    <!-- ====== COMMAND PALETTE — unfolds inside the island ====== -->
-    <div class="di-palette" id="di-palette">
-      <!-- Header -->
-      <div class="di-palette-header">
-        <span class="di-palette-title">// COMMAND PALETTE</span>
-        <span class="di-palette-cursor">&#9608;</span>
-      </div>
-
-      <!-- Search -->
-      <div class="di-palette-search">
-        <input
-          id="di-palette-input"
-          type="text"
-          placeholder="Type to search..."
-          autocomplete="off"
-          spellcheck="false"
-        />
-      </div>
-
-      <!-- Navigation section -->
-      <div class="di-palette-section">
-        <div class="di-palette-section-label">// NAVIGATION</div>
-        <div class="di-palette-items">
-          {paletteNavItems.map((item, i) => (
-            <a
-              href={item.href}
-              class="di-palette-item"
-              data-index={i}
-              data-section="nav"
-              style={`--i: ${i}`}
-            >
-              <span class="di-palette-item-icon">{item.icon}</span>
-              <span class="di-palette-item-label">{item.label}</span>
-              <span class="di-palette-item-shortcut">{item.shortcut}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-
-      <!-- Actions section -->
-      <div class="di-palette-section">
-        <div class="di-palette-section-label">// ACTIONS</div>
-        <div class="di-palette-items">
-          {paletteActionItems.map((item, i) => (
-            <a
-              href={item.href}
-              class="di-palette-item"
-              data-index={paletteNavItems.length + i}
-              data-section="action"
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noopener noreferrer" : undefined}
-              style={`--i: ${paletteNavItems.length + i}`}
-            >
-              <span class="di-palette-item-icon">{item.icon}</span>
-              <span class="di-palette-item-label">{item.label}</span>
-              <span class="di-palette-item-shortcut">{item.shortcut}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div class="di-palette-footer">
-        <span class="di-palette-hint">&uarr;&darr; navigate</span>
-        <span class="di-palette-hint">&#9166; select</span>
-        <span class="di-palette-hint">esc close</span>
-      </div>
-    </div>
+    </nav>
   </div>
 </header>
 
 <style>
-/* ============================================================
-   DYNAMIC ISLAND — 3‑State Morphing Navigation
-   States: compact → nav → palette
-   Everything is one glass capsule — no separate modals.
-   ============================================================ */
-
-/* --- Custom Properties --- */
-.di-header {
-  --di-accent: #54C5F8;
-  --di-accent-light: #7BD5FA;
-  --di-accent-glow: rgba(84, 197, 248, 0.3);
-  --di-accent-bg: rgba(84, 197, 248, 0.08);
-  --di-glass-bg: rgba(0, 0, 0, 0.85);
-  --di-glass-border: rgba(255, 255, 255, 0.06);
-  --di-text: #ffffff;
-  --di-text-secondary: rgba(255, 255, 255, 0.65);
-  --di-text-muted: rgba(255, 255, 255, 0.4);
-
-  /* Sizing */
-  --di-width-expanded: min(720px, calc(100vw - 32px));
-  --di-width-compact: 220px;
-  --di-height-expanded: 60px;
-  --di-height-compact: 44px;
-  --di-radius-expanded: 18px;
-  --di-radius-compact: 999px;
-
-  /* Curves */
-  --di-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --di-smooth: cubic-bezier(0.22, 1, 0.36, 1);
-  --di-ease: cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Layout */
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 18px;
-  pointer-events: none;
-}
-
-/* ============================================================
-   CONTAINER — The single capsule
-   ============================================================ */
-.di-container {
-  position: relative;
-  pointer-events: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-
-  width: var(--di-width-expanded);
-  min-height: var(--di-height-expanded);
-  border-radius: var(--di-radius-expanded);
-  background: var(--di-glass-bg);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid var(--di-glass-border);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    0 2px 8px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  overflow: hidden;
-
-  will-change: width, min-height, border-radius;
-  transform: translateZ(0);
-
-  transition:
-    width 0.22s var(--di-spring),
-    min-height 0.28s var(--di-smooth),
-    border-radius 0.25s var(--di-smooth),
-    box-shadow 0.3s var(--di-smooth);
-}
-
-/* --- Green dot (compact) + logo dot (expanded) --- */
-@keyframes di-dot-pulse {
-  0%, 100% {
-    opacity: 1;
-    box-shadow: 0 0 6px 2px rgba(100, 220, 140, 0.35), 0 0 14px 4px rgba(100, 220, 140, 0.12);
-  }
-  50% {
-    opacity: 0.5;
-    box-shadow: 0 0 10px 4px rgba(100, 220, 140, 0.5), 0 0 20px 8px rgba(100, 220, 140, 0.18);
-  }
-}
-
-.di-container::before {
-  content: '';
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #e0ffe8, #60d080);
-  box-shadow: 0 0 6px 2px rgba(100, 220, 140, 0.35), 0 0 14px 4px rgba(100, 220, 140, 0.12);
-  pointer-events: none;
-  animation: di-dot-pulse 2.4s ease-in-out infinite;
-  z-index: 1;
-  transition: left 0.22s var(--di-smooth);
-}
-
-/* ============================================================
-   MAIN ROW
-   ============================================================ */
-.di-main-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  width: 100%;
-  padding: 0 10px 0 24px;
-  min-height: var(--di-height-expanded);
-  flex-shrink: 0;
-  transition:
-    justify-content 0.22s var(--di-spring),
-    padding 0.22s var(--di-smooth),
-    min-height 0.22s var(--di-smooth);
-}
-
-/* ============================================================
-   LOGO
-   ============================================================ */
-.di-logo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-  flex-shrink: 0;
-  color: var(--di-text);
-  z-index: 2;
-}
-
-.di-logo-text {
-  font-family: 'Lora', Georgia, serif;
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.5px;
-}
-
-/* ============================================================
-   DESKTOP NAV
-   ============================================================ */
-.di-nav {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  flex-shrink: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.12s var(--di-smooth) 0s,
-    visibility 0s 0.12s;
-}
-
-.di-nav-link {
-  padding: 6px 14px;
-  font-family: 'Lora', Georgia, serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--di-text-secondary);
-  text-decoration: none;
-  letter-spacing: 0.5px;
-  border-radius: 8px;
-  white-space: nowrap;
-  z-index: 1;
-  opacity: 0;
-  transform: translateY(8px);
-  transition:
-    opacity 0.12s var(--di-smooth),
-    transform 0.12s var(--di-smooth),
-    color 0.2s var(--di-ease),
-    background 0.2s var(--di-ease);
-  transition-delay: calc(0.18s + var(--i, 0) * 0.03s);
-}
-
-.di-nav-link:hover,
-.di-nav-link:focus-visible {
-  color: var(--di-text);
-  background: rgba(255, 255, 255, 0.06);
-  outline: none;
-}
-.di-nav-link:focus-visible {
-  box-shadow: 0 0 0 2px var(--di-accent);
-}
-.di-nav-link.active {
-  color: var(--di-text);
-}
-
-/* Indicator */
-.di-indicator {
-  position: absolute;
-  bottom: 2px;
-  left: 0;
-  height: 2px;
-  background: var(--di-accent);
-  border-radius: 2px;
-  pointer-events: none;
-  will-change: transform, width;
-  transition: width 0.4s var(--di-spring), transform 0.4s var(--di-spring);
-}
-
-/* ============================================================
-   DESKTOP ACTIONS
-   ============================================================ */
-.di-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.12s var(--di-smooth) 0s,
-    visibility 0s 0.12s;
-}
-
-.di-social-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  color: var(--di-text-secondary);
-  text-decoration: none;
-  transition: color 0.2s var(--di-ease), background 0.2s var(--di-ease);
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.1s var(--di-smooth),
-    transform 0.1s var(--di-smooth),
-    color 0.2s var(--di-ease),
-    background 0.2s var(--di-ease);
-  transition-delay: calc(0.22s + var(--si, 0) * 0.03s);
-}
-.di-social-btn:hover,
-.di-social-btn:focus-visible {
-  color: var(--di-text);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.di-search-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: none;
-  background: transparent;
-  color: var(--di-text-secondary);
-  cursor: pointer;
-  transition: color 0.2s var(--di-ease), background 0.2s var(--di-ease);
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.1s var(--di-smooth),
-    transform 0.1s var(--di-smooth),
-    color 0.2s var(--di-ease),
-    background 0.2s var(--di-ease);
-  transition-delay: 0.28s;
-}
-.di-search-btn:hover,
-.di-search-btn:focus-visible {
-  color: var(--di-text);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-/* ============================================================
-   COMPACT ⌘K BUTTON (visible only in compact pill)
-   ============================================================ */
-.di-compact-search {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--di-text-muted);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.65rem;
-  letter-spacing: 1px;
-  z-index: 2;
-  transition:
-    opacity 0.15s var(--di-ease),
-    color 0.2s var(--di-ease),
-    background 0.2s var(--di-ease);
-}
-.di-compact-search:hover {
-  color: var(--di-text);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-/* ============================================================
-   STATE: COMPACT (scrolled down) — smaller rounded rect
-   ============================================================ */
-.di-header[data-state="compact"] .di-container {
-  width: var(--di-width-compact);
-  min-height: var(--di-height-compact);
-  border-radius: 18px;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    0 2px 12px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-.di-header[data-state="compact"] .di-main-row {
-  justify-content: center;
-  min-height: var(--di-height-compact);
-  padding: 0 14px;
-}
-
-.di-header[data-state="compact"] .di-nav,
-.di-header[data-state="compact"] .di-actions {
-  display: none;
-}
-
-.di-header[data-state="compact"] .di-compact-search {
-  display: flex;
-}
-
-/* ============================================================
-   HOVER EXPANSION: Compact → Nav (desktop)
-   Width grows first → nav links fade + slide in
-   ============================================================ */
-@media (hover: hover) and (pointer: fine) {
-  .di-header[data-state="compact"] .di-container:hover {
-    width: var(--di-width-expanded);
-    border-radius: var(--di-radius-expanded);
-    box-shadow:
-      0 8px 40px rgba(84, 197, 248, 0.06),
-      0 8px 32px rgba(0, 0, 0, 0.4),
-      0 2px 12px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  }
-
-  /* Dot slides left edge */
-  .di-header[data-state="compact"] .di-container:hover::before {
-    left: 12px;
-  }
-
-  /* Main row switches to space-between */
-  .di-header[data-state="compact"] .di-container:hover .di-main-row {
-    justify-content: space-between;
-    padding: 0 10px 0 24px;
-    min-height: var(--di-height-expanded);
-  }
-
-  /* Nav becomes visible */
-  .di-header[data-state="compact"] .di-container:hover .di-nav {
-    opacity: 1;
-    visibility: visible;
-    transition:
-      opacity 0.12s var(--di-smooth) 0.18s,
-      visibility 0s 0.18s;
-  }
-
-  .di-header[data-state="compact"] .di-container:hover .di-nav-link {
-    opacity: 1;
-    transform: translateY(0);
-    transition-delay: calc(0.18s + var(--i, 0) * 0.03s);
-  }
-
-  /* Actions become visible */
-  .di-header[data-state="compact"] .di-container:hover .di-actions {
-    opacity: 1;
-    visibility: visible;
-    transition:
-      opacity 0.12s var(--di-smooth) 0.18s,
-      visibility 0s 0.18s;
-  }
-
-  .di-header[data-state="compact"] .di-container:hover .di-social-btn,
-  .di-header[data-state="compact"] .di-container:hover .di-search-btn {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .di-header[data-state="compact"] .di-container:hover .di-compact-search {
-    opacity: 0;
-    pointer-events: none;
-    transition:
-      opacity 0.08s var(--di-ease),
-      visibility 0s 0.08s;
-  }
-}
-
-/* ============================================================
-   STATE: NAV (via click/tap on mobile, or persistent after palette)
-   ============================================================ */
-.di-header[data-nav-open="true"] .di-container {
-  width: var(--di-width-expanded);
-  min-height: var(--di-height-expanded);
-  border-radius: var(--di-radius-expanded);
-}
-
-.di-header[data-nav-open="true"] .di-main-row {
-  justify-content: space-between;
-  min-height: var(--di-height-expanded);
-  padding: 0 10px 0 24px;
-}
-
-.di-header[data-nav-open="true"] .di-nav,
-.di-header[data-nav-open="true"] .di-actions {
-  opacity: 1;
-  visibility: visible;
-  transition:
-    opacity 0.12s var(--di-smooth) 0.18s,
-    visibility 0s 0.18s;
-}
-
-.di-header[data-nav-open="true"] .di-nav-link {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: calc(0.18s + var(--i, 0) * 0.03s);
-}
-
-.di-header[data-nav-open="true"] .di-social-btn,
-.di-header[data-nav-open="true"] .di-search-btn {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.di-header[data-nav-open="true"] .di-compact-search {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.08s var(--di-ease);
-}
-
-/* ============================================================
-   COMMAND PALETTE — Unfolds inside island
-   ============================================================ */
-.di-palette {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  max-height: 0;
-  visibility: hidden;
-  transition:
-    max-height 0.22s var(--di-smooth) 0s,
-    visibility 0s 0.25s;
-  font-family: 'Lora', Georgia, serif;
-}
-
-/* All palette children start hidden with translate */
-.di-palette-header,
-.di-palette-search,
-.di-palette-item,
-.di-palette-footer {
-  opacity: 0;
-  transform: translateY(8px);
-  transition:
-    opacity 0.1s var(--di-ease) 0s,
-    transform 0.1s var(--di-ease) 0s;
-}
-
-/* ---- PALETTE OPENING ---- */
-[data-palette-open="true"] .di-palette {
-  max-height: 600px;
-  visibility: visible;
-  transition:
-    max-height 0.22s var(--di-smooth) 0.12s,  /* wait for nav fade (0.1s) + buffer */
-    visibility 0s 0s;
-}
-
-/* Nav links fade out immediately when palette opens */
-[data-palette-open="true"] .di-nav-link {
-  opacity: 0;
-  transform: translateY(-4px);
-  transition:
-    opacity 0.1s var(--di-ease),
-    transform 0.1s var(--di-ease);
-  transition-delay: 0s;
-}
-
-[data-palette-open="true"] .di-social-btn,
-[data-palette-open="true"] .di-search-btn {
-  opacity: 0;
-  transform: translateY(-4px);
-  transition:
-    opacity 0.08s var(--di-ease),
-    transform 0.08s var(--di-ease);
-  transition-delay: 0s;
-}
-
-/* Palette content appears after height expansion */
-[data-palette-open="true"] .di-palette-header {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.35s; /* nav fade 0.1 + height expand 0.22 + buffer */
-}
-[data-palette-open="true"] .di-palette-search {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.4s;
-}
-[data-palette-open="true"] .di-palette-item {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: calc(0.42s + var(--i, 0) * 0.04s);
-}
-[data-palette-open="true"] .di-palette-footer {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.65s;
-}
-
-/* ---- PALETTE CLOSING (reverse order) ---- */
-[data-palette-open="closing"] .di-palette-footer {
-  opacity: 0;
-  transform: translateY(6px);
-  transition-delay: 0s;
-}
-[data-palette-open="closing"] .di-palette-item {
-  opacity: 0;
-  transform: translateY(6px);
-  transition-delay: calc(0.05s + var(--i, 0) * 0.03s);
-}
-[data-palette-open="closing"] .di-palette-search {
-  opacity: 0;
-  transform: translateY(6px);
-  transition-delay: 0.15s;
-}
-[data-palette-open="closing"] .di-palette-header {
-  opacity: 0;
-  transform: translateY(6px);
-  transition-delay: 0.2s;
-}
-
-/* Hide after fade */
-[data-palette-open="closing"] .di-palette-header,
-[data-palette-open="closing"] .di-palette-search,
-[data-palette-open="closing"] .di-palette-item,
-[data-palette-open="closing"] .di-palette-footer {
-  visibility: hidden;
-  transition:
-    opacity 0.1s var(--di-ease) var(--close-delay, 0s),
-    transform 0.1s var(--di-ease) var(--close-delay, 0s),
-    visibility 0s calc(0.1s + var(--close-delay, 0s));
-}
-
-/* Collapse height after content fades */
-[data-palette-open="closing"] .di-palette {
-  max-height: 0;
-  transition-delay: 0.35s; /* after all content fades */
-  visibility: hidden;
-}
-
-/* Nav links return after collapse */
-[data-palette-open="closing"] .di-nav-link {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.12s var(--di-smooth),
-    transform 0.12s var(--di-smooth);
-  transition-delay: 0.6s;
-}
-
-/* Palette container sizing */
-[data-palette-open="true"] .di-container {
-  width: min(480px, calc(100vw - 32px));
-  min-height: auto;
-  border-radius: 18px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.3);
-}
-
-[data-palette-open="true"] .di-main-row {
-  justify-content: flex-start;
-  padding: 0 10px 0 24px;
-  min-height: 48px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-[data-palette-open="true"] .di-logo {
-  margin-right: auto;
-}
-
-[data-palette-open="true"] .di-compact-search {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* --- Palette Header --- */
-.di-palette-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px 8px;
-}
-.di-palette-title {
-  font-size: 0.65rem;
-  color: var(--di-text-muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-.di-palette-cursor {
-  color: var(--di-accent);
-  font-size: 0.85rem;
-  animation: di-cursor-blink 1s step-end infinite;
-}
-@keyframes di-cursor-blink {
-  50% { opacity: 0; }
-}
-
-/* --- Palette Search --- */
-.di-palette-search {
-  padding: 8px 18px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-.di-palette-search input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--di-text);
-  font-size: 0.9rem;
-  font-family: 'Lora', Georgia, serif;
-  caret-color: var(--di-accent);
-}
-.di-palette-search input::placeholder {
-  color: var(--di-text-muted);
-}
-
-/* --- Palette Sections --- */
-.di-palette-section {
-  padding: 8px 0;
-}
-.di-palette-section + .di-palette-section {
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-}
-.di-palette-section-label {
-  font-size: 0.6rem;
-  color: var(--di-text-muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 4px 18px 6px;
-  font-weight: 600;
-}
-.di-palette-items {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-/* --- Palette Items --- */
-.di-palette-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 18px;
-  text-decoration: none;
-  color: var(--di-text-secondary);
-  border-left: 2px solid transparent;
-  cursor: pointer;
-}
-.di-palette-item:hover,
-.di-palette-item.focused {
-  background: var(--di-accent-bg);
-  color: var(--di-text);
-  border-left-color: var(--di-accent);
-}
-.di-palette-item:focus-visible {
-  outline: 2px solid var(--di-accent);
-  outline-offset: -2px;
-}
-.di-palette-item-icon {
-  font-size: 0.65rem;
-  color: var(--di-text-muted);
-  width: 16px;
-  text-align: center;
-  flex-shrink: 0;
-}
-.di-palette-item:hover .di-palette-item-icon,
-.di-palette-item.focused .di-palette-item-icon {
-  color: var(--di-accent);
-}
-.di-palette-item-label {
-  font-size: 0.85rem;
-  flex: 1;
-  letter-spacing: 0.5px;
-}
-.di-palette-item-shortcut {
-  font-size: 0.6rem;
-  color: var(--di-text-muted);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 1px 7px;
-  border-radius: 4px;
-  letter-spacing: 1px;
-}
-.di-palette-item:hover .di-palette-item-shortcut,
-.di-palette-item.focused .di-palette-item-shortcut {
-  color: var(--di-accent);
-  border-color: rgba(84, 197, 248, 0.3);
-}
-
-/* --- Palette Footer --- */
-.di-palette-footer {
-  display: flex;
-  gap: 14px;
-  padding: 10px 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  margin-top: auto;
-}
-.di-palette-hint {
-  font-size: 0.55rem;
-  color: var(--di-text-muted);
-  letter-spacing: 1px;
-}
-
-/* ============================================================
-   MOBILE (< 640px)
-   ============================================================ */
-@media (max-width: 640px) {
-  .di-header {
-    padding-top: 12px;
-  }
-
-  /* Always compact pill on mobile */
-  .di-container {
-    width: var(--di-width-compact);
-    min-height: var(--di-height-compact);
-    border-radius: var(--di-radius-compact);
-  }
-  .di-header[data-state="compact"] .di-container {
-    width: var(--di-width-compact);
-    min-height: var(--di-height-compact);
-    border-radius: var(--di-radius-compact);
-    padding: 0;
-  }
-  .di-header[data-state="compact"] .di-main-row {
+  .di {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
     justify-content: center;
-    padding: 0 14px;
-    min-height: var(--di-height-compact);
-    gap: 0;
+    padding-top: 20px;
+    pointer-events: none;
   }
 
-  /* Hide dot on mobile */
-  .di-container::before {
-    display: none;
-  }
-
-  /* Hide desktop nav/actions */
-  .di-nav,
-  .di-actions {
-    display: none;
-  }
-
-  /* Show ⌘K */
-  .di-compact-search {
-    display: flex;
-  }
-
-  /* Nav open on mobile: island expands */
-  .di-header[data-nav-open="true"] .di-container {
-    width: min(360px, calc(100vw - 24px));
-    min-height: auto;
-    border-radius: 20px;
-    padding: 0;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-  }
-
-  .di-header[data-nav-open="true"] .di-main-row {
-    justify-content: flex-start;
-    padding: 0 14px;
-    min-height: 48px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  /* Close button replaces ⌘K */
-  .di-header[data-nav-open="true"] .di-compact-search {
-    position: absolute;
-    right: 10px;
-    opacity: 1;
+  /* ---- The capsule ---- */
+  .di-pill {
     pointer-events: auto;
+    position: relative;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 46px;
+    width: 104px;
+    padding: 0 16px;
+    background: #0a0a0a;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+      0 12px 34px rgba(0, 0, 0, 0.5),
+      0 3px 10px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    transition:
+      width 0.44s cubic-bezier(0.34, 1.4, 0.5, 1),
+      box-shadow 0.3s ease;
+    will-change: width;
   }
 
-  /* Show nav links vertically inside island */
-  .di-header[data-nav-open="true"] .di-nav {
+  .di-pill:focus-visible {
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.55),
+      0 12px 34px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ---- Compact contents: dot + slider bar ---- */
+  .di-compact {
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 2px;
-    width: 100%;
-    padding: 10px 14px 14px;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 0.16s ease;
+  }
+
+  .di-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffffff, #cfcfcf);
+    box-shadow:
+      0 0 6px rgba(255, 255, 255, 0.4),
+      0 0 1px rgba(255, 255, 255, 0.9);
+    animation: di-pulse 2.6s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes di-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(255, 255, 255, 0.4); }
+    50% { opacity: 0.65; box-shadow: 0 0 10px rgba(255, 255, 255, 0.55); }
+  }
+
+  .di-bar {
+    width: 34px;
+    height: 5px;
+    border-radius: 999px;
+    background: #3a3a3d;
+    flex-shrink: 0;
+  }
+
+  /* ---- Expanded nav links ---- */
+  .di-nav {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 12px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.18s ease, visibility 0s 0.2s;
+  }
+
+  .di-link {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    color: rgba(255, 255, 255, 0.68);
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 999px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .di-link:hover,
+  .di-link:focus-visible {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    outline: none;
+  }
+
+  /* ---- Theme toggle button ---- */
+  .di-theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    margin-left: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.68);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease,
+      opacity 0.2s ease,
+      transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .di-theme-toggle:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .di-theme-toggle .icon-moon {
+    display: none;
+  }
+
+  [data-theme="dark"] .di-theme-toggle .icon-sun {
+    display: none;
+  }
+
+  [data-theme="dark"] .di-theme-toggle .icon-moon {
+    display: block;
+  }
+
+  /* ---- OPEN STATE (hover on desktop, click anywhere) ---- */
+  .di[data-open="true"] .di-pill {
+    width: min(480px, calc(100vw - 32px));
+  }
+
+  .di[data-open="true"] .di-compact {
+    opacity: 0;
+  }
+
+  .di[data-open="true"] .di-nav {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.2s ease 0.12s, visibility 0s 0.12s;
   }
 
-  .di-header[data-nav-open="true"] .di-nav-link {
-    width: 100%;
-    text-align: center;
-    padding: 12px 16px;
-    font-size: 0.95rem;
-    border-radius: 12px;
+  .di[data-open="true"] .di-link,
+  .di[data-open="true"] .di-theme-toggle {
     opacity: 1;
     transform: translateY(0);
-    transition-delay: calc(0.2s + var(--i, 0) * 0.06s);
+    transition-delay: calc(0.16s + var(--i, 0) * 0.04s);
   }
 
-  .di-header[data-nav-open="true"] .di-nav-link:hover,
-  .di-header[data-nav-open="true"] .di-nav-link:focus-visible {
-    background: var(--di-accent-bg);
-    color: var(--di-text);
+  /* Desktop: expand on hover */
+  @media (hover: hover) and (pointer: fine) {
+    .di-pill:hover {
+      width: min(480px, calc(100vw - 32px));
+    }
+    .di-pill:hover .di-compact { opacity: 0; }
+    .di-pill:hover .di-nav {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 0.2s ease 0.12s, visibility 0s 0.12s;
+    }
+    .di-pill:hover .di-link,
+    .di-pill:hover .di-theme-toggle {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: calc(0.16s + var(--i, 0) * 0.04s);
+    }
   }
 
-  /* Hide indicator on mobile */
-  .di-indicator {
-    display: none;
+  @media (max-width: 480px) {
+    .di { padding-top: 14px; }
+    .di-link { font-size: 0.85rem; padding: 6px 11px; }
   }
 
-  /* Hide palette on mobile */
-  .di-palette {
-    display: none;
+  @media (prefers-reduced-motion: reduce) {
+    .di-pill, .di-nav, .di-link, .di-dot, .di-theme-toggle { transition: none; animation: none; }
   }
-}
-
-/* ============================================================
-   TABLET
-   ============================================================ */
-@media (min-width: 641px) and (max-width: 820px) {
-  .di-container {
-    --di-width-expanded: min(680px, calc(100vw - 24px));
-  }
-  .di-nav {
-    gap: 0;
-  }
-  .di-nav-link {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-  }
-  .di-actions {
-    gap: 4px;
-  }
-}
-
-/* ============================================================
-   SMALL MOBILE
-   ============================================================ */
-@media (max-width: 400px) {
-  .di-container {
-    --di-width-compact: 190px;
-  }
-  .di-logo-text {
-    font-size: 0.95rem;
-  }
-}
-
-/* ============================================================
-   REDUCED MOTION
-   ============================================================ */
-@media (prefers-reduced-motion: reduce) {
-  .di-container,
-  .di-main-row,
-  .di-nav,
-  .di-nav-link,
-  .di-actions,
-  .di-social-btn,
-  .di-search-btn,
-  .di-compact-search,
-  .di-palette,
-  .di-palette-header,
-  .di-palette-search,
-  .di-palette-item,
-  .di-palette-footer {
-    transition: none !important;
-    animation: none !important;
-  }
-}
 </style>
 
 <script>
-// ============================================================
-// Dynamic Island — State Orchestration
-// ============================================================
-(function () {
-  "use strict";
+  (function () {
+    const di = document.getElementById("di");
+    const pill = document.getElementById("di-pill");
+    const themeToggle = document.getElementById("theme-toggle");
+    if (!di || !pill) return;
 
-  // --- DOM refs ---
-  const header = document.getElementById("di-header");
-  const container = document.getElementById("di-container");
-  const nav = document.getElementById("di-nav");
-  const indicator = document.getElementById("di-indicator");
-  const navLinks = document.querySelectorAll(".di-nav-link");
-  const searchBtn = document.getElementById("di-search-btn");
-  const compactSearch = document.getElementById("di-compact-search");
-  const palette = document.getElementById("di-palette");
-  const paletteInput = document.getElementById("di-palette-input");
-  const paletteItems = document.querySelectorAll(".di-palette-item");
-
-  // --- State ---
-  let isNavOpen = false;
-  let isPaletteOpenState = false;
-  let paletteFocusIndex = -1;
-  let activeSection = "";
-  let prefersReducedMotion = false;
-
-  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  prefersReducedMotion = motionQuery.matches;
-  motionQuery.addEventListener("change", () => {
-    prefersReducedMotion = motionQuery.matches;
-  });
-
-  const SECTION_IDS = [
-    ...new Set(Array.from(navLinks).map(function (l) { return l.dataset.section; })),
-  ];
-
-  // ==========================================================
-  // ACTIVE SECTION
-  // ==========================================================
-  function updateIndicator(activeLink) {
-    if (!indicator || !activeLink || prefersReducedMotion) return;
-    if (nav.offsetParent === null) return;
-    var navRect = nav.getBoundingClientRect();
-    var linkRect = activeLink.getBoundingClientRect();
-    indicator.style.width = linkRect.width + "px";
-    indicator.style.transform = "translateX(" + (linkRect.left - navRect.left) + "px)";
-  }
-
-  function setActiveSection(id) {
-    if (id === activeSection) return;
-    activeSection = id;
-    navLinks.forEach(function (link) {
-      var isActive = link.dataset.section === id;
-      link.classList.toggle("active", isActive);
-      if (isActive) updateIndicator(link);
-    });
-  }
-
-  var sectionObserver = new IntersectionObserver(
-    function (entries) {
-      var bestEntry = null;
-      var bestRatio = 0;
-      entries.forEach(function (entry) {
-        if (entry.intersectionRatio > bestRatio) {
-          bestRatio = entry.intersectionRatio;
-          bestEntry = entry;
-        }
-      });
-      if (bestEntry && bestRatio > 0.15) {
-        setActiveSection(bestEntry.target.id);
-      }
-    },
-    { threshold: [0.15, 0.3, 0.5, 0.7], rootMargin: "-80px 0px -20% 0px" }
-  );
-
-  SECTION_IDS.forEach(function (id) {
-    var el = document.getElementById(id);
-    if (el) {
-      sectionObserver.observe(el);
+    // ---- Theme ----
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.documentElement.setAttribute("data-theme", savedTheme);
     } else {
-      var fallback = document.querySelector("[id='" + id + "'], [data-section='" + id + "']");
-      if (fallback) sectionObserver.observe(fallback);
-    }
-  });
-
-  // ==========================================================
-  // NAV TOGGLE (mobile tap / desktop click)
-  // ==========================================================
-  function openNav() {
-    isNavOpen = true;
-    header.dataset.navOpen = "true";
-    header.dataset.state = "compact";
-  }
-
-  function closeNav() {
-    isNavOpen = false;
-    header.dataset.navOpen = "false";
-    header.dataset.state = "compact";
-  }
-
-  function toggleNav() {
-    if (isPaletteOpenState) return;
-    if (isNavOpen) {
-      closeNav();
-    } else {
-      openNav();
-    }
-  }
-
-  // ==========================================================
-  // COMMAND PALETTE — Unfold / fold with sequencing
-  // ==========================================================
-  function openPalette() {
-    if (isPaletteOpenState) return;
-    isPaletteOpenState = true;
-    if (isNavOpen) closeNav();
-
-    // Ensure we're in compact state
-    header.dataset.state = "compact";
-
-    // Trigger phase 1: Nav fades out (CSS handles immediately),
-    // palette max-height expands (CSS handles with 0.12s delay)
-    header.dataset.paletteOpen = "true";
-
-    paletteFocusIndex = -1;
-    updatePaletteFocus();
-
-    // Focus input after animations settle
-    setTimeout(function () {
-      if (paletteInput) paletteInput.focus();
-    }, 450);
-  }
-
-  function closePalette() {
-    if (!isPaletteOpenState) return;
-    // Trigger closing animation (reverse order)
-    header.dataset.paletteOpen = "closing";
-
-    if (paletteInput) {
-      paletteInput.value = "";
-      paletteInput.blur();
+      // Default: light on homepage, dark on /letters
+      const isLetters = window.location.pathname.startsWith("/letters");
+      document.documentElement.setAttribute("data-theme", isLetters ? "dark" : "light");
     }
 
-    // Reset search filter
-    paletteItems.forEach(function (item) {
-      item.style.display = "";
+    themeToggle?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const current = document.documentElement.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
     });
 
-    // After closing animation completes, reset state
-    setTimeout(function () {
-      isPaletteOpenState = false;
-      paletteFocusIndex = -1;
-      updatePaletteFocus();
-      header.dataset.paletteOpen = "false";
-      header.dataset.state = "compact";
-    }, 750); // match closing animation total duration
-  }
+    // ---- Island expand/collapse ----
+    function open() {
+      di.dataset.open = "true";
+      pill.setAttribute("aria-expanded", "true");
+    }
+    function close() {
+      di.dataset.open = "false";
+      pill.setAttribute("aria-expanded", "false");
+    }
+    function toggle() {
+      di.dataset.open === "true" ? close() : open();
+    }
 
-  function updatePaletteFocus() {
-    paletteItems.forEach(function (item, i) {
-      item.classList.toggle("focused", i === paletteFocusIndex);
-    });
-  }
-
-  function movePaletteFocus(direction) {
-    var visible = Array.from(paletteItems).filter(function (item) {
-      return item.style.display !== "none";
-    });
-    if (visible.length === 0) return;
-    var currentIndex = visible.indexOf(paletteItems[paletteFocusIndex]);
-    if (currentIndex === -1) currentIndex = direction > 0 ? -1 : 0;
-    var nextIndex = (currentIndex + direction + visible.length) % visible.length;
-    var globalIndex = Array.from(paletteItems).indexOf(visible[nextIndex]);
-    paletteFocusIndex = globalIndex;
-    updatePaletteFocus();
-    visible[nextIndex].scrollIntoView({ block: "nearest" });
-  }
-
-  // ==========================================================
-  // EVENT BINDING
-  // ==========================================================
-
-  // --- Container click: compact → nav (mobile) or palette (⌘K) ---
-  container.addEventListener("click", function (e) {
-    if (isPaletteOpenState) return;
-
-    // ⌘K button opens palette (desktop only)
-    if (e.target.closest("#di-compact-search")) {
-      e.preventDefault();
-      if (window.innerWidth > 640) {
-        openPalette();
-      } else {
-        toggleNav();
+    // Click / tap toggles (primary interaction on touch, secondary on desktop)
+    pill.addEventListener("click", (e) => {
+      // let link clicks navigate + close
+      if (e.target.closest(".di-link")) {
+        close();
+        return;
       }
-      return;
-    }
+      // let theme toggle work without collapsing
+      if (e.target.closest("#theme-toggle")) {
+        return;
+      }
+      toggle();
+    });
 
-    // Search button opens palette (desktop only)
-    if (e.target.closest("#di-search-btn")) {
-      e.preventDefault();
-      openPalette();
-      return;
-    }
-
-    // On mobile, tapping the compact pill toggles nav
-    if (window.innerWidth <= 640) {
-      var link = e.target.closest("a");
-      // Clicking a nav link when already open → let it navigate
-      if (link && isNavOpen && !link.classList.contains("di-logo")) return;
-      // Logo in nav-open state → don't navigate, close nav instead
-      if (link && link.classList.contains("di-logo")) {
+    // Keyboard: Enter/Space toggles, Escape closes
+    pill.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        if (isNavOpen) { closeNav(); return; }
-      }
-      if (isNavOpen && !e.target.closest(".di-main-row")) return;
-      e.preventDefault();
-      toggleNav();
-    }
-  });
-
-  // --- Keyboard: ⌘K / Ctrl+K to toggle palette ---
-  document.addEventListener("keydown", function (e) {
-    if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-      e.preventDefault();
-      if (isPaletteOpenState) {
-        closePalette();
-      } else {
-        openPalette();
-      }
-    }
-
-    // Escape
-    if (e.key === "Escape") {
-      if (isPaletteOpenState) {
-        closePalette();
-      } else if (isNavOpen && window.innerWidth <= 640) {
-        closeNav();
-      }
-    }
-  });
-
-  // --- Palette keyboard navigation ---
-  document.addEventListener("keydown", function (e) {
-    if (!isPaletteOpenState) return;
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      movePaletteFocus(1);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      movePaletteFocus(-1);
-    } else if (e.key === "Enter" && paletteFocusIndex >= 0) {
-      e.preventDefault();
-      var item = paletteItems[paletteFocusIndex];
-      if (item && item.style.display !== "none") {
-        // Blur input to allow navigation
-        if (paletteInput) paletteInput.blur();
-        closePalette();
-        // Navigate after palette closes
-        setTimeout(function () {
-          item.click();
-        }, 300);
-      }
-    }
-  });
-
-  // --- Close palette when clicking outside ---
-  document.addEventListener("click", function (e) {
-    if (!isPaletteOpenState) return;
-    if (!e.target.closest("#di-palette") && !e.target.closest(".di-container")) {
-      closePalette();
-    }
-  });
-
-  // --- Palette item click closes palette ---
-  paletteItems.forEach(function (item) {
-    item.addEventListener("click", function () {
-      closePalette();
-    });
-  });
-
-  // --- Palette search filter ---
-  if (paletteInput) {
-    paletteInput.addEventListener("input", function () {
-      var query = paletteInput.value.toLowerCase();
-      paletteItems.forEach(function (item) {
-        var label = (item.querySelector(".di-palette-item-label") || {}).textContent || "";
-        item.style.display = label.toLowerCase().includes(query) ? "" : "none";
-      });
-      paletteFocusIndex = -1;
-      updatePaletteFocus();
-    });
-  }
-
-  // --- Close palette on resize to mobile ---
-  window.addEventListener("resize", function () {
-    if (isPaletteOpenState && window.innerWidth <= 640) {
-      closePalette();
-    }
-  });
-
-  // --- Mobile: close nav when clicking a link ---
-  navLinks.forEach(function (link) {
-    link.addEventListener("click", function () {
-      if (window.innerWidth <= 640 && isNavOpen) {
-        closeNav();
+        toggle();
+      } else if (e.key === "Escape") {
+        close();
+        pill.blur();
       }
     });
-  });
 
-  // ==========================================================
-  // WINDOW EVENTS
-  // ==========================================================
+    // Close when clicking/tapping outside
+    document.addEventListener("click", (e) => {
+      if (di.dataset.open === "true" && !e.target.closest("#di-pill")) close();
+    });
 
-  var resizeTimer;
-  window.addEventListener("resize", function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
-      if (activeSection) {
-        var active = document.querySelector(".di-nav-link.active");
-        if (active) updateIndicator(active);
-      }
-    }, 100);
-  });
-
-  // ==========================================================
-  // INIT
-  // ==========================================================
-
-  var firstLink = navLinks[0];
-  if (firstLink) {
-    setTimeout(function () {
-      if (!activeSection && firstLink) {
-        firstLink.classList.add("active");
-        updateIndicator(firstLink);
-      }
-    }, 50);
-  }
-
-  console.log("✦ Dynamic Island — 3-state morphing header initialized");
-})();
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+  })();
 </script>
