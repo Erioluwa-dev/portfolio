@@ -1,0 +1,194 @@
+---
+// Repos — a wide card of repository cards.
+//
+// ─────────────────────────────────────────────────────────────
+//  DATA: replace this static array with live GitHub API results.
+//  Example (build-time fetch, add at the top of this frontmatter):
+//
+//    const res = await fetch(
+//      "https://api.github.com/users/Erioluwa-dev/repos?sort=updated&per_page=6"
+//    );
+//    const data = await res.json();
+//    const repos = data.map((r) => ({
+//      name: r.name,
+//      desc: r.description ?? "",
+//      stars: r.stargazers_count,
+//      language: r.language ?? "—",
+//      url: r.html_url,
+//    }));
+//
+//  The markup below only depends on { name, desc, stars, language, url }.
+// ─────────────────────────────────────────────────────────────
+const repos = [
+  {
+    name: "CourtVision",
+    desc: "Conversational AI basketball analyst — tracks players with YOLOv8 + DeepSORT and delivers real-time play-by-play.",
+    stars: 0,
+    language: "Python",
+    url: "https://github.com/Erioluwa-dev/CourtVision",
+  },
+  {
+    name: "YEMS",
+    desc: "Offline-first school management system built for low-connectivity environments. Six-container Docker setup.",
+    stars: 0,
+    language: "TypeScript",
+    url: "https://github.com/Erioluwa-dev",
+  },
+  {
+    name: "todo-app",
+    desc: "CRUD fundamentals — where it started. Clean React + TypeScript task manager.",
+    stars: 0,
+    language: "TypeScript",
+    url: "https://github.com/Erioluwa-dev/todo-app",
+  },
+  {
+    name: "portfolio",
+    desc: "This site. Astro, hand-built components, and a monochrome design system.",
+    stars: 0,
+    language: "Astro",
+    url: "https://github.com/Erioluwa-dev",
+  },
+];
+
+// Small monochrome dots keep the palette neutral while distinguishing languages.
+const langDot = {
+  Python: "#4a4a4a",
+  TypeScript: "#2b2b2b",
+  Astro: "#1a1a1a",
+  JavaScript: "#5a5a5a",
+};
+---
+
+<section id="repos" class="surface-card repos">
+  <div class="repos-head">
+    <h2 class="card-label">Repos</h2>
+    <a
+      class="repos-all"
+      href="https://github.com/Erioluwa-dev"
+      target="_blank"
+      rel="noopener noreferrer"
+    >View all &rarr;</a>
+  </div>
+
+  <div class="repo-grid">
+    {repos.map((r) => (
+      <a class="repo-card" href={r.url} target="_blank" rel="noopener noreferrer">
+        <div class="repo-top">
+          <span class="repo-name">{r.name}</span>
+          <span class="repo-stars">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            {r.stars}
+          </span>
+        </div>
+        <p class="repo-desc">{r.desc}</p>
+        <div class="repo-lang">
+          <span class="repo-lang-dot" style={`background:${langDot[r.language] ?? "#6a6a6a"}`}></span>
+          {r.language}
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .repos { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .repos-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .repos-all {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: color 0.15s ease;
+    white-space: nowrap;
+  }
+  .repos-all:hover { color: var(--text); }
+
+  .repo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+
+  .repo-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 1.1rem 1.2rem;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .repo-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  html[data-theme="dark"] .repo-card:hover {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .repo-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .repo-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .repo-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .repo-desc {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    flex: 1;
+  }
+
+  .repo-lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .repo-lang-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 560px) {
+    .repo-grid { grid-template-columns: 1fr; }
+  }
+</style>
