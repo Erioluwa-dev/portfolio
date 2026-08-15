@@ -1,29 +1,29 @@
 ---
 const pageItems = [
   { label: "Overview / Home", description: "LinkedIn x GitHub hybrid profile dashboard", href: "/" },
-  { label: "About", description: "Learn about Damilare's background & systems focus", href: "/#about" },
-  { label: "Projects & Repositories", description: "Inspect open-source software, kernels, & compilers", href: "/#projects" },
-  { label: "Resume", description: "Work experience, education, & credentials", href: "/resume" },
+  { label: "About", description: "Learn about Erioluwa's background & path", href: "/#about" },
+  { label: "Projects & Repositories", description: "Inspect open-source software and projects", href: "/#repos" },
   { label: "Blog", description: "Technical articles and engineering posts", href: "/letters" },
-  { label: "Wiki", description: "Personal systems engineering wiki", href: "/wiki" },
-  { label: "Uses & Setup", description: "Hardware, OS config, & developer environment", href: "/uses" },
-  { label: "Contact", description: "Get in touch / Hire Damilare", href: "/contact" },
+  { label: "Contact", description: "Get in touch / Hire Erioluwa", href: "/#contact" },
 ];
 
 const projectItems = [
-  { label: "Karion OS", description: "bare-metal x86 operating system kernel written in rust", href: "https://github.com/erioluwafawehinmi/karion-os" },
-  { label: "carv", description: "systems programming language that compiles to c", href: "https://github.com/erioluwafawehinmi/carv" },
-  { label: "ignite", description: "hardware-isolated microvm sandboxing runtime in rust", href: "https://github.com/erioluwafawehinmi/ignite" },
-  { label: "gnn-recommender", description: "graph neural network recommendation engine in pytorch", href: "https://github.com/erioluwafawehinmi/gnn-recommender" },
-  { label: "qirrel", description: "nlp framework for text analysis", href: "https://github.com/erioluwafawehinmi/qirrel" },
-  { label: "gim", description: "system metrics cli tool in rust", href: "https://github.com/erioluwafawehinmi/gim" },
-  { label: "zario", description: "fast logging solution for typescript", href: "https://github.com/erioluwafawehinmi/zario" },
+  { label: "CourtVision", description: "Conversational AI basketball analyst tracks players with YOLOv8 + DeepSORT", href: "https://github.com/Erioluwa-dev/CourtVision" },
+  { label: "YEMS", description: "Offline-first school management system for low-connectivity environments", href: "https://github.com/Erioluwa-dev" },
+  { label: "todo-app", description: "React + TypeScript task manager showcasing CRUD fundamentals", href: "https://github.com/Erioluwa-dev/todo-app" },
+  { label: "portfolio", description: "This site's source: Astro & monochrome design system", href: "https://github.com/Erioluwa-dev" },
+];
+
+const letterItems = [
+  { label: "Building CourtVision: A 26-Week Solo Journey", description: "Reflections on building a basketball analytics platform from scratch", href: "/letters/building-courtvision" },
+  { label: "Why I Chose Astro for My Portfolio", description: "Why Astro became the foundation for my personal site over Next.js and Vite", href: "/letters/why-astro" },
+  { label: "The Art of Shipping Solo Projects", description: "Perfectionism is the enemy of shipping. How to ship early and iterate", href: "/letters/shipping-solo-projects" },
 ];
 
 const connectItems = [
-  { label: "github", description: "@dev-dami", href: "https://github.com/erioluwafawehinmi" },
-  { label: "linkedin", description: "professional profile", href: "https://linkedin.com/in/damilarefawehinmi" },
-  { label: "email", description: "dami@varityweb.com", href: "mailto:dami@varityweb.com" },
+  { label: "github", description: "@Erioluwa-dev", href: "https://github.com/Erioluwa-dev" },
+  { label: "instagram", description: "@stay.with.eri", href: "https://instagram.com/stay.with.eri" },
+  { label: "email", description: "erioluwafawehinmi@gmail.com", href: "mailto:erioluwafawehinmi@gmail.com" },
 ];
 ---
 
@@ -84,6 +84,26 @@ const connectItems = [
             class="cmdk-item"
             data-index={i}
             data-section="projects"
+          >
+            <div class="cmdk-item-content">
+              <span class="cmdk-item-label">{item.label}</span>
+              <span class="cmdk-item-description">{item.description}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Letters section -->
+    <div class="cmdk-section" data-section="letters">
+      <div class="cmdk-section-label">// letters</div>
+      <div class="cmdk-items">
+        {letterItems.map((item, i) => (
+          <a
+            href={item.href}
+            class="cmdk-item"
+            data-index={i}
+            data-section="letters"
           >
             <div class="cmdk-item-content">
               <span class="cmdk-item-label">{item.label}</span>
