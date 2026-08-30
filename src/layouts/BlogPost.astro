@@ -1,8 +1,5 @@
 ---
 import Layout from './Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
-import CommandPalette from '../components/CommandPalette.astro';
 
 interface Props {
   title: string;
@@ -10,156 +7,129 @@ interface Props {
 }
 
 const { title, date } = Astro.props;
+
+const formatted = new Date(date).toLocaleDateString('en-GB', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+});
 ---
 
 <Layout title={`${title} — Letters`}>
-  <Navbar />
-  <CommandPalette />
+  <div class="shell">
+    <article class="bento">
+      <div class="col-12">
+        <div class="card card-teal post-head">
+          <a class="back" href="/letters">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 12H6M11 18l-6-6 6-6" />
+            </svg>
+            <span class="tag">All letters</span>
+          </a>
+          <h1 class="h2 post-title">{title}</h1>
+          <span class="tag post-date">{formatted}</span>
+        </div>
+      </div>
 
-  <main class="blog-post-page">
-    <article class="blog-post">
-      <a href="/letters" class="back-link">&larr; Back to Letters</a>
+      <div class="col-8">
+        <div class="card post-body prose">
+          <slot />
+        </div>
+      </div>
 
-      <header class="post-header">
-        <time class="post-date">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
-        <h1 class="post-title">{title}</h1>
-      </header>
-
-      <div class="post-content">
-        <slot />
+      <div class="col-4 stretch">
+        <div class="card card-bare post-aside">
+          <p class="hand aside-note">Written by</p>
+          <p class="h3 aside-name">Fawehinmi Erioluwa</p>
+          <p class="muted aside-body">
+            Frontend engineer in Lagos. Currently building CourtVision.
+          </p>
+          <a class="btn btn-ghost aside-btn" href="/contact">Get in touch</a>
+        </div>
       </div>
     </article>
-
-    <Footer />
-  </main>
+  </div>
 </Layout>
 
 <style>
-  .blog-post-page {
-    padding-top: 72px;
-    padding-left: 230px;
-    padding-right: 4rem;
-    position: relative;
-    z-index: 1;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
+  .stretch { display: flex; }
+  .stretch > :global(*) { flex: 1; }
 
-  .blog-post {
-    max-width: 640px;
-    margin: 0 auto;
-    flex: 1;
-  }
+  .post-head { gap: 14px; }
 
-  .back-link {
-    display: inline-block;
-    font-size: 0.85rem;
-    color: var(--text-muted);
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
     text-decoration: none;
-    letter-spacing: 0.5px;
-    margin-bottom: 3rem;
-    transition: color 0.15s;
+    opacity: 0.75;
+    transition: opacity 0.18s ease, transform 0.18s ease;
   }
 
-  .back-link:hover {
-    color: var(--accent);
+  .back:hover { opacity: 1; transform: translateX(-3px); }
+
+  .post-title { max-width: 22ch; }
+  .post-date { opacity: 0.7; }
+
+  .post-body { gap: 0; }
+
+  .post-body :global(p) {
+    margin: 0 0 1.15em;
+    font-size: 1.02rem;
+    line-height: 1.75;
+    max-width: 68ch;
   }
 
-  .post-header {
-    margin-bottom: 3rem;
-  }
+  .post-body :global(p:last-child) { margin-bottom: 0; }
 
-  .post-date {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 1rem;
-  }
-
-  .post-title {
-    font-size: 2.25rem;
-    color: var(--text);
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.5px;
-  }
-
-  .post-content {
-    font-size: 1.05rem;
-    color: var(--text-muted);
-    line-height: 1.8;
-  }
-
-  .post-content :global(h2) {
-    font-size: 1.5rem;
-    color: var(--text);
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
+  .post-body :global(h2) {
+    font-family: var(--display);
+    font-size: var(--fs-h3);
     font-weight: 600;
+    font-variation-settings: 'BNCE' 22, 'INFM' 24;
+    line-height: 1.24;
+    margin: 1.8em 0 0.55em;
   }
 
-  .post-content :global(h3) {
-    font-size: 1.25rem;
-    color: var(--text);
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
-    font-weight: 600;
+  .post-body :global(h2:first-child) { margin-top: 0; }
+
+  .post-body :global(a) {
+    color: var(--live);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
-  .post-content :global(p) {
-    margin-bottom: 1.5rem;
+  .post-body :global(ul),
+  .post-body :global(ol) {
+    margin: 0 0 1.15em;
+    padding-left: 1.2em;
+    line-height: 1.75;
   }
 
-  .post-content :global(a) {
-    color: var(--accent);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.15s;
+  .post-body :global(li) { margin-bottom: 0.4em; }
+
+  .post-body :global(blockquote) {
+    margin: 1.4em 0;
+    padding: 4px 0 4px 20px;
+    border-left: 3px solid var(--amber);
+    font-family: var(--hand);
+    font-size: 1.3rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
   }
 
-  .post-content :global(a:hover) {
-    border-bottom-color: var(--accent);
+  .post-body :global(code) {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: var(--paper);
   }
 
-  .post-content :global(code) {
-    background: var(--bg-subtle);
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    font-size: 0.9em;
-  }
-
-  .post-content :global(pre) {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1.25rem;
-    overflow-x: auto;
-    margin-bottom: 1.5rem;
-  }
-
-  .post-content :global(pre code) {
-    background: transparent;
-    padding: 0;
-  }
-
-  .post-content :global(blockquote) {
-    border-left: 3px solid var(--accent);
-    padding-left: 1.25rem;
-    margin: 1.5rem 0;
-    color: var(--text-muted);
-    font-style: italic;
-  }
-
-  .post-content :global(ul),
-  .post-content :global(ol) {
-    margin-bottom: 1.5rem;
-    padding-left: 1.5rem;
-  }
-
-  .post-content :global(li) {
-    margin-bottom: 0.5rem;
-  }
+  .post-aside { gap: 6px; justify-content: center; }
+  .aside-note { margin: 0; font-size: 1.3rem; color: var(--ink-soft); }
+  .aside-name { margin: 0; }
+  .aside-body { margin: 8px 0 0; font-size: 0.9rem; }
+  .aside-btn { margin-top: 18px; align-self: flex-start; }
 </style>
