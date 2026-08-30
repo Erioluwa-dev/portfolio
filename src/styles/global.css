@@ -69,19 +69,27 @@
      viewport is not, so viewport units drop a 68px headline into a
      476px card — which is most of why the small panels looked jammed.
      Everything below display size stays on the 16 · φ^(n/3) steps. */
-  /* Every step carries ~1.2 over the derived scale. Caveat's x-height is
-     small enough that the old numbers would have set reading copy a full
-     tier below where it reads. */
-  --fs-micro: 0.88rem;   /* 14.1 */
-  --fs-small: 1.02rem;   /* 16.3 */
-  --fs-body:  1.2rem;    /* 19.2 */
-  --fs-lead:  1.4rem;    /* 22.4 */
+/* Every step carries ~1.1 over the derived scale — enough to answer
+     Caveat's small x-height, and no more.
+
+     The tiers that can grow tall are also sized against viewport HEIGHT,
+     not just card width. A panel is 100dvh minus fixed chrome, so on a
+     short laptop the box shrinks while a rem-fixed headline does not —
+     which is exactly how the cards ended up scrolling. Reading copy
+     carries a floor: it shrinks a little, never below legibility. */
+  --fs-micro: 0.8rem;    /* 12.8 */
+  --fs-small: 0.94rem;   /* 15.0 */
+  /* One hop through --vh so the height term can be pinned in a test
+     harness; in the browser it is exactly 1svh. */
+  --vh: 1svh;
+  --fs-body:  clamp(1rem, calc(2 * var(--vh)), 1.1rem);       /* 16 → 17.6 */
+  --fs-lead:  clamp(1.06rem, calc(2.3 * var(--vh)), 1.28rem); /* 17 → 20.5 */
   /* The display tiers run ~1.12 over the derived scale: Caveat and Grape
      Nuts both sit small in the em, and matching the sans optically matters
      more than matching it numerically. */
-  --fs-h3:    1.72rem;   /* 27.5 */
-  --fs-h2:    clamp(1.8rem, 4.9cqi, 2.9rem);      /* → 46.4 */
-  --fs-display: clamp(2.35rem, 8.4cqi, 4.75rem);  /* → 76   */
+  --fs-h3:    clamp(1.3rem, calc(2.7 * var(--vh)), 1.55rem);  /* 20.8 → 24.8 */
+  --fs-h2:    clamp(1.5rem, min(4.6cqi, calc(4.4 * var(--vh))), 2.6rem);    /* → 41.6 */
+  --fs-display: clamp(2.1rem, min(7.8cqi, calc(7.6 * var(--vh))), 4.2rem);  /* → 67.2 */
 
   /* ── Chrome heights ──
      head + foot = 89 + 55 = 144 = --sp-7, so a panel's usable height
@@ -98,7 +106,7 @@
   /* Cards carrying a display headline get the wider inset; everything
      else stays on --pad. One padding for every card size is what made
      big claims feel boxed in and small notes feel over-padded. */
-  --pad:    var(--sp-4);
+  --pad:    clamp(var(--sp-3), calc(3.2 * var(--vh)), var(--sp-4));
   --pad-lg: var(--sp-5);
 
   /* ── Faces ── */
@@ -178,6 +186,13 @@ html[data-theme="dark"] {
   :root {
     --pad:    var(--sp-3);
     --pad-lg: var(--sp-4);
+
+    --fs-body:  1.1rem;
+    --fs-lead:  1.28rem;
+    --fs-h3:    1.55rem;
+    --fs-h2:    clamp(1.7rem, 4.6cqi, 2.6rem);
+    --fs-display: clamp(2.2rem, 7.8cqi, 4.2rem);
+
     --r-lg:   22px;
     --head-h: 76px;
     --foot-h: 72px;
@@ -212,6 +227,13 @@ html[data-theme="dark"] {
    for anyone who has asked not to be moved. */
 @media (prefers-reduced-motion: reduce) {
   :root {
+
+    --fs-body:  1.1rem;
+    --fs-lead:  1.28rem;
+    --fs-h3:    1.55rem;
+    --fs-h2:    clamp(1.7rem, 4.6cqi, 2.6rem);
+    --fs-display: clamp(2.2rem, 7.8cqi, 4.2rem);
+
     --rail-flow:    column;
     --rail-h:       auto;
     --rail-pad:     var(--head-h) var(--rail-gutter) calc(var(--foot-h) + var(--sp-4));
@@ -244,10 +266,11 @@ body {
   color: var(--ink);
   font-family: var(--body);
   font-size: var(--fs-body);
-  /* A script at 400 goes spidery in a paragraph, and joined letterforms
-     need the leading opened before lines stop tangling. */
+  /* A script at 400 goes spidery in a paragraph, so the weight stays up.
+     1.55 is the low end of the readable band for body text and the one
+     lever here that buys height back without touching size. */
   font-weight: 500;
-  line-height: 1.72;
+  line-height: 1.55;
   font-variation-settings: normal;
   -webkit-font-smoothing: antialiased;
   transition: background 0.35s ease, color 0.35s ease;
@@ -365,7 +388,9 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   container-type: inline-size;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  /* The gaps add up: a project card stacks six children, so a few pixels
+     each is most of a line of copy on a short panel. */
+  gap: clamp(var(--sp-1), calc(1.45 * var(--vh)), var(--sp-2));
   padding: var(--pad);
   border-radius: var(--r-lg);
   background: var(--chalk);
@@ -381,8 +406,10 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
 
 .card-tight { padding: var(--sp-3); }
 
-/* A card whose job is to carry the claim gets the room to carry it. */
-.card-hero { padding: var(--pad-lg); gap: var(--sp-3); }
+/* A card whose job is to carry the claim gets the room to carry it —
+   but at --sp-5 the inset alone was taking 110px of vertical budget on a
+   panel that cannot grow. One step down, and the gap with it. */
+.card-hero { padding: var(--sp-4); gap: var(--sp-2); }
 
 /* Cards that can outgrow their panel scroll inside themselves rather
    than pushing the rail out of shape. */
@@ -410,7 +437,10 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   margin: 0;
   /* Bound the measure first, then balance — balance alone will happily
      set a 60-character single line across a wide card. */
-  max-inline-size: 22ch;
+  /* A ch in Caveat is much narrower than a ch in a sans, so the old
+     measure was setting these headlines a line or two longer than they
+     need to be. Widened to hold the same physical line length. */
+  max-inline-size: 28ch;
   text-wrap: balance;
 }
 
@@ -423,7 +453,7 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   line-height: 1.2;
   letter-spacing: 0;
   margin: 0;
-  max-inline-size: 24ch;
+  max-inline-size: 30ch;
   text-wrap: balance;
 }
 
@@ -442,7 +472,7 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
 /* Tier 4 — reading copy */
 .lead {
   font-size: var(--fs-lead);
-  line-height: 1.62;
+  line-height: 1.5;
   margin: 0;
   text-wrap: pretty;
 }

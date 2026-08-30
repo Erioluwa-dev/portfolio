@@ -186,7 +186,10 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 
   .intro { justify-content: safe center; }
   .greeting { opacity: 0.78; }
-  .intro-lead { max-width: 46ch; }
+  /* 46ch was measured against the old sans; a ch in Caveat is far
+     narrower, so the same cap was forcing this lead an extra line long
+     and pushing the hero card past its panel. */
+  .intro-lead { max-width: 56ch; }
 
   .scroll-hint { margin-top: var(--sp-1); opacity: 0.78; }
 

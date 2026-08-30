@@ -89,14 +89,13 @@ const facts = [
     </div>
   </section>
 
-  <section class="panel panel-md" aria-labelledby="tools-heading">
-    <div class="split">
+  <section class="panel panel-lg" aria-labelledby="tools-heading">
+    <div class="row row-phi">
       <div class="card tools card-scroll">
         <span class="tag muted">The toolkit</span>
         <h2 class="h3" id="tools-heading">What I reach for</h2>
         <p class="body muted tools-note">
-          Grouped by depth. My range is wider than my depth is uniform, and
-          saying so is more useful than a flat list of logos.
+          Grouped by depth, not by preference.
         </p>
 
         <div class="tool-groups">
@@ -139,7 +138,8 @@ const facts = [
   .opener > :global(*) { min-height: 0; }
 
   .head { justify-content: safe center; }
-  .head-lead { max-width: 46ch; opacity: 0.88; }
+  /* Measured against the old sans; a ch in Caveat is far narrower. */
+  .head-lead { max-width: 62ch; opacity: 0.88; }
 
   .beat { justify-content: safe center; }
   .beat-when { color: var(--live-ink); }
@@ -152,11 +152,11 @@ const facts = [
 
   .tools { justify-content: safe center; }
 
-  .tools-note { max-width: 44ch; }
+  .tools-note { max-width: 52ch; }
 
   .tool-groups {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
     gap: var(--sp-3) var(--sp-4);
     margin-top: var(--sp-2);
   }

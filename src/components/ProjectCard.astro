@@ -78,7 +78,9 @@ const Heading = `h${level}` as 'h2' | 'h3';
 
   .project-summary { max-width: 46ch; }
 
-  .project-detail { line-height: 1.62; max-width: 62ch; }
+  /* The longest block of copy on the site; it sets the height of the
+     flagship card, so it reads at the tight end of the body range. */
+  .project-detail { line-height: 1.5; max-width: 62ch; }
 
   /* Pinned to the foot of the card so a row of cards lines its chips up,
      but only when there is slack to give. */
