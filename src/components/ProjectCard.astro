@@ -53,7 +53,7 @@ const p = project;
 </article>
 
 <style>
-  .project { gap: 16px; height: 100%; }
+  .project { gap: var(--sp-2); height: 100%; overflow-y: auto; }
 
   .project-head {
     display: flex;
@@ -72,7 +72,7 @@ const p = project;
   .project-detail {
     margin: 0;
     font-size: var(--fs-body);
-    line-height: 1.68;
+    line-height: 1.62;
     opacity: 0.78;
     max-width: 62ch;
   }
@@ -102,5 +102,5 @@ const p = project;
     padding-top: 4px;
   }
 
-  .is-expanded .project-summary { font-size: 1.2rem; }
+  .is-expanded .project-summary { font-size: var(--fs-lead); }
 </style>
