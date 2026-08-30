@@ -104,35 +104,6 @@ const path = Astro.url.pathname;
     const wide = window.matchMedia("(min-width: 900px)");
     const panels = Array.from(rail.querySelectorAll<HTMLElement>(".panel"));
 
-    // ── Report position so the footer can show where you are ──
-    const bar = document.getElementById("rail-bar");
-    const counter = document.getElementById("rail-counter");
-
-    const report = () => {
-      const travel = rail.scrollWidth - rail.clientWidth;
-      const ratio = travel > 0 ? rail.scrollLeft / travel : 1;
-      if (bar) bar.style.transform = `scaleX(${Math.min(1, Math.max(0.02, ratio || 0.02))})`;
-
-      if (counter && panels.length) {
-        const middle = rail.scrollLeft + rail.clientWidth / 2;
-        let nearest = 0;
-        let best = Infinity;
-        panels.forEach((p, i) => {
-          const distance = Math.abs(p.offsetLeft + p.offsetWidth / 2 - middle);
-          if (distance < best) { best = distance; nearest = i; }
-        });
-        // At either end the rail runs out of travel before the edge panel can
-        // reach the centre, so pin the count there.
-        if (ratio >= 0.995) nearest = panels.length - 1;
-        else if (ratio <= 0.005) nearest = 0;
-        counter.textContent = `${String(nearest + 1).padStart(2, "0")} / ${String(panels.length).padStart(2, "0")}`;
-      }
-    };
-
-    rail.addEventListener("scroll", report, { passive: true });
-    window.addEventListener("resize", report);
-    report();
-
     // ── Wheel: a vertical gesture drives the rail sideways ──
     rail.addEventListener(
       "wheel",
