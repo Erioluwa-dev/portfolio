@@ -15,26 +15,59 @@ export const projects: Project[] = [
   {
     slug: "courtvision",
     name: "CourtVision",
-    kind: "Computer vision · LLM",
+    kind: "Computer vision · Applied ML",
     status: "building",
     summary:
       "A basketball analyst that watches the tape with you and answers questions about what it saw.",
     detail:
-      "CourtVision detects and tracks every player on the floor with YOLOv8 and DeepSORT, reads body position with MediaPipe, and writes what it learns into a per-player tendency database. A Groq-backed LangChain pipeline sits on top so you can ask it plain questions — who drifts left off a screen, who never closes out — and get an answer grounded in the footage. Built solo, on a $0 budget, over 26 weeks.",
-    stack: ["Python", "YOLOv8", "DeepSORT", "MediaPipe", "Groq", "LangChain", "Supabase", "Streamlit"],
+      "The whole pipeline is mine: detection, tracking, team classification, possession inference, then the statistics that fall out of it — trajectories, heatmaps, shot analysis. YOLOv8 and DeepSORT hold identity through traffic, MediaPipe reads body position, and every player's tendencies get written into a database a Groq-backed LangChain layer can be asked about in plain English. Machine learning is the computation here, not an API call bolted onto a UI. Built solo, on a $0 budget, over 26 weeks.",
+    stack: ["Python", "YOLOv8", "DeepSORT", "MediaPipe", "OpenCV", "Groq", "LangChain", "Supabase", "Streamlit"],
     repo: "https://github.com/Erioluwa-dev/CourtVision",
     flagship: true,
   },
   {
     slug: "yems",
     name: "YEMS",
-    kind: "Offline-first platform",
+    kind: "Full-stack platform",
     status: "private",
     summary:
       "School management for places where the connection drops in the middle of registering a student.",
     detail:
-      "The Youth Educational Management System runs offline first and syncs when the network comes back, because that is the actual condition it ships into. Six containers, a Postgres core, and a UI built so a teacher can finish what they started without knowing anything about the network state underneath.",
-    stack: ["Next.js", "TypeScript", "PostgreSQL", "Docker"],
+      "The Youth Educational Management System is the project where I stopped owning only the interface. Auth, the API, the business logic, the Postgres schema, the sync engine, six containers and the deploy — all of it had to be reasoned about together, because offline-first is not a frontend feature. A teacher finishes what they started without ever learning the network state underneath.",
+    stack: ["Next.js", "TypeScript", "Node.js", "PostgreSQL", "Redis", "Docker"],
+  },
+  {
+    slug: "song-graph",
+    name: "Song Graph",
+    kind: "Graph ML · Recommenders",
+    status: "building",
+    summary:
+      "Music recommendation as a graph problem — users and tracks as nodes, taste as the edges between them.",
+    detail:
+      "A graph neural network over a user–item graph, learning embeddings that carry more than a similarity score does: who listens adjacent to whom, and which tracks sit between two scenes. I am not claiming GNN expertise. I am claiming I wanted to understand recommendation from the representation up rather than by importing someone's ranker.",
+    stack: ["Python", "PyTorch", "PyTorch Geometric", "Pandas"],
+  },
+  {
+    slug: "claw-code-parity",
+    name: "claw-code-parity",
+    kind: "Systems · Rust",
+    status: "building",
+    summary:
+      "A deliberate trip outside the TypeScript ecosystem, into a language that will not let things slide.",
+    detail:
+      "Rust for the reason most people pick it up: ownership, lifetimes and an unforgiving compiler teach you what the runtime had been quietly covering for. This is exploration, not a specialisation — but I would rather learn the tool a problem asks for than reshape the problem to fit the tools I already have.",
+    stack: ["Rust", "Cargo"],
+  },
+  {
+    slug: "whatsapp-clone",
+    name: "WhatsApp Clone",
+    kind: "Realtime interface",
+    status: "shipped",
+    summary:
+      "Chat is the honest test of interface work — presence, ordering, and state that never sits still.",
+    detail:
+      "Threads, message state, optimistic sends and a layout that has to stay composed while data arrives out of order. Rebuilding something people use every day is unforgiving in a useful way: the bar is not whether it works, it is whether it feels like the thing.",
+    stack: ["React", "TypeScript", "Realtime", "CSS"],
   },
   {
     slug: "portfolio",
@@ -70,10 +103,29 @@ export const statusLabel: Record<Project["status"], string> = {
 
 export type StackGroup = { group: string; items: string[] };
 
+// Grouped by honest depth rather than by category. Listing Rust beside
+// TypeScript would be a claim I have not earned yet.
 export const stack: StackGroup[] = [
-  { group: "Reach for daily", items: ["TypeScript", "React", "Next.js", "Astro", "CSS"] },
-  { group: "Comfortable in", items: ["Python", "Nuxt.js", "Flutter", "PostgreSQL", "MongoDB"] },
-  { group: "Around the work", items: ["Docker", "Supabase", "Git", "Figma"] },
+  {
+    group: "Deepest — reach for daily",
+    items: ["TypeScript", "React", "Next.js", "Astro", "CSS", "UI/UX"],
+  },
+  {
+    group: "Build the backend with",
+    items: ["Node.js", "Bun", "Hono", "PostgreSQL", "Redis", "REST APIs", "Auth"],
+  },
+  {
+    group: "Growing — real projects, still learning",
+    items: ["Python", "PyTorch", "Computer vision", "YOLO", "OpenCV", "Graph ML"],
+  },
+  {
+    group: "Around the work",
+    items: ["Docker", "Queues", "Object storage", "Supabase", "Git", "Figma"],
+  },
+  {
+    group: "Exploring on purpose",
+    items: ["Rust", "Systems programming"],
+  },
 ];
 
 export type Letter = {

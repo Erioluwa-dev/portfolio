@@ -1,6 +1,6 @@
 # Erioluwa Portfolio
 
-A minimalist, dark-themed personal portfolio for **Fawehinmi Erioluwa** — a 17-year-old, self-taught frontend engineer based in Lagos, Nigeria.
+A minimalist, dark-themed personal portfolio for **Fawehinmi Erioluwa** — a self-taught product engineer based in Lagos, Nigeria — interfaces, backends, and applied machine learning.
 
 ## Stack
 

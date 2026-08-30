@@ -22,22 +22,34 @@ const beats = [
     body: "YEMS had to keep working in a school where the connection drops mid-form. That is when I stopped writing code that only runs on my machine, on my wifi.",
   },
   {
+    when: "After that",
+    what: "Owning the layers under the interface",
+    body: "Node, Bun, Hono, Postgres, Redis, queues, storage. Not because backend is fashionable — because I kept hitting product decisions I could not make from the interface alone.",
+  },
+  {
     when: "Now",
     what: "CourtVision — 26 weeks, solo",
-    body: "Computer vision sits further outside my comfort zone than anything I have shipped. That is most of why I am building it.",
+    body: "Detection, tracking, team classification, possession, statistics. Machine learning as the actual computation, not a call to somebody's API. It sits further outside my comfort zone than anything I have shipped, which is most of why I am building it.",
+  },
+  {
+    when: "Also now",
+    what: "Graph ML, and a little Rust",
+    body: "A recommender built on a graph neural network, and a Rust project that exists to teach me what a strict compiler knows. Both exploratory. I would rather learn the tool a problem asks for than reshape the problem around the tools I already have.",
   },
 ];
 
 const facts = [
   { label: "Based in", value: "Lagos, Nigeria" },
-  { label: "Learning", value: "Computer vision, and how to scope a build" },
-  { label: "Open to", value: "Frontend roles, QA testing, collaborations" },
+  { label: "Deepest in", value: "Frontend, UI/UX, TypeScript, product thinking" },
+  { label: "Growing into", value: "Backend, infrastructure, applied ML" },
+  { label: "Exploring", value: "Computer vision, graph ML, Rust" },
+  { label: "Open to", value: "Product and full-stack roles, collaborations" },
 ];
 ---
 
 <Layout
   title="About — Fawehinmi Erioluwa"
-  description="How a self-taught engineer in Lagos went from avoiding code to building offline-first systems and computer vision tools."
+  description="How a self-taught engineer in Lagos went from avoiding code to building whole products — interfaces, backends, and the machine learning underneath."
 >
   <section class="panel panel-lg" aria-labelledby="about-heading">
     <div class="opener">
@@ -47,9 +59,10 @@ const facts = [
         <span class="tag">About</span>
         <h1 class="display" id="about-heading">It started with laziness, honestly.</h1>
         <p class="lead head-lead">
-          I am Fawehinmi Erioluwa — self-taught, based in Lagos, and far more
-          interested in whether a thing holds up under real conditions than in
-          whether it demos well.
+          I am Fawehinmi Erioluwa — a product engineer, self-taught, based in
+          Lagos. I started at the interface and kept going down: the API, the
+          data, the models. Far more interested in whether a thing holds up
+          under real conditions than in whether it demos well.
         </p>
       </div>
     </div>
@@ -76,11 +89,15 @@ const facts = [
     </div>
   </section>
 
-  <section class="panel panel-sm" aria-labelledby="tools-heading">
+  <section class="panel panel-md" aria-labelledby="tools-heading">
     <div class="split">
       <div class="card tools card-scroll">
         <span class="tag muted">The toolkit</span>
         <h2 class="h3" id="tools-heading">What I reach for</h2>
+        <p class="body muted tools-note">
+          Grouped by depth. My range is wider than my depth is uniform, and
+          saying so is more useful than a flat list of logos.
+        </p>
 
         <div class="tool-groups">
           {stack.map((g) => (
@@ -135,11 +152,13 @@ const facts = [
 
   .tools { justify-content: safe center; }
 
+  .tools-note { max-width: 44ch; }
+
   .tool-groups {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-3);
-    margin-top: var(--sp-1);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--sp-3) var(--sp-4);
+    margin-top: var(--sp-2);
   }
 
   .tool-group { margin-bottom: var(--sp-1); color: var(--ink-soft); }

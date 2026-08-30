@@ -11,7 +11,7 @@ const recent = letters.slice(0, 2);
 const arrow = "M5 12h13M13 6l6 6-6 6";
 ---
 
-<Layout title="Fawehinmi Erioluwa — Frontend Engineer">
+<Layout title="Fawehinmi Erioluwa — Product Engineer">
   <!-- 1 — the claim -->
   <section class="panel panel-lg" aria-labelledby="thesis">
     <div class="opener">
@@ -21,11 +21,13 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
         <div class="card card-amber card-hero card-scroll intro">
           <p class="hand greeting">Hi — I'm Eri.</p>
           <h1 class="display" id="thesis">
-            I build software that works when the internet doesn't.
+            I build whole products, not just the part you can see.
           </h1>
           <p class="lead intro-lead">
-            Frontend engineer in Lagos, Nigeria. Self-taught, still learning, and
-            currently teaching a camera to read a basketball game.
+            Product engineer in Lagos, Nigeria. Interfaces first — that is where
+            I am deepest — then the API, the data, and lately the machine
+            learning underneath. Self-taught, still learning, currently
+            teaching a camera to read a basketball game.
           </p>
           <p class="tag rail-only scroll-hint">
             <span class="dot dot-pulse"></span>
@@ -37,8 +39,8 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
           <div class="open-text">
             <span class="tag muted">Open to</span>
             <p class="body open-body">
-              Frontend roles, QA testing, and collaborations where the
-              constraints are real.
+              Product and full-stack roles, frontend-heavy work, and
+              collaborations where the constraints are real.
             </p>
           </div>
           <a class="btn open-btn" href="/contact">
@@ -58,8 +60,8 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
       <span class="tag now-label"><span class="dot dot-pulse"></span> Currently</span>
       <h2 class="h2 now-title">CourtVision</h2>
       <p class="lead now-body">
-        Detection and tracking hold through traffic. The conversational layer
-        is what I'm building next.
+        Detection and tracking hold through traffic. Possession inference and
+        the conversational layer are what I'm building next.
       </p>
     </div>
   </section>
@@ -72,10 +74,14 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   )}
 
   <!-- 4 — the toolkit -->
-  <section class="panel panel-sm" aria-labelledby="toolkit-heading">
+  <section class="panel panel-md" aria-labelledby="toolkit-heading">
     <div class="card toolkit card-scroll">
       <span class="tag muted">The toolkit</span>
       <h2 class="h2" id="toolkit-heading">What I reach for</h2>
+      <p class="body muted toolkit-note">
+        Ordered by depth, not by preference. The distance between the first
+        group and the last one is the honest part.
+      </p>
 
       <div class="tool-groups">
         {stack.map((g) => (
@@ -203,11 +209,15 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 
   .toolkit { flex: var(--fill); justify-content: safe center; }
 
+  .toolkit-note { max-width: 46ch; }
+
+  /* Five depth tiers is more than one column wants; the wider panel lets
+     them pair up instead of scrolling out of sight. */
   .tool-groups {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-3);
-    margin-top: var(--sp-1);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--sp-3) var(--sp-4);
+    margin-top: var(--sp-2);
   }
 
   .tool-group { margin-bottom: var(--sp-1); color: var(--ink-soft); }
