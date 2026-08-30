@@ -1,5 +1,5 @@
 ---
-// The island is the only fixed chrome on the site. Collapsed, it names the page
+// The island is the only fixed chrome at the top. Collapsed, it names the page
 // you're on; expanded, it hands you the rest of them.
 interface Props {
   path: string;
@@ -33,6 +33,11 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
     <span class="compact" aria-hidden="true">
       <span class="dot dot-pulse compact-dot"></span>
       <span class="tag compact-label">{current}</span>
+      <span class="compact-hint" aria-hidden="true">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </span>
     </span>
 
     <nav class="nav" aria-label="Pages">
@@ -53,11 +58,11 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
         style={`--i:${links.length}`}
         aria-label="Switch between light and dark"
       >
-        <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <circle cx="12" cy="12" r="4.5"></circle>
           <path d="M12 1.5v2M12 20.5v2M3.6 3.6l1.4 1.4M19 19l1.4 1.4M1.5 12h2M20.5 12h2M3.6 20.4L5 19M19 5l1.4-1.4"></path>
         </svg>
-        <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
       </button>
@@ -72,7 +77,7 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
     z-index: 1000;
     display: flex;
     justify-content: center;
-    padding-top: 22px;
+    padding-top: var(--sp-3);
     pointer-events: none;
   }
 
@@ -82,30 +87,33 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 48px;
-    width: 168px;
-    padding: 0 18px;
-    background: var(--ink);
-    color: var(--paper);
+    height: var(--sp-5);
+    width: 208px;
+    padding: 0 var(--sp-3);
+    background: var(--chrome-bg);
+    color: var(--chrome-fg);
+    border: 1px solid var(--chrome-line);
     border-radius: var(--r-pill);
     cursor: pointer;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(23, 22, 15, 0.22);
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.24);
     transition: width 0.42s cubic-bezier(0.34, 1.32, 0.5, 1), background 0.35s ease;
   }
 
   .compact {
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: var(--sp-1);
     transition: opacity 0.15s ease;
   }
 
   .compact-dot { background: var(--amber); }
 
-  .compact-label {
-    color: var(--paper);
-    opacity: 0.85;
+  .compact-label { color: var(--chrome-fg); }
+
+  .compact-hint {
+    display: flex;
+    color: var(--chrome-dim);
   }
 
   .nav {
@@ -114,7 +122,7 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2px;
+    gap: 3px;
     padding: 0 10px;
     opacity: 0;
     visibility: hidden;
@@ -123,12 +131,15 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
   }
 
   .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 var(--sp-2);
     font-family: var(--body);
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: rgba(232, 227, 214, 0.66);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--chrome-fg);
     text-decoration: none;
-    padding: 8px 13px;
     border-radius: var(--r-pill);
     white-space: nowrap;
     opacity: 0;
@@ -136,32 +147,31 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
     transition: color 0.18s ease, background 0.18s ease, opacity 0.22s ease, transform 0.22s ease;
   }
 
-  .nav-link:hover { color: #fff; background: rgba(255, 255, 255, 0.09); }
+  .nav-link:hover { background: rgba(244, 241, 232, 0.14); }
 
   .nav-link.is-active {
-    color: var(--on-amber);
     background: var(--amber);
-    font-weight: 600;
+    color: var(--on-amber);
   }
 
   .theme-toggle {
     display: grid;
     place-items: center;
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     margin-left: 5px;
     padding: 0;
-    background: rgba(255, 255, 255, 0.08);
-    border: 0;
+    background: rgba(244, 241, 232, 0.1);
+    border: 1px solid var(--chrome-line);
     border-radius: 50%;
-    color: rgba(232, 227, 214, 0.7);
+    color: var(--chrome-fg);
     cursor: pointer;
     opacity: 0;
     transform: translateY(5px);
-    transition: color 0.18s ease, background 0.18s ease, opacity 0.22s ease, transform 0.22s ease;
+    transition: background 0.18s ease, opacity 0.22s ease, transform 0.22s ease;
   }
 
-  .theme-toggle:hover { color: #fff; background: rgba(255, 255, 255, 0.16); }
+  .theme-toggle:hover { background: rgba(244, 241, 232, 0.2); }
 
   .theme-toggle .icon-moon { display: none; }
   :global(html[data-theme="dark"]) .theme-toggle .icon-sun { display: none; }
@@ -170,7 +180,7 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
   /* ── Open ── */
   .island[data-open="true"] .pill,
   .pill:hover {
-    width: min(546px, calc(100vw - 28px));
+    width: min(600px, calc(100vw - var(--sp-4)));
   }
 
   .island[data-open="true"] .compact,
@@ -195,15 +205,16 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
 
   /* Touch devices get tap-to-open only; hover would fire on first tap. */
   @media (hover: none) {
-    .pill:hover { width: 168px; }
+    .pill:hover { width: 208px; }
     .pill:hover .compact { opacity: 1; }
     .pill:hover .nav { opacity: 0; visibility: hidden; pointer-events: none; }
   }
 
   @media (max-width: 620px) {
-    .island { padding-top: 14px; }
-    .nav-link { font-size: 0.8rem; padding: 7px 9px; }
-    .nav { gap: 0; padding: 0 8px; }
+    .island { padding-top: var(--sp-2); }
+    .pill { height: 48px; width: 190px; }
+    .nav-link { font-size: 0.78rem; padding: 0 9px; }
+    .nav { gap: 0; padding: 0 7px; }
   }
 </style>
 
