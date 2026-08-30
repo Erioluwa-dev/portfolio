@@ -1,11 +1,21 @@
 /* ═══════════════════════════════════════════════════════════════
    ERIOLUWA — design system
+
    Warm chalk paper · hardwood amber · court teal · one live magenta.
 
    Type is handwritten: Shantell Sans carries the voice (bouncy and
    informal at display size, settled for reading), Grape Nuts is the pen
    used for margin notes, and DM Mono is the machine talking back — the
    only non-human face on the site.
+
+   Every scale below is golden-ratio derived. Space steps by φ (1.618)
+   from an 8px base; type steps by the cube root of φ (1.174) from 16px,
+   so the sizes stay usable while the ratio holds.
+
+   The site reads left to right: content sits on a horizontal rail of
+   panels, with fixed chrome above and below. Below 900px it falls back
+   to ordinary vertical scrolling, because forcing a phone sideways is a
+   worse experience than the effect is worth.
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
@@ -21,10 +31,43 @@
   --amber:      #e9a22b;
   --teal:       #1d4b45;
   --live:       #e8447f;
+  /* Darker magenta for small text — the fill colour misses AA on paper. */
+  --live-ink:   #bd275d;
 
   /* Text that sits on a filled card */
   --on-amber:   #17160f;
   --on-teal:    #f2efe4;
+
+  /* ── Chrome ──
+     The island and footer keep their own pair in both themes. Reusing
+     --ink here is what made the nav invisible in dark mode: --ink flips
+     to cream, so the pill and its labels became light on light. */
+  --chrome-bg:   #17160f;
+  --chrome-fg:   #f4f1e8;
+  --chrome-dim:  rgba(244, 241, 232, 0.62);
+  --chrome-line: rgba(244, 241, 232, 0.16);
+
+  /* ── Space: 8 · φ ── */
+  --sp-1: 8px;
+  --sp-2: 13px;
+  --sp-3: 21px;
+  --sp-4: 34px;
+  --sp-5: 55px;
+  --sp-6: 89px;
+  --sp-7: 144px;
+
+  /* ── Type: 16 · φ^(n/3) ── */
+  --fs-micro: 0.72rem;   /* 11.6 */
+  --fs-small: 0.85rem;   /* 13.6 */
+  --fs-body:  1rem;      /* 16   */
+  --fs-lead:  1.175rem;  /* 18.8 */
+  --fs-h3:    1.375rem;  /* 22   */
+  --fs-h2:    clamp(1.85rem, 3.2vw, 2.618rem);  /* → 41.9 = 16φ² */
+  --fs-display: clamp(2.4rem, 5.4vw, 4.236rem); /* → 67.8 = 16φ³ */
+
+  /* ── Chrome heights (φ steps, so content clearance stays on scale) ── */
+  --head-h: var(--sp-6);
+  --foot-h: var(--sp-6);
 
   /* ── Radii ── */
   --r-lg: 28px;
@@ -32,41 +75,38 @@
   --r-sm: 10px;
   --r-pill: 999px;
 
-  /* ── Rhythm ── */
-  --gap: 14px;
-  --pad: 30px;
-  --shell: 1140px;
+  --pad: var(--sp-4);
 
-  /* ── Type ── */
+  /* ── Faces ── */
   --display: 'Shantell Sans', 'Comic Sans MS', cursive;
   --body:    'Shantell Sans', 'Trebuchet MS', sans-serif;
   --hand:    'Grape Nuts', 'Segoe Script', cursive;
   --mono:    'DM Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
-
-  --fs-display: clamp(2.4rem, 5.8vw, 4rem);
-  --fs-h2:      clamp(1.7rem, 3.2vw, 2.45rem);
-  --fs-h3:      clamp(1.2rem, 2.1vw, 1.5rem);
-  --fs-lead:    1.05rem;
-  --fs-body:    0.975rem;
-  --fs-micro:   0.6875rem;
 
   color-scheme: light;
 }
 
 html[data-theme="dark"] {
   --paper:      #12110c;
-  --chalk:      #1c1a13;
+  --chalk:      #1f1d15;
   --ink:        #ede8da;
-  --ink-soft:   #a19c8c;
-  --ink-faint:  #6e6a5c;
-  --hairline:   rgba(237, 232, 218, 0.16);
+  --ink-soft:   #a8a294;
+  --ink-faint:  #7c7768;
+  --hairline:   rgba(237, 232, 218, 0.18);
 
-  --amber:      #dd991f;
-  --teal:       #24605a;
-  --live:       #ef5b8d;
+  --amber:      #e2a233;
+  --teal:       #2a6b62;
+  --live:       #f0679a;
+  --live-ink:   #f88cb2;
 
   --on-amber:   #14130d;
   --on-teal:    #f2efe4;
+
+  /* Raised, not inverted — the chrome stays darker than the cards. */
+  --chrome-bg:   #262218;
+  --chrome-fg:   #f4f1e8;
+  --chrome-dim:  rgba(244, 241, 232, 0.66);
+  --chrome-line: rgba(244, 241, 232, 0.18);
 
   color-scheme: dark;
 }
@@ -77,163 +117,184 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  min-height: 100%;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--body);
   font-size: var(--fs-body);
-  line-height: 1.62;
-  /* Reading copy sits still on the baseline; only display type bounces. */
+  line-height: 1.6;
   font-variation-settings: 'BNCE' 0, 'INFM' 0;
   -webkit-font-smoothing: antialiased;
   transition: background 0.35s ease, color 0.35s ease;
 }
 
 img { max-width: 100%; display: block; }
-
 a { color: inherit; }
 
 ::selection { background: var(--live); color: #fff; }
 
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: var(--r-pill); }
-
 :focus-visible {
-  outline: 2px solid var(--live);
+  outline: 2px solid var(--live-ink);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-/* ═══ Shell ═══════════════════════════════════════════════════ */
+/* ═══ The rail ════════════════════════════════════════════════
+   One horizontal track. Panels are laid side by side and the page
+   advances left to right from opening statement to contact.
+   ═════════════════════════════════════════════════════════════ */
 
-.shell {
-  width: 100%;
-  max-width: var(--shell);
-  margin: 0 auto;
-  padding: 0 20px;
+.rail {
+  display: flex;
+  align-items: stretch;
+  gap: var(--sp-3);
+  height: 100dvh;
+  padding: var(--head-h) var(--sp-5) var(--foot-h);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
 }
 
-.page {
-  padding: 118px 0 var(--gap);
+.rail::-webkit-scrollbar { height: 0; }
+.rail { scrollbar-width: none; }
+
+.panel {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 100%;
+  scroll-snap-align: center;
+  min-height: 0;
 }
 
-/* ═══ Bento grid ══════════════════════════════════════════════ */
+/* Panel widths hold the same ratio as the space scale: 34 → 55 → 89. */
+.panel-sm { width: min(34rem, 84vw); }
+.panel-md { width: min(55rem, 90vw); }
+.panel-lg { width: min(89rem, 94vw); }
 
-.bento {
+/* A lone card fills its panel. */
+.panel > .card { flex: 1; }
+
+/* A pair of cards stacked inside one panel, in φ proportion. */
+.split {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--gap);
+  grid-template-rows: 1.618fr 1fr;
+  gap: var(--sp-2);
+  min-height: 0;
+  flex: 1;
 }
 
-.bento + .bento { margin-top: var(--gap); }
-
-.col-3  { grid-column: span 3; }
-.col-4  { grid-column: span 4; }
-.col-5  { grid-column: span 5; }
-.col-6  { grid-column: span 6; }
-.col-7  { grid-column: span 7; }
-.col-8  { grid-column: span 8; }
-.col-9  { grid-column: span 9; }
-.col-12 { grid-column: span 12; }
-
-@media (max-width: 900px) {
-  .col-3, .col-4, .col-5, .col-7, .col-8, .col-9 { grid-column: span 6; }
+.split-even {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--sp-2);
+  min-height: 0;
+  flex: 1;
 }
 
-@media (max-width: 620px) {
-  .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9 { grid-column: span 12; }
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-2);
+  min-height: 0;
 }
 
-/* ═══ Card primitives ═════════════════════════════════════════ */
+.row-phi { grid-template-columns: 1.618fr 1fr; }
+
+/* ═══ Cards ═══════════════════════════════════════════════════ */
 
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
+  gap: var(--sp-2);
   padding: var(--pad);
   border-radius: var(--r-lg);
   background: var(--chalk);
   border: 1px solid var(--hairline);
+  min-height: 0;
   transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
 }
 
-.card-amber {
-  background: var(--amber);
-  border-color: transparent;
-  color: var(--on-amber);
-}
+.card-amber { background: var(--amber); border-color: transparent; color: var(--on-amber); }
+.card-teal  { background: var(--teal);  border-color: transparent; color: var(--on-teal); }
+.card-ink   { background: var(--chrome-bg); border-color: transparent; color: var(--chrome-fg); }
+.card-bare  { background: transparent; border-color: var(--hairline); }
 
-.card-teal {
-  background: var(--teal);
-  border-color: transparent;
-  color: var(--on-teal);
-}
+.card-tight { padding: var(--sp-3); }
 
-.card-ink {
-  background: var(--ink);
-  border-color: transparent;
-  color: var(--paper);
-}
+/* Cards that can outgrow their panel scroll inside themselves rather
+   than pushing the rail out of shape. */
+.card-scroll { overflow-y: auto; }
 
-.card-bare {
-  background: transparent;
-  border-color: var(--hairline);
-}
+/* ═══ Hierarchy ═══════════════════════════════════════════════
+   Five tiers, each separated by size, weight, and colour at once —
+   never by size alone. One tier-1 element per panel, no exceptions.
+   ═════════════════════════════════════════════════════════════ */
 
-.card-tight { padding: 22px; }
-
-/* ═══ Type primitives ═════════════════════════════════════════ */
-
+/* Tier 1 — the claim */
 .display {
   font-family: var(--display);
   font-size: var(--fs-display);
   font-weight: 700;
   font-variation-settings: 'BNCE' 48, 'INFM' 42;
-  line-height: 1.06;
-  letter-spacing: -0.012em;
+  line-height: 1.02;
+  letter-spacing: -0.014em;
   margin: 0;
+  text-wrap: balance;
 }
 
+/* Tier 2 — what a panel is about */
 .h2 {
   font-family: var(--display);
   font-size: var(--fs-h2);
   font-weight: 700;
-  font-variation-settings: 'BNCE' 36, 'INFM' 34;
-  line-height: 1.14;
+  font-variation-settings: 'BNCE' 34, 'INFM' 32;
+  line-height: 1.1;
   letter-spacing: -0.008em;
   margin: 0;
+  text-wrap: balance;
 }
 
+/* Tier 3 — the name of a thing */
 .h3 {
   font-family: var(--display);
   font-size: var(--fs-h3);
   font-weight: 600;
-  font-variation-settings: 'BNCE' 22, 'INFM' 24;
+  font-variation-settings: 'BNCE' 20, 'INFM' 22;
   line-height: 1.24;
   margin: 0;
 }
 
-/* Margin notes, asides, signatures — an actual pen, not a typeface. */
+/* Tier 4 — reading copy */
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.body { font-size: var(--fs-body); margin: 0; }
+
+.muted { color: var(--ink-soft); }
+
+.prose p { margin: 0 0 0.9em; }
+.prose p:last-child { margin-bottom: 0; }
+
+/* Margin notes and asides — an actual pen, not a typeface. */
 .hand {
   font-family: var(--hand);
   font-weight: 400;
   font-variation-settings: normal;
-  line-height: 1.4;
-}
-
-.lead {
-  font-size: var(--fs-lead);
-  line-height: 1.58;
+  font-size: var(--fs-h3);
+  line-height: 1.3;
   margin: 0;
 }
 
-.prose p { margin: 0 0 1em; }
-.prose p:last-child { margin-bottom: 0; }
-
-.muted { color: var(--ink-soft); }
-
-/* Small mono label — the machine-vision voice, set against the handwriting. */
+/* Tier 5 — machine labels. Smallest, widest, quietest. */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -253,11 +314,7 @@ a { color: inherit; }
   border: 1px solid var(--hairline);
 }
 
-.tag-live {
-  background: var(--live);
-  border-color: transparent;
-  color: #fff;
-}
+.tag-live { background: var(--live-ink); border-color: transparent; color: #fff; }
 
 .dot {
   width: 6px;
@@ -274,17 +331,20 @@ a { color: inherit; }
   50% { opacity: 0.35; }
 }
 
-/* ═══ Links & buttons ═════════════════════════════════════════ */
+/* ═══ Controls ════════════════════════════════════════════════ */
 
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 9px;
-  padding: 13px 22px;
+  /* 44px minimum target */
+  min-height: 44px;
+  padding: 11px var(--sp-3);
   border-radius: var(--r-pill);
   border: 1px solid transparent;
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--chrome-bg);
+  color: var(--chrome-fg);
   font-family: var(--body);
   font-size: var(--fs-body);
   font-weight: 600;
@@ -294,6 +354,8 @@ a { color: inherit; }
 }
 
 .btn:hover { transform: translateY(-2px); }
+
+.btn-amber { background: var(--amber); color: var(--on-amber); }
 
 .btn-ghost {
   background: transparent;
@@ -307,6 +369,7 @@ a { color: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  min-height: 44px;
   font-weight: 600;
   text-decoration: none;
   color: inherit;
@@ -315,26 +378,51 @@ a { color: inherit; }
 .link-arrow svg { transition: transform 0.2s ease; }
 .link-arrow:hover svg { transform: translateX(4px); }
 
-/* ═══ Hairline divider ════════════════════════════════════════ */
+.rule { height: 1px; background: var(--hairline); border: 0; margin: 0; }
 
-.rule {
-  height: 1px;
-  background: var(--hairline);
-  border: 0;
-  margin: 0;
+/* ═══ Vertical fallback ═══════════════════════════════════════
+   Under 900px the rail unwinds into a normal column.
+   ═════════════════════════════════════════════════════════════ */
+
+@media (max-width: 899px) {
+  :root { --pad: var(--sp-3); --r-lg: 22px; --head-h: 76px; --foot-h: 72px; }
+
+  .rail {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding: var(--head-h) var(--sp-3) calc(var(--foot-h) + var(--sp-4));
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .panel,
+  .panel-sm,
+  .panel-md,
+  .panel-lg {
+    width: 100%;
+    height: auto;
+  }
+
+  .split,
+  .split-even {
+    grid-template-rows: none;
+    grid-auto-rows: min-content;
+    flex: none;
+  }
+
+  .row { grid-template-columns: 1fr; }
+  .row-phi { grid-template-columns: 1fr; }
+
+  .card-scroll { overflow: visible; }
 }
 
-/* ═══ Reduced motion ══════════════════════════════════════════ */
-
 @media (prefers-reduced-motion: reduce) {
+  .rail { scroll-behavior: auto; }
+
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-}
-
-@media (max-width: 620px) {
-  :root { --pad: 22px; --r-lg: 22px; }
-  .page { padding-top: 96px; }
 }
