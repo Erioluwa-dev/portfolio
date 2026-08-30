@@ -1,223 +1,106 @@
 ---
+import type { Project } from '../data/site';
+import { statusLabel } from '../data/site';
+
 interface Props {
-  name: string;
-  fullName?: string;
-  desc: string;
-  tag: string;
-  tagColor: string;
-  stack: string[];
-  isFlagship?: boolean;
-  mission?: string;
-  url?: string;
-  github?: string;
-  id?: string;
+  project: Project;
+  expanded?: boolean;
 }
 
-const { name, fullName, desc, tag, tagColor, stack, isFlagship, mission, url, github, id } = Astro.props;
+const { project, expanded = false } = Astro.props;
+const p = project;
 ---
 
-<div
-  id={id}
-  class:list={['project-card', { flagship: isFlagship }]}
-  data-collapsible
->
-  <!-- Name + Tag row (clickable header) -->
-  <div class="card-header" data-toggle>
-    <div class:list={['card-name', { 'flagship-name': isFlagship }]}>
-      {name}
-    </div>
-    <div class="card-tags">
-      {isFlagship && (
-        <span class="active-badge">[ ACTIVE BUILD ]</span>
+<article class:list={["project", "card", p.flagship ? "card-teal" : "", expanded ? "is-expanded" : ""]}>
+  <header class="project-head">
+    <span class:list={["tag", "tag-pill", p.status === "building" ? "tag-live" : ""]}>
+      {p.status === "building" && <span class="dot dot-pulse"></span>}
+      {statusLabel[p.status]}
+    </span>
+    <span class="tag project-kind">{p.kind}</span>
+  </header>
+
+  <h3 class="h2 project-name">{p.name}</h3>
+
+  <p class="lead project-summary">{p.summary}</p>
+
+  {expanded && <p class="project-detail">{p.detail}</p>}
+
+  <ul class="project-stack">
+    {p.stack.map((s) => <li class="tag stack-chip">{s}</li>)}
+  </ul>
+
+  {(p.repo || p.live) && (
+    <div class="project-links">
+      {p.repo && (
+        <a class="link-arrow" href={p.repo} target="_blank" rel="noopener noreferrer">
+          Read the code
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h13M13 6l6 6-6 6" />
+          </svg>
+        </a>
       )}
-      <span class="status-tag" style={`color: ${tagColor}; border-color: ${tagColor}50;`}>
-        {tag}
-      </span>
-      <span class="chevron">&#9662;</span>
+      {p.live && (
+        <a class="link-arrow" href={p.live} target="_blank" rel="noopener noreferrer">
+          Open it
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h13M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      )}
     </div>
-  </div>
-
-  <!-- Collapsible content -->
-  <div class="card-body">
-    <p class="card-desc">{desc}</p>
-
-    {mission && (
-      <div class="card-mission">{mission}</div>
-    )}
-
-    {stack && stack.length > 0 && (
-      <div class="card-stack">
-        {stack.map((tech) => (
-          <span class="stack-chip">{tech}</span>
-        ))}
-      </div>
-    )}
-
-    {(url || github) && (
-      <a
-        href={url || github}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="project-link-icon"
-        title={url ? "View live site" : "View source code"}
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          {url ? (
-            <>
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-            </>
-          ) : (
-            <>
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-            </>
-          )}
-        </svg>
-      </a>
-    )}
-  </div>
-</div>
-
-<script>
-  document.querySelectorAll('[data-collapsible]').forEach((card) => {
-    const header = card.querySelector('[data-toggle]');
-    const body = card.querySelector('.card-body');
-    header?.addEventListener('click', () => {
-      card.classList.toggle('expanded');
-    });
-  });
-</script>
+  )}
+</article>
 
 <style>
-  .project-card {
-    border: 1px solid #1a1a1a;
-    border-radius: 3px;
-    background: #111;
-    position: relative;
-  }
+  .project { gap: 16px; height: 100%; }
 
-  .project-card.flagship {
-    border-color: #54C5F840;
-    border-left: 3px solid #54C5F8;
-    background: #54C5F808;
-  }
-
-  .card-header {
+  .project-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.6rem;
-    padding: 1rem 1.2rem;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .card-name {
-    font-size: 1rem;
-    color: #fff;
-    font-weight: 600;
-  }
-
-  .card-name.flagship-name {
-    color: #54C5F8;
-  }
-
-  .card-tags {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-shrink: 0;
-  }
-
-  .active-badge {
-    font-size: 0.7rem;
-    color: #54C5F8;
-    border: 1px solid #54C5F860;
-    padding: 0.15rem 0.45rem;
-    border-radius: 2px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
-
-  .status-tag {
-    font-size: 0.7rem;
-    border: 1px solid;
-    padding: 0.15rem 0.4rem;
-    border-radius: 2px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .chevron {
-    font-size: 0.7rem;
-    color: #555;
-    transition: transform 0.2s ease;
-  }
-
-  .project-card.expanded .chevron {
-    transform: rotate(180deg);
-  }
-
-  .card-body {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
-    padding: 0 1.2rem;
-    opacity: 0;
-  }
-
-  .project-card.expanded .card-body {
-    max-height: 600px;
-    padding: 0 1.2rem 1.2rem;
-    opacity: 1;
-  }
-
-  .card-desc {
-    margin: 0 0 0.6rem;
-    font-size: 0.9rem;
-    color: #bbb;
-    line-height: 1.6;
-    max-width: 580px;
-  }
-
-  .card-mission {
-    font-size: 1rem;
-    color: #54C5F8;
-    font-style: italic;
-    margin-bottom: 0.6rem;
-    opacity: 0.85;
-  }
-
-  .card-stack {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
+    gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 0.8rem;
+  }
+
+  .project-kind { opacity: 0.6; }
+
+  .project-name { margin: 4px 0 0; }
+
+  .project-summary { max-width: 46ch; }
+
+  .project-detail {
+    margin: 0;
+    font-size: var(--fs-body);
+    line-height: 1.68;
+    opacity: 0.78;
+    max-width: 62ch;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: auto 0 0;
+    padding: 0;
+    list-style: none;
   }
 
   .stack-chip {
-    font-size: 0.95rem;
-    color: #999;
-    border: 1px solid #333333;
-    padding: 0.15rem 0.5rem;
-    border-radius: 2px;
+    padding: 6px 10px;
+    border-radius: var(--r-pill);
+    border: 1px solid currentColor;
+    opacity: 0.5;
+    text-transform: none;
+    letter-spacing: 0.04em;
   }
 
-  .project-link-icon {
-    position: absolute;
-    bottom: 0.6rem;
-    right: 0.6rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 3px;
-    background: #222;
-    border: 1px solid #333;
-    text-decoration: none;
-    transition: all 0.18s ease;
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-top: 4px;
   }
+
+  .is-expanded .project-summary { font-size: 1.2rem; }
 </style>

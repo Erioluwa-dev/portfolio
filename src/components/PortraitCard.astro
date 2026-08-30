@@ -1,0 +1,104 @@
+---
+// The signature element: the portrait framed the way CourtVision frames a
+// player — corner brackets, an ID tag, and a live clock in his actual timezone.
+interface Props {
+  tag?: string;
+}
+
+const { tag = "eri · lagos" } = Astro.props;
+---
+
+<div class="portrait card card-amber">
+  <div class="frame">
+    <img src="/brand.jpg" alt="Fawehinmi Erioluwa" width="600" height="800" />
+
+    <span class="bracket br-tl"></span>
+    <span class="bracket br-tr"></span>
+    <span class="bracket br-bl"></span>
+    <span class="bracket br-br"></span>
+
+    <span class="id-tag tag">{tag}</span>
+
+    <span class="clock tag" id="lagos-clock">
+      <span class="dot dot-pulse"></span>
+      <span id="lagos-time">--:--</span> WAT
+    </span>
+  </div>
+</div>
+
+<style>
+  .portrait { padding: 14px; }
+
+  .frame {
+    position: relative;
+    flex: 1;
+    min-height: 360px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--chalk);
+  }
+
+  /* The mark is a drawn signature, so it gets shown whole rather than cropped. */
+  .frame img {
+    width: 100%;
+    height: 100%;
+    min-height: 360px;
+    padding: 64px 52px;
+    object-fit: contain;
+  }
+
+  /* Detection brackets — they draw themselves in once, then hold. */
+  .bracket {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--on-amber);
+    opacity: 0;
+    animation: lock 0.5s ease forwards;
+  }
+
+  .br-tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; animation-delay: 0.15s; }
+  .br-tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; border-radius: 0 8px 0 0; animation-delay: 0.24s; }
+  .br-bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; animation-delay: 0.33s; }
+  .br-br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; animation-delay: 0.42s; }
+
+  @keyframes lock {
+    from { opacity: 0; transform: scale(1.35); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .id-tag,
+  .clock {
+    position: absolute;
+    padding: 7px 11px;
+    border-radius: var(--r-pill);
+    background: var(--on-amber);
+    color: var(--amber);
+    white-space: nowrap;
+  }
+
+  .id-tag { top: 26px; left: 50%; transform: translateX(-50%); }
+  .clock { bottom: 26px; left: 50%; transform: translateX(-50%); gap: 6px; }
+  .clock .dot { background: var(--live); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bracket { opacity: 1; }
+  }
+</style>
+
+<script>
+  (function () {
+    const el = document.getElementById("lagos-time");
+    if (!el) return;
+
+    const fmt = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Africa/Lagos",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const tick = () => { el.textContent = fmt.format(new Date()); };
+    tick();
+    setInterval(tick, 20000);
+  })();
+</script>
