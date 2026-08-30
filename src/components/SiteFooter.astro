@@ -69,19 +69,23 @@ const year = new Date().getFullYear();
     gap: var(--sp-3);
   }
 
+  /* The bar is 55px tall, so the links take all of it as hit area rather
+     than sitting as a 20px sliver in the middle of it. */
   .link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
     font-size: var(--fs-small);
     font-weight: 600;
     color: var(--ink);
-    text-decoration: none;
-    padding: 4px 0;
-    border-bottom: 1px solid transparent;
-    transition: color 0.18s ease, border-color 0.18s ease;
+    text-decoration: underline 1px transparent;
+    text-underline-offset: 4px;
+    transition: color 0.18s ease, text-decoration-color 0.18s ease;
   }
 
   .link:hover {
     color: var(--live-ink);
-    border-bottom-color: currentColor;
+    text-decoration-color: currentColor;
   }
 
   .place { color: var(--ink-faint); }
@@ -96,6 +100,7 @@ const year = new Date().getFullYear();
 
     .line { display: none; }
     .elsewhere { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .link { min-height: 44px; }
   }
 
   @media (max-width: 480px) {
