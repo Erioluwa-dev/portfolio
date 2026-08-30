@@ -5,29 +5,38 @@ import { statusLabel } from '../data/site';
 interface Props {
   project: Project;
   expanded?: boolean;
+  /** Kept in step with the surrounding page so the outline never skips a level. */
+  level?: 2 | 3;
 }
 
-const { project, expanded = false } = Astro.props;
+const { project, expanded = false, level = 2 } = Astro.props;
 const p = project;
+const Heading = `h${level}` as 'h2' | 'h3';
 ---
 
-<article class:list={["project", "card", p.flagship ? "card-teal" : "", expanded ? "is-expanded" : ""]}>
+<article
+  class:list={[
+    "project", "card", "card-scroll",
+    p.flagship ? "card-teal" : "",
+    expanded ? "is-expanded" : "",
+  ]}
+>
   <header class="project-head">
     <span class:list={["tag", "tag-pill", p.status === "building" ? "tag-live" : ""]}>
       {p.status === "building" && <span class="dot dot-pulse"></span>}
       {statusLabel[p.status]}
     </span>
-    <span class="tag project-kind">{p.kind}</span>
+    <span class="tag muted">{p.kind}</span>
   </header>
 
-  <h3 class="h2 project-name">{p.name}</h3>
+  <Heading class="h2 project-name">{p.name}</Heading>
 
   <p class="lead project-summary">{p.summary}</p>
 
-  {expanded && <p class="project-detail">{p.detail}</p>}
+  {expanded && <p class="body muted project-detail">{p.detail}</p>}
 
-  <ul class="project-stack">
-    {p.stack.map((s) => <li class="tag stack-chip">{s}</li>)}
+  <ul class="chip-list project-stack" aria-label={`${p.name} — built with`}>
+    {p.stack.map((s) => <li class="tag chip">{s}</li>)}
   </ul>
 
   {(p.repo || p.live) && (
@@ -35,6 +44,7 @@ const p = project;
       {p.repo && (
         <a class="link-arrow" href={p.repo} target="_blank" rel="noopener noreferrer">
           Read the code
+          <span class="sr-only"> for {p.name}</span>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M5 12h13M13 6l6 6-6 6" />
           </svg>
@@ -43,6 +53,7 @@ const p = project;
       {p.live && (
         <a class="link-arrow" href={p.live} target="_blank" rel="noopener noreferrer">
           Open it
+          <span class="sr-only"> — {p.name}</span>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M5 12h13M13 6l6 6-6 6" />
           </svg>
@@ -53,7 +64,7 @@ const p = project;
 </article>
 
 <style>
-  .project { gap: var(--sp-2); height: 100%; overflow-y: auto; }
+  .project { gap: var(--sp-2); height: 100%; }
 
   .project-head {
     display: flex;
@@ -63,37 +74,15 @@ const p = project;
     flex-wrap: wrap;
   }
 
-  .project-kind { opacity: 0.6; }
-
   .project-name { margin: 4px 0 0; }
 
   .project-summary { max-width: 46ch; }
 
-  .project-detail {
-    margin: 0;
-    font-size: var(--fs-body);
-    line-height: 1.62;
-    opacity: 0.78;
-    max-width: 62ch;
-  }
+  .project-detail { line-height: 1.62; max-width: 62ch; }
 
-  .project-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin: auto 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .stack-chip {
-    padding: 6px 10px;
-    border-radius: var(--r-pill);
-    border: 1px solid currentColor;
-    opacity: 0.5;
-    text-transform: none;
-    letter-spacing: 0.04em;
-  }
+  /* Pinned to the foot of the card so a row of cards lines its chips up,
+     but only when there is slack to give. */
+  .project-stack { margin-top: auto; padding-top: var(--sp-1); }
 
   .project-links {
     display: flex;
@@ -103,4 +92,15 @@ const p = project;
   }
 
   .is-expanded .project-summary { font-size: var(--fs-lead); }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 </style>
