@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects, social } from '../data/site';
+---
+
+<Layout
+  title="Projects — Fawehinmi Erioluwa"
+  description="Computer vision, offline-first systems, and the small builds that taught me the fundamentals."
+>
+  <div class="shell">
+    <section class="bento">
+      <div class="col-8">
+        <div class="card card-amber page-head">
+          <span class="tag">Projects</span>
+          <h1 class="display">Four builds, one habit: finish the thing.</h1>
+          <p class="lead head-lead">
+            Some of these shipped, one is still mid-flight, and one is here
+            because it is where I started. Nothing on this page is a tutorial.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-4 stretch">
+        <div class="card card-bare repo-card">
+          <p class="hand repo-note">Everything public lives here.</p>
+          <a class="link-arrow repo-link" href={social.github} target="_blank" rel="noopener noreferrer">
+            github.com/Erioluwa-dev
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h13M13 6l6 6-6 6" />
+            </svg>
+          </a>
+          <p class="muted repo-body">
+            YEMS is a private repo &mdash; it holds a school&rsquo;s data. Happy to
+            walk through the architecture on a call.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bento" aria-label="All projects">
+      {projects.map((p) => (
+        <div class:list={[p.flagship ? "col-12" : "col-6", "stretch"]}>
+          <ProjectCard project={p} expanded />
+        </div>
+      ))}
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .stretch { display: flex; }
+  .stretch > :global(*) { flex: 1; }
+
+  .page-head { gap: 14px; }
+  .head-lead { max-width: 50ch; opacity: 0.85; }
+
+  .repo-card { gap: 12px; justify-content: center; }
+  .repo-note { margin: 0; font-size: 1.35rem; color: var(--ink-soft); }
+  .repo-link { font-size: 1.05rem; }
+  .repo-body { margin: 0; font-size: 0.9rem; }
+</style>
