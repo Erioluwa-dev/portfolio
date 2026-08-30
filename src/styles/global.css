@@ -13,9 +13,10 @@
    so the sizes stay usable while the ratio holds.
 
    The site reads left to right: content sits on a horizontal rail of
-   panels, with fixed chrome above and below. Below 900px it falls back
-   to ordinary vertical scrolling, because forcing a phone sideways is a
-   worse experience than the effect is worth.
+   panels, with fixed chrome above and below. Below 900px — and whenever
+   reduced motion is asked for — it falls back to ordinary vertical
+   scrolling, because forcing a phone sideways, or moving anyone sideways
+   against a stated preference, is worse than the effect is worth.
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
@@ -37,6 +38,7 @@
   /* Text that sits on a filled card */
   --on-amber:   #17160f;
   --on-teal:    #f2efe4;
+  --on-live:    #ffffff;
 
   /* ── Chrome ──
      The island and footer keep their own pair in both themes. Reusing
@@ -56,18 +58,25 @@
   --sp-6: 89px;
   --sp-7: 144px;
 
-  /* ── Type: 16 · φ^(n/3) ── */
+  /* ── Type ──
+     Display and section headings size against the card they sit in
+     (cqi), not the window. On a rail the panel width is fixed while the
+     viewport is not, so viewport units drop a 68px headline into a
+     476px card — which is most of why the small panels looked jammed.
+     Everything below display size stays on the 16 · φ^(n/3) steps. */
   --fs-micro: 0.72rem;   /* 11.6 */
   --fs-small: 0.85rem;   /* 13.6 */
   --fs-body:  1rem;      /* 16   */
   --fs-lead:  1.175rem;  /* 18.8 */
   --fs-h3:    1.375rem;  /* 22   */
-  --fs-h2:    clamp(1.85rem, 3.2vw, 2.618rem);  /* → 41.9 = 16φ² */
-  --fs-display: clamp(2.4rem, 5.4vw, 4.236rem); /* → 67.8 = 16φ³ */
+  --fs-h2:    clamp(1.618rem, 4.4cqi, 2.618rem);  /* → 41.9 = 16φ² */
+  --fs-display: clamp(2.1rem, 7.6cqi, 4.236rem);  /* → 67.8 = 16φ³ */
 
-  /* ── Chrome heights (φ steps, so content clearance stays on scale) ── */
+  /* ── Chrome heights ──
+     head + foot = 89 + 55 = 144 = --sp-7, so a panel's usable height
+     comes off the viewport in one clean step of the scale. */
   --head-h: var(--sp-6);
-  --foot-h: var(--sp-6);
+  --foot-h: var(--sp-5);
 
   /* ── Radii ── */
   --r-lg: 28px;
@@ -75,7 +84,11 @@
   --r-sm: 10px;
   --r-pill: 999px;
 
-  --pad: var(--sp-4);
+  /* Cards carrying a display headline get the wider inset; everything
+     else stays on --pad. One padding for every card size is what made
+     big claims feel boxed in and small notes feel over-padded. */
+  --pad:    var(--sp-4);
+  --pad-lg: var(--sp-5);
 
   /* ── Faces ── */
   --display: 'Shantell Sans', 'Comic Sans MS', cursive;
@@ -95,12 +108,14 @@ html[data-theme="dark"] {
   --hairline:   rgba(237, 232, 218, 0.18);
 
   --amber:      #e2a233;
-  --teal:       #2a6b62;
+  /* Deep enough that cream copy on it still clears AA once stepped back. */
+  --teal:       #23574f;
   --live:       #f0679a;
   --live-ink:   #f88cb2;
 
   --on-amber:   #14130d;
   --on-teal:    #f2efe4;
+  --on-live:    #14130d;
 
   /* Raised, not inverted — the chrome stays darker than the cards. */
   --chrome-bg:   #262218;
@@ -111,12 +126,107 @@ html[data-theme="dark"] {
   color-scheme: dark;
 }
 
+/* ═══ Layout mode ═════════════════════════════════════════════
+   Rail and column are the same rules with different values, so the
+   switch is declared once here rather than written out twice. Anything
+   that differs between the two layouts is a variable.
+   ═════════════════════════════════════════════════════════════ */
+
+:root {
+  --rail-gutter:  var(--sp-5);
+  /* A gutter of the next panel stays visible: on a horizontal track the
+     peek is the only honest signal that there is more to the right. */
+  --rail-room:    calc(100vw - var(--rail-gutter) * 2 - var(--sp-5));
+
+  --rail-flow:    row;
+  --rail-h:       100dvh;
+  --rail-pad:     var(--head-h) var(--rail-gutter) var(--foot-h);
+  --rail-over-x:  auto;
+  --rail-over-y:  hidden;
+  --rail-align:   stretch;
+  --body-over:    hidden;
+
+  --panel-h:      100%;
+  --panel-w-sm:   min(34rem, var(--rail-room));
+  --panel-w-md:   min(55rem, var(--rail-room));
+  --panel-w-lg:   min(89rem, var(--rail-room));
+
+  --fill:         1;               /* a card stretching to fill its panel */
+  --split-rows:   1.618fr 1fr;
+  --even-rows:    1fr 1fr;
+  --row-cols:     1fr 1fr;
+  --row-cols-phi: 1.618fr 1fr;
+  --inner-scroll: auto;            /* cards that scroll inside themselves */
+  --edge-fade:    block;
+  --rail-only:    inline-flex;     /* copy that is only true on the rail */
+}
+
+@media (max-width: 899px) {
+  :root {
+    --pad:    var(--sp-3);
+    --pad-lg: var(--sp-4);
+    --r-lg:   22px;
+    --head-h: 76px;
+    --foot-h: 72px;
+
+    --rail-gutter:  var(--sp-3);
+    --rail-flow:    column;
+    --rail-h:       auto;
+    --rail-pad:     var(--head-h) var(--rail-gutter) calc(var(--foot-h) + var(--sp-4));
+    --rail-over-x:  visible;
+    --rail-over-y:  visible;
+    --rail-align:   center;
+    --body-over:    visible;
+
+    --panel-h:      auto;
+    --panel-w-sm:   100%;
+    --panel-w-md:   100%;
+    --panel-w-lg:   100%;
+
+    --fill:         0 0 auto;
+    --split-rows:   none;
+    --even-rows:    none;
+    --row-cols:     1fr;
+    --row-cols-phi: 1fr;
+    --inner-scroll: visible;
+    --edge-fade:    none;
+    --rail-only:    none;
+  }
+}
+
+/* A wheel gesture that drives the page sideways is exactly the effect
+   reduced-motion exists to prevent, so the rail unwinds into a column
+   for anyone who has asked not to be moved. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --rail-flow:    column;
+    --rail-h:       auto;
+    --rail-pad:     var(--head-h) var(--rail-gutter) calc(var(--foot-h) + var(--sp-4));
+    --rail-over-x:  visible;
+    --rail-over-y:  visible;
+    --rail-align:   center;
+    --body-over:    visible;
+
+    --panel-h:      auto;
+    --panel-w-sm:   min(58rem, 100%);
+    --panel-w-md:   min(58rem, 100%);
+    --panel-w-lg:   min(58rem, 100%);
+
+    --fill:         0 0 auto;
+    --split-rows:   none;
+    --even-rows:    none;
+    --inner-scroll: visible;
+    --rail-only:    none;
+  }
+}
+
 * { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
+  overflow: var(--body-over);
   background: var(--paper);
   color: var(--ink);
   font-family: var(--body);
@@ -130,7 +240,7 @@ body {
 img { max-width: 100%; display: block; }
 a { color: inherit; }
 
-::selection { background: var(--live); color: #fff; }
+::selection { background: var(--live); color: var(--on-live); }
 
 :focus-visible {
   outline: 2px solid var(--live-ink);
@@ -145,69 +255,98 @@ a { color: inherit; }
 
 .rail {
   display: flex;
-  align-items: stretch;
+  flex-direction: var(--rail-flow);
+  align-items: var(--rail-align);
   gap: var(--sp-3);
-  height: 100dvh;
-  padding: var(--head-h) var(--sp-5) var(--foot-h);
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x proximity;
-  scroll-behavior: smooth;
+  height: var(--rail-h);
+  padding: var(--rail-pad);
+  overflow-x: var(--rail-over-x);
+  overflow-y: var(--rail-over-y);
   overscroll-behavior-x: contain;
+  scrollbar-width: none;
 }
 
 .rail::-webkit-scrollbar { height: 0; }
-.rail { scrollbar-width: none; }
+
+/* No scroll-behavior here on purpose. The rail is eased by hand in
+   Layout.astro so a gesture keeps a 1:1 relationship with the wheel and
+   settles wherever it is let go; the CSS property would instead restart
+   its own animation on every notch. Keyboard jumps pass `behavior:
+   "smooth"` at the call site. */
+
+/* Which end of the rail you are at, drawn as depth rather than as a
+   progress bar — the track is the story, not a completion metric. */
+.rail-edge {
+  position: fixed;
+  z-index: 500;
+  top: var(--head-h);
+  bottom: var(--foot-h);
+  width: var(--sp-5);
+  display: var(--edge-fade);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.rail-edge-start { left: 0;  background: linear-gradient(to right, var(--paper), transparent); }
+.rail-edge-end   { right: 0; background: linear-gradient(to left,  var(--paper), transparent); }
+
+body[data-rail-pos="mid"] .rail-edge,
+body[data-rail-pos="end"] .rail-edge-start,
+body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
 
 .panel {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: safe center;
   gap: var(--sp-2);
-  height: 100%;
-  scroll-snap-align: center;
+  height: var(--panel-h);
   min-height: 0;
 }
 
 /* Panel widths hold the same ratio as the space scale: 34 → 55 → 89. */
-.panel-sm { width: min(34rem, 84vw); }
-.panel-md { width: min(55rem, 90vw); }
-.panel-lg { width: min(89rem, 94vw); }
+.panel-sm { width: var(--panel-w-sm); }
+.panel-md { width: var(--panel-w-md); }
+.panel-lg { width: var(--panel-w-lg); }
 
 /* A lone card fills its panel. */
-.panel > .card { flex: 1; }
+.panel > .card { flex: var(--fill); }
 
 /* A pair of cards stacked inside one panel, in φ proportion. */
 .split {
   display: grid;
-  grid-template-rows: 1.618fr 1fr;
+  grid-template-rows: var(--split-rows);
+  grid-auto-rows: min-content;
   gap: var(--sp-2);
   min-height: 0;
-  flex: 1;
+  flex: var(--fill);
 }
 
 .split-even {
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: var(--even-rows);
+  grid-auto-rows: min-content;
   gap: var(--sp-2);
   min-height: 0;
-  flex: 1;
+  flex: var(--fill);
 }
 
 .row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: var(--row-cols);
   gap: var(--sp-2);
   min-height: 0;
 }
 
-.row-phi { grid-template-columns: 1.618fr 1fr; }
+.row-phi { grid-template-columns: var(--row-cols-phi); }
 
 /* ═══ Cards ═══════════════════════════════════════════════════ */
 
 .card {
   position: relative;
+  /* Headings size against this box, not against the window. */
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--sp-2);
@@ -226,9 +365,15 @@ a { color: inherit; }
 
 .card-tight { padding: var(--sp-3); }
 
+/* A card whose job is to carry the claim gets the room to carry it. */
+.card-hero { padding: var(--pad-lg); gap: var(--sp-3); }
+
 /* Cards that can outgrow their panel scroll inside themselves rather
    than pushing the rail out of shape. */
-.card-scroll { overflow-y: auto; }
+.card-scroll {
+  overflow-y: var(--inner-scroll);
+  overscroll-behavior: contain;
+}
 
 /* ═══ Hierarchy ═══════════════════════════════════════════════
    Five tiers, each separated by size, weight, and colour at once —
@@ -244,6 +389,9 @@ a { color: inherit; }
   line-height: 1.02;
   letter-spacing: -0.014em;
   margin: 0;
+  /* Bound the measure first, then balance — balance alone will happily
+     set a 60-character single line across a wide card. */
+  max-inline-size: 22ch;
   text-wrap: balance;
 }
 
@@ -256,6 +404,7 @@ a { color: inherit; }
   line-height: 1.1;
   letter-spacing: -0.008em;
   margin: 0;
+  max-inline-size: 24ch;
   text-wrap: balance;
 }
 
@@ -280,6 +429,12 @@ a { color: inherit; }
 .body { font-size: var(--fs-body); margin: 0; }
 
 .muted { color: var(--ink-soft); }
+
+/* On a filled card the muted token is the wrong ink entirely — step the
+   card's own foreground back rather than reaching for a paper grey. */
+.card-amber .muted,
+.card-teal .muted,
+.card-ink .muted { color: color-mix(in srgb, currentColor 82%, transparent); }
 
 .prose p { margin: 0 0 0.9em; }
 .prose p:last-child { margin-bottom: 0; }
@@ -314,7 +469,7 @@ a { color: inherit; }
   border: 1px solid var(--hairline);
 }
 
-.tag-live { background: var(--live-ink); border-color: transparent; color: #fff; }
+.tag-live { background: var(--live-ink); border-color: transparent; color: var(--on-live); }
 
 .dot {
   width: 6px;
@@ -330,6 +485,32 @@ a { color: inherit; }
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
 }
+
+/* ═══ Chips ═══════════════════════════════════════════════════
+   One chip, used for tech lists everywhere. Kept quiet by its outline,
+   never by dimming the label — a 50% opacity chip is unreadable text
+   pretending to be restraint.
+   ═════════════════════════════════════════════════════════════ */
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  padding: 7px 11px;
+  border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, currentColor 26%, transparent);
+  text-transform: none;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.chip-solid { border-color: transparent; background: var(--paper); }
 
 /* ═══ Controls ════════════════════════════════════════════════ */
 
@@ -378,48 +559,12 @@ a { color: inherit; }
 .link-arrow svg { transition: transform 0.2s ease; }
 .link-arrow:hover svg { transform: translateX(4px); }
 
+/* Instructions that stop being true once the rail unwinds. */
+.rail-only { display: var(--rail-only); }
+
 .rule { height: 1px; background: var(--hairline); border: 0; margin: 0; }
 
-/* ═══ Vertical fallback ═══════════════════════════════════════
-   Under 900px the rail unwinds into a normal column.
-   ═════════════════════════════════════════════════════════════ */
-
-@media (max-width: 899px) {
-  :root { --pad: var(--sp-3); --r-lg: 22px; --head-h: 76px; --foot-h: 72px; }
-
-  .rail {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    padding: var(--head-h) var(--sp-3) calc(var(--foot-h) + var(--sp-4));
-    overflow: visible;
-    scroll-snap-type: none;
-  }
-
-  .panel,
-  .panel-sm,
-  .panel-md,
-  .panel-lg {
-    width: 100%;
-    height: auto;
-  }
-
-  .split,
-  .split-even {
-    grid-template-rows: none;
-    grid-auto-rows: min-content;
-    flex: none;
-  }
-
-  .row { grid-template-columns: 1fr; }
-  .row-phi { grid-template-columns: 1fr; }
-
-  .card-scroll { overflow: visible; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .rail { scroll-behavior: auto; }
-
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
