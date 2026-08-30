@@ -16,110 +16,111 @@ const formatted = new Date(date).toLocaleDateString('en-GB', {
 ---
 
 <Layout title={`${title} — Letters`}>
-  <div class="shell">
-    <article class="bento">
-      <div class="col-12">
-        <div class="card card-teal post-head">
-          <a class="back" href="/letters">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M19 12H6M11 18l-6-6 6-6" />
-            </svg>
-            <span class="tag">All letters</span>
-          </a>
-          <h1 class="h2 post-title">{title}</h1>
-          <span class="tag post-date">{formatted}</span>
-        </div>
-      </div>
+  {/* Long prose is the one thing that should not run sideways, so the post
+      sits in a single panel and scrolls the ordinary way inside its card. */}
+  <section class="panel panel-lg">
+    <article class="post">
+      <div class="card card-scroll body-card">
+        <a class="back" href="/letters">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 12H6M11 18l-6-6 6-6" />
+          </svg>
+          <span class="tag">All letters</span>
+        </a>
 
-      <div class="col-8">
-        <div class="card post-body prose">
+        <span class="tag muted">{formatted}</span>
+        <h1 class="h2 post-title">{title}</h1>
+
+        <div class="prose post-prose">
           <slot />
         </div>
       </div>
 
-      <div class="col-4 stretch">
-        <div class="card card-bare post-aside">
-          <p class="hand aside-note">Written by</p>
-          <p class="h3 aside-name">Fawehinmi Erioluwa</p>
-          <p class="muted aside-body">
-            Frontend engineer in Lagos. Currently building CourtVision.
-          </p>
-          <a class="btn btn-ghost aside-btn" href="/contact">Get in touch</a>
-        </div>
-      </div>
+      <aside class="card card-teal aside">
+        <p class="hand aside-note">Written by</p>
+        <p class="h3 aside-name">Fawehinmi Erioluwa</p>
+        <p class="body aside-body">
+          Frontend engineer in Lagos. Currently building CourtVision.
+        </p>
+        <a class="btn btn-amber aside-btn" href="/contact">Get in touch</a>
+      </aside>
     </article>
-  </div>
+  </section>
 </Layout>
 
 <style>
-  .stretch { display: flex; }
-  .stretch > :global(*) { flex: 1; }
+  .post {
+    display: grid;
+    grid-template-columns: 1.618fr 1fr;
+    gap: var(--sp-2);
+    flex: 1;
+    min-height: 0;
+  }
 
-  .post-head { gap: 14px; }
+  .post > :global(*) { min-height: 0; }
+
+  .body-card { gap: var(--sp-2); }
 
   .back {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     align-self: flex-start;
+    min-height: 40px;
     text-decoration: none;
-    opacity: 0.75;
-    transition: opacity 0.18s ease, transform 0.18s ease;
+    color: var(--ink-soft);
+    transition: color 0.18s ease, transform 0.18s ease;
   }
 
-  .back:hover { opacity: 1; transform: translateX(-3px); }
+  .back:hover { color: var(--ink); transform: translateX(-3px); }
 
-  .post-title { max-width: 22ch; }
-  .post-date { opacity: 0.7; }
+  .post-title { max-width: 24ch; }
 
-  .post-body { gap: 0; }
+  .post-prose { margin-top: var(--sp-1); }
 
-  .post-body :global(p) {
-    margin: 0 0 1.15em;
-    font-size: 1.02rem;
-    line-height: 1.75;
-    max-width: 68ch;
+  .post-prose :global(p) {
+    margin: 0 0 1.1em;
+    line-height: 1.72;
+    max-width: 66ch;
   }
 
-  .post-body :global(p:last-child) { margin-bottom: 0; }
+  .post-prose :global(p:last-child) { margin-bottom: 0; }
 
-  .post-body :global(h2) {
+  .post-prose :global(h2) {
     font-family: var(--display);
     font-size: var(--fs-h3);
     font-weight: 600;
-    font-variation-settings: 'BNCE' 22, 'INFM' 24;
+    font-variation-settings: 'BNCE' 20, 'INFM' 22;
     line-height: 1.24;
-    margin: 1.8em 0 0.55em;
+    margin: 1.7em 0 0.5em;
   }
 
-  .post-body :global(h2:first-child) { margin-top: 0; }
-
-  .post-body :global(a) {
-    color: var(--live);
+  .post-prose :global(a) {
+    color: var(--live-ink);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
 
-  .post-body :global(ul),
-  .post-body :global(ol) {
-    margin: 0 0 1.15em;
+  .post-prose :global(ul),
+  .post-prose :global(ol) {
+    margin: 0 0 1.1em;
     padding-left: 1.2em;
-    line-height: 1.75;
+    line-height: 1.72;
   }
 
-  .post-body :global(li) { margin-bottom: 0.4em; }
+  .post-prose :global(li) { margin-bottom: 0.4em; }
 
-  .post-body :global(blockquote) {
-    margin: 1.4em 0;
-    padding: 4px 0 4px 20px;
+  .post-prose :global(blockquote) {
+    margin: 1.3em 0;
+    padding: 4px 0 4px var(--sp-3);
     border-left: 3px solid var(--amber);
     font-family: var(--hand);
-    font-size: 1.3rem;
-    line-height: 1.45;
+    font-size: var(--fs-h3);
+    line-height: 1.4;
     color: var(--ink-soft);
   }
 
-  .post-body :global(code) {
+  .post-prose :global(code) {
     font-family: var(--mono);
     font-size: 0.88em;
     padding: 2px 6px;
@@ -127,9 +128,12 @@ const formatted = new Date(date).toLocaleDateString('en-GB', {
     background: var(--paper);
   }
 
-  .post-aside { gap: 6px; justify-content: center; }
-  .aside-note { margin: 0; font-size: 1.3rem; color: var(--ink-soft); }
-  .aside-name { margin: 0; }
-  .aside-body { margin: 8px 0 0; font-size: 0.9rem; }
-  .aside-btn { margin-top: 18px; align-self: flex-start; }
+  .aside { justify-content: center; }
+  .aside-note { opacity: 0.8; }
+  .aside-body { opacity: 0.84; margin-top: var(--sp-1); }
+  .aside-btn { align-self: flex-start; margin-top: var(--sp-3); }
+
+  @media (max-width: 899px) {
+    .post { grid-template-columns: 1fr; }
+  }
 </style>
