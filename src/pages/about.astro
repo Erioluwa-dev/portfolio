@@ -3,7 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import PortraitCard from '../components/PortraitCard.astro';
 import { stack } from '../data/site';
 
-// A real chronology, so the labels carry order rather than decorate it.
+// A real chronology — and on a rail that runs left to right, the order is the
+// point. The labels mark position in time, not decoration.
 const beats = [
   {
     when: "Before",
@@ -38,139 +39,108 @@ const facts = [
   title="About — Fawehinmi Erioluwa"
   description="How a self-taught engineer in Lagos went from avoiding code to building offline-first systems and computer vision tools."
 >
-  <div class="shell">
-    <section class="bento">
-      <div class="col-7">
-        <div class="card card-teal about-head">
-          <span class="tag">About</span>
-          <h1 class="display">It started with laziness, honestly.</h1>
-          <p class="lead about-lead">
-            I am Fawehinmi Erioluwa &mdash; self-taught, based in Lagos, and far
-            more interested in whether a thing holds up under real conditions
-            than in whether it demos well.
-          </p>
-        </div>
+  <section class="panel panel-lg" aria-labelledby="about-heading">
+    <div class="opener">
+      <PortraitCard tag="eri · 2026" />
+
+      <div class="card card-teal head">
+        <span class="tag">About</span>
+        <h1 class="display" id="about-heading">It started with laziness, honestly.</h1>
+        <p class="lead head-lead">
+          I am Fawehinmi Erioluwa — self-taught, based in Lagos, and far more
+          interested in whether a thing holds up under real conditions than in
+          whether it demos well.
+        </p>
       </div>
+    </div>
+  </section>
 
-      <div class="col-5 stretch">
-        <PortraitCard tag="eri · 2026" />
-      </div>
-    </section>
-
-    <section class="bento" aria-labelledby="story-heading">
-      <div class="col-7">
-        <div class="card story">
-          <h2 class="h2" id="story-heading">How it went</h2>
-
-          <ol class="beats">
-            {beats.map((b) => (
-              <li class="beat">
-                <span class="tag beat-when">{b.when}</span>
-                <p class="beat-what">{b.what}</p>
-                <p class="beat-body muted">{b.body}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-
-      <div class="col-5 side">
-        <div class="card card-amber belief">
-          <p class="hand belief-note">What I actually believe</p>
-          <p class="belief-body">
-            Clean interfaces are the easy half. The hard half is code that still
-            makes sense to you a year later, on a project nobody funded, under
-            constraints nobody chose.
-          </p>
-        </div>
-
-        <div class="card tools">
-          <span class="tag muted">The toolkit</span>
-          <div class="tool-groups">
-            {stack.map((g) => (
-              <div>
-                <p class="tool-group hand">{g.group}</p>
-                <ul class="tool-list">
-                  {g.items.map((i) => <li class="tag tool">{i}</li>)}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div class="card card-bare facts">
-          <dl class="fact-list">
-            {facts.map((f) => (
-              <div class="fact">
-                <dt class="tag muted">{f.label}</dt>
-                <dd>{f.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
+  {beats.map((b) => (
+    <section class="panel panel-sm" aria-label={b.when}>
+      <div class="card beat">
+        <span class="tag beat-when">{b.when}</span>
+        <h2 class="h2 beat-what">{b.what}</h2>
+        <p class="lead beat-body muted">{b.body}</p>
       </div>
     </section>
-  </div>
+  ))}
+
+  <section class="panel panel-sm" aria-labelledby="belief-heading">
+    <div class="card card-amber belief">
+      <p class="hand belief-note">What I actually believe</p>
+      <h2 class="h2" id="belief-heading">Clean interfaces are the easy half.</h2>
+      <p class="lead belief-body">
+        The hard half is code that still makes sense to you a year later, on a
+        project nobody funded, under constraints nobody chose.
+      </p>
+    </div>
+  </section>
+
+  <section class="panel panel-sm" aria-labelledby="tools-heading">
+    <div class="split">
+      <div class="card tools card-scroll">
+        <span class="tag muted">The toolkit</span>
+        <h2 class="h3" id="tools-heading">What I reach for</h2>
+
+        <div class="tool-groups">
+          {stack.map((g) => (
+            <div>
+              <p class="hand tool-group">{g.group}</p>
+              <ul class="tool-list">
+                {g.items.map((i) => <li class="tag tool">{i}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="card card-bare facts">
+        <dl class="fact-list">
+          {facts.map((f) => (
+            <div class="fact">
+              <dt class="tag muted">{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
 </Layout>
 
 <style>
-  .stretch { display: flex; }
-  .stretch > :global(*) { flex: 1; }
-
-  .about-head { gap: 14px; }
-  .about-lead { max-width: 48ch; opacity: 0.88; }
-
-  .story { gap: 24px; }
-
-  .beats {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  .opener {
+    display: grid;
+    grid-template-columns: 1fr 1.618fr;
+    gap: var(--sp-2);
+    flex: 1;
+    min-height: 0;
   }
 
-  .beat {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 22px 0;
-  }
+  .opener > :global(*) { min-height: 0; }
 
-  .beat:last-child { padding-bottom: 0; }
-  .beat + .beat { border-top: 1px solid var(--hairline); }
+  .head { justify-content: center; }
+  .head-lead { max-width: 46ch; opacity: 0.88; }
 
-  .beat-when { color: var(--live); }
+  .beat { justify-content: center; }
+  .beat-when { color: var(--live-ink); }
+  .beat-what { max-width: 20ch; }
+  .beat-body { max-width: 40ch; }
 
-  .beat-what {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-  }
+  .belief { justify-content: center; }
+  .belief-note { opacity: 0.75; }
+  .belief-body { max-width: 40ch; }
 
-  .beat-body { margin: 0; max-width: 56ch; }
-
-  .side {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap);
-  }
-
-  .belief { gap: 10px; }
-  .belief-note { margin: 0; font-size: 1.35rem; opacity: 0.75; }
-  .belief-body { margin: 0; font-size: 1.02rem; line-height: 1.55; }
-
-  .tools { gap: 20px; }
+  .tools { justify-content: center; }
 
   .tool-groups {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--sp-3);
+    margin-top: var(--sp-1);
   }
 
-  .tool-group {
-    margin: 0 0 8px;
-    font-size: 1.15rem;
-    color: var(--ink-soft);
-  }
+  .tool-group { margin-bottom: var(--sp-1); color: var(--ink-soft); }
 
   .tool-list {
     display: flex;
@@ -189,15 +159,19 @@ const facts = [
     letter-spacing: 0.04em;
   }
 
-  .facts { padding: 22px; }
+  .facts { justify-content: center; }
 
   .fact-list {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: var(--sp-2);
   }
 
   .fact { display: flex; flex-direction: column; gap: 4px; }
   .fact dd { margin: 0; font-weight: 600; }
+
+  @media (max-width: 899px) {
+    .opener { grid-template-columns: 1fr; }
+  }
 </style>

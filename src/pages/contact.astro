@@ -7,124 +7,124 @@ const channels = [
   { label: "GitHub", value: "Erioluwa-dev", href: social.github, note: "Code, issues, and what I am shipping." },
   { label: "Instagram", value: "stay.with.eri", href: social.instagram, note: "Less code, more life." },
 ];
+
+const arrow = "M5 12h13M13 6l6 6-6 6";
 ---
 
 <Layout
   title="Contact — Fawehinmi Erioluwa"
   description="Get in touch with Fawehinmi Erioluwa — frontend roles, QA testing, and collaborations."
 >
-  <div class="shell">
-    <section class="bento">
-      <div class="col-7">
-        <div class="card card-ink contact-head">
-          <span class="tag">Contact</span>
-          <h1 class="display">Say what you need built.</h1>
-          <p class="lead contact-lead">
-            A role, contract work, or the project that has been sitting in your
-            notes app for a month. Send it over &mdash; I read everything and
-            reply within a day or two.
-          </p>
-          <a class="btn head-btn" href={`mailto:${social.email}`}>
-            {social.email}
-          </a>
-        </div>
-      </div>
+  <section class="panel panel-md" aria-labelledby="contact-heading">
+    <div class="card card-ink head">
+      <span class="tag">Contact</span>
+      <h1 class="display" id="contact-heading">Say what you need built.</h1>
+      <p class="lead head-lead">
+        A role, contract work, or the project that has been sitting in your
+        notes app for a month. Send it over — I read everything and reply
+        within a day or two.
+      </p>
+      <a class="btn btn-amber head-btn" href={`mailto:${social.email}`}>
+        {social.email}
+      </a>
+    </div>
+  </section>
 
-      <div class="col-5 stretch">
-        <div class="card card-amber open-card">
-          <p class="hand open-note">Right now I am open to</p>
-          <ul class="open-list">
-            <li>Frontend engineering roles</li>
-            <li>QA and testing work</li>
-            <li>Collaborations on real products</li>
-          </ul>
-          <p class="open-foot">
-            Lagos, Nigeria &mdash; remote-friendly and used to working across
-            timezones.
-          </p>
-        </div>
-      </div>
-    </section>
+  <section class="panel panel-sm" aria-labelledby="open-heading">
+    <div class="card card-amber open">
+      <p class="hand open-note">Right now</p>
+      <h2 class="h2" id="open-heading">I'm open to</h2>
+      <ul class="open-list">
+        <li>Frontend engineering roles</li>
+        <li>QA and testing work</li>
+        <li>Collaborations on real products</li>
+      </ul>
+      <p class="body open-foot">
+        Lagos, Nigeria — remote-friendly and used to working across timezones.
+      </p>
+    </div>
+  </section>
 
-    <section class="bento" aria-label="Ways to reach me">
+  <section class="panel panel-md" aria-label="Ways to reach me">
+    <div class="channels">
       {channels.map((c) => (
-        <div class="col-4 stretch">
-          <a
-            class="card channel"
-            href={c.href}
-            target={c.href.startsWith('http') ? '_blank' : undefined}
-            rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-          >
-            <span class="tag muted">{c.label}</span>
-            <span class="h3 channel-value">{c.value}</span>
-            <span class="muted channel-note">{c.note}</span>
-            <svg class="channel-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 12h13M13 6l6 6-6 6" />
-            </svg>
-          </a>
-        </div>
+        <a
+          class="card channel"
+          href={c.href}
+          target={c.href.startsWith('http') ? '_blank' : undefined}
+          rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          <span class="tag muted">{c.label}</span>
+          <span class="h3 channel-value">{c.value}</span>
+          <span class="body muted channel-note">{c.note}</span>
+          <svg class="channel-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d={arrow} />
+          </svg>
+        </a>
       ))}
-    </section>
-  </div>
+    </div>
+  </section>
 </Layout>
 
 <style>
-  .stretch { display: flex; }
-  .stretch > :global(*) { flex: 1; }
+  .head { justify-content: center; }
+  .head-lead { max-width: 46ch; opacity: 0.84; }
+  .head-btn { align-self: flex-start; margin-top: var(--sp-1); word-break: break-word; }
 
-  .contact-head { gap: 16px; }
-  .contact-lead { max-width: 48ch; opacity: 0.82; }
-
-  .head-btn {
-    margin-top: 8px;
-    align-self: flex-start;
-    background: var(--amber);
-    color: var(--on-amber);
-    word-break: break-word;
-  }
-
-  .open-card { gap: 12px; justify-content: center; }
-  .open-note { margin: 0; font-size: 1.35rem; opacity: 0.75; }
+  .open { justify-content: center; }
+  .open-note { opacity: 0.75; }
 
   .open-list {
-    margin: 0;
+    margin: var(--sp-1) 0 0;
     padding: 0;
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    font-size: 1.05rem;
+    gap: var(--sp-1);
+    font-size: var(--fs-lead);
     font-weight: 600;
   }
 
-  .open-list li { position: relative; padding-left: 20px; }
+  .open-list li { position: relative; padding-left: 22px; }
 
   .open-list li::before {
     content: "";
     position: absolute;
     left: 0;
     top: 0.62em;
-    width: 9px;
+    width: 10px;
     height: 2px;
     background: currentColor;
   }
 
-  .open-foot { margin: 6px 0 0; font-size: 0.9rem; opacity: 0.72; }
+  .open-foot { margin-top: var(--sp-2); opacity: 0.74; }
+
+  .channels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-2);
+    flex: 1;
+    min-height: 0;
+  }
 
   .channel {
+    justify-content: center;
     gap: 6px;
     text-decoration: none;
     transition: transform 0.18s ease, border-color 0.18s ease;
   }
 
-  .channel:hover { transform: translateY(-3px); border-color: var(--live); }
-  .channel:hover .channel-arrow { transform: translateX(4px); color: var(--live); }
+  .channel:hover { transform: translateY(-3px); border-color: var(--live-ink); }
+  .channel:hover .channel-arrow { transform: translateX(4px); color: var(--live-ink); }
 
   .channel-value { word-break: break-word; }
-  .channel-note { font-size: 0.9rem; }
 
   .channel-arrow {
-    margin-top: 16px;
+    margin-top: var(--sp-3);
     transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  @media (max-width: 899px) {
+    .channels { grid-template-columns: 1fr; }
   }
 </style>

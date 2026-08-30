@@ -4,79 +4,56 @@ import { letters } from '../data/site';
 
 const fmt = (d: string) =>
   new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+
+const arrow = "M5 12h13M13 6l6 6-6 6";
 ---
 
 <Layout
   title="Letters — Fawehinmi Erioluwa"
   description="Notes on building solo, shipping under constraints, and the tools that earn their place."
 >
-  <div class="shell">
-    <section class="bento">
-      <div class="col-8">
-        <div class="card card-amber page-head">
-          <span class="tag">Letters</span>
-          <h1 class="display">Notes from inside the build.</h1>
-          <p class="lead head-lead">
-            Written while the work was still messy, not cleaned up afterwards.
-            Mostly about scope, constraints, and what actually shipped.
-          </p>
-        </div>
-      </div>
+  <section class="panel panel-sm" aria-labelledby="letters-heading">
+    <div class="card card-amber head">
+      <span class="tag">Letters</span>
+      <h1 class="display" id="letters-heading">Notes from inside the build.</h1>
+      <p class="lead head-lead">
+        Written while the work was still messy, not cleaned up afterwards.
+        Mostly about scope, constraints, and what actually shipped.
+      </p>
+    </div>
+  </section>
 
-      <div class="col-4 stretch">
-        <div class="card card-bare count-card">
-          <p class="hand count-note">Written so far</p>
-          <p class="h2 count-value">{letters.length}</p>
-          <p class="muted count-body">
-            Slowly. I write one when a build teaches me something I did not
-            expect.
-          </p>
-        </div>
-      </div>
+  {letters.map((l) => (
+    <section class="panel panel-sm" aria-label={l.title}>
+      <a class="card letter" href={`/letters/${l.slug}`}>
+        <span class="tag muted">{fmt(l.date)}</span>
+        <h2 class="h2 letter-title">{l.title}</h2>
+        <p class="lead letter-excerpt muted">{l.excerpt}</p>
+        <span class="link-arrow letter-cta">
+          Read it
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d={arrow} />
+          </svg>
+        </span>
+      </a>
     </section>
-
-    <section class="bento" aria-label="All letters">
-      {letters.map((l) => (
-        <div class="col-12">
-          <a class="card letter" href={`/letters/${l.slug}`}>
-            <span class="tag muted letter-date">{fmt(l.date)}</span>
-            <h2 class="h3 letter-title">{l.title}</h2>
-            <p class="muted letter-excerpt">{l.excerpt}</p>
-            <span class="link-arrow letter-cta">
-              Read it
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h13M13 6l6 6-6 6" />
-              </svg>
-            </span>
-          </a>
-        </div>
-      ))}
-    </section>
-  </div>
+  ))}
 </Layout>
 
 <style>
-  .stretch { display: flex; }
-  .stretch > :global(*) { flex: 1; }
-
-  .page-head { gap: 14px; }
-  .head-lead { max-width: 48ch; opacity: 0.85; }
-
-  .count-card { gap: 4px; justify-content: center; }
-  .count-note { margin: 0; font-size: 1.3rem; color: var(--ink-soft); }
-  .count-value { margin: 0; color: var(--live); }
-  .count-body { margin: 8px 0 0; font-size: 0.9rem; }
+  .head { justify-content: center; }
+  .head-lead { max-width: 34ch; opacity: 0.86; }
 
   .letter {
-    gap: 8px;
+    justify-content: center;
     text-decoration: none;
     transition: transform 0.18s ease, border-color 0.18s ease;
   }
 
-  .letter:hover { transform: translateY(-3px); border-color: var(--live); }
-  .letter:hover .letter-title { color: var(--live); }
+  .letter:hover { transform: translateY(-3px); border-color: var(--live-ink); }
+  .letter:hover .letter-title { color: var(--live-ink); }
 
-  .letter-title { transition: color 0.18s ease; max-width: 30ch; }
-  .letter-excerpt { margin: 0; max-width: 62ch; }
-  .letter-cta { margin-top: 12px; font-size: 0.92rem; }
+  .letter-title { max-width: 18ch; transition: color 0.18s ease; }
+  .letter-excerpt { max-width: 40ch; }
+  .letter-cta { margin-top: var(--sp-1); }
 </style>
