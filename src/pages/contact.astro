@@ -16,7 +16,7 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   description="Get in touch with Fawehinmi Erioluwa — frontend roles, QA testing, and collaborations."
 >
   <section class="panel panel-md" aria-labelledby="contact-heading">
-    <div class="card card-ink head">
+    <div class="card card-ink card-hero head">
       <span class="tag">Contact</span>
       <h1 class="display" id="contact-heading">Say what you need built.</h1>
       <p class="lead head-lead">
@@ -45,7 +45,7 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
     </div>
   </section>
 
-  <section class="panel panel-md" aria-label="Ways to reach me">
+  <section class="panel panel-lg" aria-label="Ways to reach me">
     <div class="channels">
       {channels.map((c) => (
         <a
@@ -67,11 +67,11 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 </Layout>
 
 <style>
-  .head { justify-content: center; }
+  .head { justify-content: safe center; }
   .head-lead { max-width: 46ch; opacity: 0.84; }
   .head-btn { align-self: flex-start; margin-top: var(--sp-1); word-break: break-word; }
 
-  .open { justify-content: center; }
+  .open { justify-content: safe center; }
   .open-note { opacity: 0.75; }
 
   .open-list {
@@ -108,7 +108,7 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   }
 
   .channel {
-    justify-content: center;
+    justify-content: safe center;
     gap: 6px;
     text-decoration: none;
     transition: transform 0.18s ease, border-color 0.18s ease;
@@ -117,7 +117,12 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   .channel:hover { transform: translateY(-3px); border-color: var(--live-ink); }
   .channel:hover .channel-arrow { transform: translateX(4px); color: var(--live-ink); }
 
-  .channel-value { word-break: break-word; }
+  /* A 27-character address in a third-of-a-panel card is the one place
+     the fixed h3 step broke down, so this one sizes to its card. */
+  .channel-value {
+    font-size: clamp(var(--fs-body), 6.2cqi, var(--fs-h3));
+    overflow-wrap: anywhere;
+  }
 
   .channel-arrow {
     margin-top: var(--sp-3);

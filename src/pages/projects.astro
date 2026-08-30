@@ -10,9 +10,9 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   title="Projects — Fawehinmi Erioluwa"
   description="Computer vision, offline-first systems, and the small builds that taught me the fundamentals."
 >
-  <section class="panel panel-sm" aria-labelledby="projects-heading">
+  <section class="panel panel-md" aria-labelledby="projects-heading">
     <div class="split">
-      <div class="card card-amber head">
+      <div class="card card-amber card-hero head">
         <span class="tag">Projects</span>
         <h1 class="display" id="projects-heading">Four builds.</h1>
         <p class="lead head-lead">
@@ -54,12 +54,12 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 </Layout>
 
 <style>
-  .head { justify-content: center; }
-  .head-lead { max-width: 34ch; opacity: 0.86; }
+  .head { justify-content: safe center; }
+  .head-lead { max-width: 42ch; opacity: 0.86; }
 
-  .repo { justify-content: center; }
+  .repo { justify-content: safe center; }
   .repo-note { color: var(--ink-soft); }
 
-  .closing { flex: 1; justify-content: center; align-items: flex-start; }
+  .closing { flex: var(--fill); justify-content: safe center; align-items: flex-start; }
   .closing-note { color: var(--amber); }
 </style>

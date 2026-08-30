@@ -18,7 +18,7 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
       <PortraitCard />
 
       <div class="opener-stack">
-        <div class="card card-amber intro">
+        <div class="card card-amber card-hero card-scroll intro">
           <p class="hand greeting">Hi — I'm Eri.</p>
           <h1 class="display" id="thesis">
             I build software that works when the internet doesn't.
@@ -27,9 +27,9 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
             Frontend engineer in Lagos, Nigeria. Self-taught, still learning, and
             currently teaching a camera to read a basketball game.
           </p>
-          <p class="tag scroll-hint">
+          <p class="tag rail-only scroll-hint">
             <span class="dot dot-pulse"></span>
-            Scroll sideways
+            Scroll — the page runs sideways
           </p>
         </div>
 
@@ -57,7 +57,7 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
     <div class="card card-teal now">
       <span class="tag now-label"><span class="dot dot-pulse"></span> Currently</span>
       <h2 class="h2 now-title">CourtVision</h2>
-      <p class="body now-body">
+      <p class="lead now-body">
         Detection and tracking hold through traffic. The conversational layer
         is what I'm building next.
       </p>
@@ -81,8 +81,8 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
         {stack.map((g) => (
           <div>
             <p class="hand tool-group">{g.group}</p>
-            <ul class="tool-list">
-              {g.items.map((item) => <li class="tag tool">{item}</li>)}
+            <ul class="chip-list">
+              {g.items.map((item) => <li class="tag chip chip-solid">{item}</li>)}
             </ul>
           </div>
         ))}
@@ -103,7 +103,7 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
     </div>
 
     <div class="row work-row">
-      {rest.map((p) => <ProjectCard project={p} />)}
+      {rest.map((p) => <ProjectCard project={p} level={3} />)}
     </div>
   </section>
 
@@ -137,7 +137,7 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 
   <!-- 7 — the end of the rail -->
   <section class="panel panel-sm" aria-labelledby="contact-heading">
-    <div class="card card-ink closing">
+    <div class="card card-ink card-hero card-scroll closing">
       <p class="hand closing-note">You made it to the end.</p>
       <h2 class="h2" id="contact-heading">Tell me what it needs to do.</h2>
       <a class="btn btn-amber closing-btn" href={`mailto:${social.email}`}>
@@ -154,40 +154,40 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 </Layout>
 
 <style>
-  /* Portrait sits at 1, the claim at φ — the opener carries the ratio. */
+  /* The mark sits at 1, the claim at φ². It used to be 1 : φ, which handed
+     38% of the widest panel on the site to a logo and squeezed the sentence
+     that the whole page exists to make. */
   .opener {
     display: grid;
-    grid-template-columns: 1fr 1.618fr;
-    gap: var(--sp-2);
-    flex: 1;
+    grid-template-columns: 1fr 2.618fr;
+    gap: var(--sp-3);
+    flex: var(--fill);
     min-height: 0;
   }
 
   .opener > :global(*) { min-height: 0; }
 
-  /* Who I am sits at φ, what I'm open to at 1, directly beneath it. */
+  /* Who I am at φ², what I'm open to at 1, directly beneath it. */
   .opener-stack {
     display: grid;
-    grid-template-rows: 1.618fr 1fr;
+    grid-template-rows: var(--opener-rows, 2.618fr 1fr);
+    grid-auto-rows: min-content;
     gap: var(--sp-2);
     min-height: 0;
   }
 
   .opener-stack > :global(*) { min-height: 0; }
 
-  .intro { justify-content: center; }
-  .greeting { opacity: 0.72; }
-  .intro-lead { max-width: 46ch; opacity: 0.86; }
+  .intro { justify-content: safe center; }
+  .greeting { opacity: 0.78; }
+  .intro-lead { max-width: 46ch; }
 
-  .scroll-hint {
-    margin-top: var(--sp-2);
-    opacity: 0.62;
-  }
+  .scroll-hint { margin-top: var(--sp-1); opacity: 0.78; }
 
-  .now { justify-content: center; }
-  .now-label { opacity: 0.8; }
+  .now { justify-content: safe center; }
+  .now-label { opacity: 0.85; }
   .now-title { color: var(--amber); }
-  .now-body { opacity: 0.86; max-width: 34ch; }
+  .now-body { max-width: 34ch; }
 
   .open {
     flex-direction: row;
@@ -197,11 +197,11 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
     flex-wrap: wrap;
   }
 
-  .open-text { display: flex; flex-direction: column; gap: 6px; }
+  .open-text { display: flex; flex-direction: column; gap: 6px; min-width: 18ch; }
   .open-body { color: var(--ink-soft); max-width: 42ch; }
   .open-btn { flex-shrink: 0; }
 
-  .toolkit { flex: 1; justify-content: center; }
+  .toolkit { flex: var(--fill); justify-content: safe center; }
 
   .tool-groups {
     display: flex;
@@ -212,35 +212,19 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 
   .tool-group { margin-bottom: var(--sp-1); color: var(--ink-soft); }
 
-  .tool-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .tool {
-    padding: 7px 11px;
-    border-radius: var(--r-pill);
-    background: var(--paper);
-    text-transform: none;
-    letter-spacing: 0.04em;
-  }
-
   .work-head {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    gap: var(--sp-2);
     flex-wrap: wrap;
     flex: 0 0 auto;
   }
 
-  .work-row { flex: 1; min-height: 0; }
+  .work-row { flex: var(--fill); min-height: 0; }
   .work-row > :global(*) { min-height: 0; }
 
-  .letters { flex: 1; justify-content: center; }
+  .letters { flex: var(--fill); justify-content: safe center; }
 
   .letter-list {
     margin: var(--sp-1) 0 0;
@@ -271,15 +255,18 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 
   .letters-all { margin-top: var(--sp-2); }
 
-  .closing { flex: 1; justify-content: center; }
+  .closing { flex: var(--fill); justify-content: safe center; }
   .closing-note { color: var(--amber); }
   .closing-btn { align-self: flex-start; margin-top: var(--sp-1); word-break: break-word; }
-  .closing-link { opacity: 0.72; }
+  .closing-link { opacity: 0.82; }
 
   @media (max-width: 899px) {
     .opener { grid-template-columns: 1fr; }
-    .opener-stack { grid-template-rows: none; grid-auto-rows: min-content; }
-    .work-row { grid-template-columns: 1fr; }
+    .opener-stack { --opener-rows: none; }
     .open { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .opener-stack { --opener-rows: none; }
   }
 </style>

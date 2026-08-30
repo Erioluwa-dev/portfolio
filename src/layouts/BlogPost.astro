@@ -49,11 +49,12 @@ const formatted = new Date(date).toLocaleDateString('en-GB', {
 </Layout>
 
 <style>
+  /* Prose at φ², the byline at 1. Reading is the whole job of this page. */
   .post {
     display: grid;
-    grid-template-columns: 1.618fr 1fr;
-    gap: var(--sp-2);
-    flex: 1;
+    grid-template-columns: 2.618fr 1fr;
+    gap: var(--sp-3);
+    flex: var(--fill);
     min-height: 0;
   }
 
@@ -128,7 +129,7 @@ const formatted = new Date(date).toLocaleDateString('en-GB', {
     background: var(--paper);
   }
 
-  .aside { justify-content: center; }
+  .aside { justify-content: safe center; }
   .aside-note { opacity: 0.8; }
   .aside-body { opacity: 0.84; margin-top: var(--sp-1); }
   .aside-btn { align-self: flex-start; margin-top: var(--sp-3); }

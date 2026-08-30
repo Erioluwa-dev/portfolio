@@ -43,7 +43,7 @@ const facts = [
     <div class="opener">
       <PortraitCard tag="eri · 2026" />
 
-      <div class="card card-teal head">
+      <div class="card card-teal card-hero head">
         <span class="tag">About</span>
         <h1 class="display" id="about-heading">It started with laziness, honestly.</h1>
         <p class="lead head-lead">
@@ -86,8 +86,8 @@ const facts = [
           {stack.map((g) => (
             <div>
               <p class="hand tool-group">{g.group}</p>
-              <ul class="tool-list">
-                {g.items.map((i) => <li class="tag tool">{i}</li>)}
+              <ul class="chip-list">
+                {g.items.map((i) => <li class="tag chip chip-solid">{i}</li>)}
               </ul>
             </div>
           ))}
@@ -109,29 +109,31 @@ const facts = [
 </Layout>
 
 <style>
+  /* The mark at 1, the story at φ². A logo does not need a third of the
+     widest panel on the site. */
   .opener {
     display: grid;
-    grid-template-columns: 1fr 1.618fr;
-    gap: var(--sp-2);
-    flex: 1;
+    grid-template-columns: 1fr 2.618fr;
+    gap: var(--sp-3);
+    flex: var(--fill);
     min-height: 0;
   }
 
   .opener > :global(*) { min-height: 0; }
 
-  .head { justify-content: center; }
+  .head { justify-content: safe center; }
   .head-lead { max-width: 46ch; opacity: 0.88; }
 
-  .beat { justify-content: center; }
+  .beat { justify-content: safe center; }
   .beat-when { color: var(--live-ink); }
   .beat-what { max-width: 20ch; }
   .beat-body { max-width: 40ch; }
 
-  .belief { justify-content: center; }
+  .belief { justify-content: safe center; }
   .belief-note { opacity: 0.75; }
   .belief-body { max-width: 40ch; }
 
-  .tools { justify-content: center; }
+  .tools { justify-content: safe center; }
 
   .tool-groups {
     display: flex;
@@ -142,24 +144,7 @@ const facts = [
 
   .tool-group { margin-bottom: var(--sp-1); color: var(--ink-soft); }
 
-  .tool-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .tool {
-    padding: 7px 11px;
-    border-radius: var(--r-pill);
-    background: var(--paper);
-    text-transform: none;
-    letter-spacing: 0.04em;
-  }
-
-  .facts { justify-content: center; }
+  .facts { justify-content: safe center; }
 
   .fact-list {
     margin: 0;
