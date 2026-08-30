@@ -33,21 +33,32 @@ const groups = [
     ],
   },
 ];
+
+// Options need stable ids so the input can point at the active one.
+let n = 0;
+const numbered = groups.map((g) => ({
+  ...g,
+  items: g.items.map((item) => ({ ...item, id: `cmdk-opt-${n++}` })),
+}));
 ---
 
-<button id="cmdk-trigger" class="trigger" aria-label="Open search (Control K)">
+<button id="cmdk-trigger" class="trigger" aria-label="Search this site (Control K)">
   <span class="tag">Search</span>
   <kbd class="key">Ctrl K</kbd>
 </button>
 
 <div id="cmdk-overlay" class="overlay" hidden></div>
 
-<div id="cmdk-panel" class="panel" role="dialog" aria-modal="true" aria-label="Search the site" hidden>
-  <div class="panel-head">
+<div id="cmdk-panel" class="cmdk" role="dialog" aria-modal="true" aria-label="Search the site" hidden>
+  <div class="cmdk-head">
     <input
       id="cmdk-input"
       class="input"
       type="text"
+      role="combobox"
+      aria-expanded="true"
+      aria-controls="cmdk-body"
+      aria-autocomplete="list"
       placeholder="Search pages, projects, letters..."
       autocomplete="off"
       spellcheck="false"
@@ -55,13 +66,16 @@ const groups = [
     <kbd class="key">Esc</kbd>
   </div>
 
-  <div class="panel-body" id="cmdk-body">
-    {groups.map((g) => (
-      <section class="group" data-group>
-        <p class="tag group-name">{g.name}</p>
+  <div class="cmdk-body" id="cmdk-body" role="listbox" aria-label="Results">
+    {numbered.map((g) => (
+      <section class="group" role="group" aria-label={g.name} data-group>
+        <p class="tag group-name" aria-hidden="true">{g.name}</p>
         {g.items.map((item) => (
           <a
             class="item"
+            id={item.id}
+            role="option"
+            aria-selected="false"
             href={item.href}
             data-item
             data-search={`${item.label} ${item.note}`.toLowerCase()}
@@ -75,23 +89,29 @@ const groups = [
 
     <p class="empty" id="cmdk-empty" hidden>Nothing matches that. Try a project name.</p>
   </div>
+
+  <p class="cmdk-foot tag" aria-hidden="true">↑↓ to move · ↵ to open · esc to close</p>
 </div>
 
 <style>
+  /* The bar is fixed and 55px tall, so a control 20px off the bottom sat
+     underneath it — visible in no theme and clickable in none. */
   .trigger {
     position: fixed;
-    right: 20px;
-    bottom: 20px;
-    z-index: 900;
+    right: var(--sp-3);
+    bottom: calc(var(--foot-h) + var(--sp-2));
+    z-index: 1100;
     display: inline-flex;
     align-items: center;
     gap: 9px;
+    min-height: 44px;
     padding: 11px 15px;
     border: 1px solid var(--hairline);
     border-radius: var(--r-pill);
     background: var(--chalk);
     color: var(--ink-soft);
     cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
     transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
   }
 
@@ -121,12 +141,14 @@ const groups = [
 
   /* These carry a display value, so the UA [hidden] rule needs restating. */
   .overlay[hidden],
-  .panel[hidden],
+  .cmdk[hidden],
   .group[hidden],
   .item[hidden],
   .empty[hidden] { display: none; }
 
-  .panel {
+  /* Not ".panel" — that class belongs to the rail, and the global rules for
+     it were stretching this dialog to a fixed 66vh of mostly empty box. */
+  .cmdk {
     position: fixed;
     z-index: 1600;
     top: 12vh;
@@ -143,7 +165,7 @@ const groups = [
     box-shadow: 0 26px 60px rgba(23, 22, 15, 0.3);
   }
 
-  .panel-head {
+  .cmdk-head {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -164,9 +186,19 @@ const groups = [
 
   .input::placeholder { color: var(--ink-faint); }
 
-  .panel-body {
+  .cmdk-body {
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 10px 12px 16px;
+  }
+
+  .cmdk-foot {
+    margin: 0;
+    padding: 10px 22px;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+    text-transform: none;
   }
 
   .group { padding-top: 10px; }
@@ -174,7 +206,7 @@ const groups = [
   .group-name {
     margin: 0 0 4px;
     padding: 0 10px;
-    color: var(--ink-faint);
+    color: var(--ink-soft);
   }
 
   .item {
@@ -204,17 +236,18 @@ const groups = [
   }
 
   .item:hover .item-note,
-  .item.is-active .item-note { color: inherit; opacity: 0.75; }
+  .item.is-active .item-note { color: inherit; opacity: 0.8; }
 
   .empty {
     margin: 0;
     padding: 22px 12px;
-    color: var(--ink-faint);
+    color: var(--ink-soft);
     text-align: center;
   }
 
   @media (max-width: 620px) {
-    .trigger { right: 14px; bottom: 14px; }
+    .trigger { right: var(--sp-2); }
+    .cmdk-foot { display: none; }
   }
 </style>
 
@@ -229,16 +262,33 @@ const groups = [
 
     const items = Array.from(panel.querySelectorAll<HTMLAnchorElement>("[data-item]"));
     const groups = Array.from(panel.querySelectorAll<HTMLElement>("[data-group]"));
+    // Everything the dialog covers is sealed off while it is open, so a
+    // screen reader or a Tab press cannot wander behind it.
+    const behind = ["#rail", "#island", "footer"]
+      .map((sel) => document.querySelector(sel))
+      .filter((el): el is HTMLElement => el instanceof HTMLElement);
+
     let active = 0;
+    let restoreFocusTo: HTMLElement | null = null;
 
     const visible = () => items.filter((el) => !el.hidden);
 
     const paint = () => {
       const list = visible();
       if (active >= list.length) active = Math.max(0, list.length - 1);
-      items.forEach((el) => el.classList.remove("is-active"));
-      list[active]?.classList.add("is-active");
-      list[active]?.scrollIntoView({ block: "nearest" });
+      items.forEach((el) => {
+        el.classList.remove("is-active");
+        el.setAttribute("aria-selected", "false");
+      });
+      const current = list[active];
+      if (current) {
+        current.classList.add("is-active");
+        current.setAttribute("aria-selected", "true");
+        current.scrollIntoView({ block: "nearest" });
+        input.setAttribute("aria-activedescendant", current.id);
+      } else {
+        input.removeAttribute("aria-activedescendant");
+      }
     };
 
     const filter = (q: string) => {
@@ -255,16 +305,28 @@ const groups = [
     };
 
     const open = () => {
+      const from = document.activeElement;
+      restoreFocusTo = from instanceof HTMLElement && from !== document.body ? from : trigger;
       overlay.hidden = false;
       panel.hidden = false;
+      behind.forEach((el) => el.setAttribute("inert", ""));
       input.value = "";
       filter("");
       input.focus();
     };
 
     const close = () => {
+      if (panel.hidden) return;
       overlay.hidden = true;
       panel.hidden = true;
+      behind.forEach((el) => el.removeAttribute("inert"));
+      // Focus goes back where it came from, not to the top of the document.
+      (restoreFocusTo ?? trigger).focus();
+    };
+
+    const move = (step: number) => {
+      active = Math.min(Math.max(active + step, 0), Math.max(0, visible().length - 1));
+      paint();
     };
 
     trigger.addEventListener("click", open);
@@ -281,15 +343,19 @@ const groups = [
       if (panel.hidden) return;
 
       if (e.key === "Escape") {
+        e.preventDefault();
         close();
       } else if (e.key === "ArrowDown") {
         e.preventDefault();
-        active = Math.min(active + 1, visible().length - 1);
-        paint();
+        move(1);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        active = Math.max(active - 1, 0);
-        paint();
+        move(-1);
+      } else if (e.key === "Tab") {
+        // Focus stays on the input; Tab walks the list like the arrows do,
+        // so the dialog is never a place you can fall out the back of.
+        e.preventDefault();
+        move(e.shiftKey ? -1 : 1);
       } else if (e.key === "Enter") {
         const target = visible()[active];
         if (target) {
