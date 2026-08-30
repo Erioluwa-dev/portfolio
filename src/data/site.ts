@@ -48,17 +48,6 @@ export const projects: Project[] = [
     stack: ["Python", "PyTorch", "PyTorch Geometric", "Pandas"],
   },
   {
-    slug: "claw-code-parity",
-    name: "claw-code-parity",
-    kind: "Systems · Rust",
-    status: "building",
-    summary:
-      "A deliberate trip outside the TypeScript ecosystem, into a language that will not let things slide.",
-    detail:
-      "Rust for the reason most people pick it up: ownership, lifetimes and an unforgiving compiler teach you what the runtime had been quietly covering for. This is exploration, not a specialisation — but I would rather learn the tool a problem asks for than reshape the problem to fit the tools I already have.",
-    stack: ["Rust", "Cargo"],
-  },
-  {
     slug: "portfolio",
     name: "This site",
     kind: "Static site",
