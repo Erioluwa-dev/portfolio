@@ -59,17 +59,6 @@ export const projects: Project[] = [
     stack: ["Rust", "Cargo"],
   },
   {
-    slug: "whatsapp-clone",
-    name: "WhatsApp Clone",
-    kind: "Realtime interface",
-    status: "shipped",
-    summary:
-      "Chat is the honest test of interface work — presence, ordering, and state that never sits still.",
-    detail:
-      "Threads, message state, optimistic sends and a layout that has to stay composed while data arrives out of order. Rebuilding something people use every day is unforgiving in a useful way: the bar is not whether it works, it is whether it feels like the thing.",
-    stack: ["React", "TypeScript", "Realtime", "CSS"],
-  },
-  {
     slug: "portfolio",
     name: "This site",
     kind: "Static site",
