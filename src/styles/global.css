@@ -3,10 +3,15 @@
 
    Warm chalk paper · hardwood amber · court teal · one live magenta.
 
-   Type is handwritten: Shantell Sans carries the voice (bouncy and
-   informal at display size, settled for reading), Grape Nuts is the pen
-   used for margin notes, and DM Mono is the machine talking back — the
-   only non-human face on the site.
+   Type is cursive throughout. Caveat sets everything — claims, reading
+   copy, buttons, labels — and Grape Nuts is the thinner pen kept for
+   margin notes, so an aside still reads as a different hand. Nothing on
+   the site is set in a non-script face.
+
+   This is a deliberate trade. A joined script is hardest to read exactly
+   where there is most to read, so the whole scale is stepped up and
+   opened out to buy legibility back: script faces sit small in the em,
+   and 16px of Caveat is not 16px of a sans.
 
    Every scale below is golden-ratio derived. Space steps by φ (1.618)
    from an 8px base; type steps by the cube root of φ (1.174) from 16px,
@@ -64,13 +69,19 @@
      viewport is not, so viewport units drop a 68px headline into a
      476px card — which is most of why the small panels looked jammed.
      Everything below display size stays on the 16 · φ^(n/3) steps. */
-  --fs-micro: 0.72rem;   /* 11.6 */
-  --fs-small: 0.85rem;   /* 13.6 */
-  --fs-body:  1rem;      /* 16   */
-  --fs-lead:  1.175rem;  /* 18.8 */
-  --fs-h3:    1.375rem;  /* 22   */
-  --fs-h2:    clamp(1.618rem, 4.4cqi, 2.618rem);  /* → 41.9 = 16φ² */
-  --fs-display: clamp(2.1rem, 7.6cqi, 4.236rem);  /* → 67.8 = 16φ³ */
+  /* Every step carries ~1.2 over the derived scale. Caveat's x-height is
+     small enough that the old numbers would have set reading copy a full
+     tier below where it reads. */
+  --fs-micro: 0.88rem;   /* 14.1 */
+  --fs-small: 1.02rem;   /* 16.3 */
+  --fs-body:  1.2rem;    /* 19.2 */
+  --fs-lead:  1.4rem;    /* 22.4 */
+  /* The display tiers run ~1.12 over the derived scale: Caveat and Grape
+     Nuts both sit small in the em, and matching the sans optically matters
+     more than matching it numerically. */
+  --fs-h3:    1.72rem;   /* 27.5 */
+  --fs-h2:    clamp(1.8rem, 4.9cqi, 2.9rem);      /* → 46.4 */
+  --fs-display: clamp(2.35rem, 8.4cqi, 4.75rem);  /* → 76   */
 
   /* ── Chrome heights ──
      head + foot = 89 + 55 = 144 = --sp-7, so a panel's usable height
@@ -91,10 +102,12 @@
   --pad-lg: var(--sp-5);
 
   /* ── Faces ── */
-  --display: 'Shantell Sans', 'Comic Sans MS', cursive;
-  --body:    'Shantell Sans', 'Trebuchet MS', sans-serif;
+  --display: 'Caveat', 'Segoe Script', 'Brush Script MT', cursive;
+  --body:    'Caveat', 'Segoe Script', 'Brush Script MT', cursive;
   --hand:    'Grape Nuts', 'Segoe Script', cursive;
-  --mono:    'DM Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  /* Named for the role it plays — the quiet label — not for a monospace
+     it no longer is. */
+  --mono:    'Caveat', 'Segoe Script', 'Brush Script MT', cursive;
 
   color-scheme: light;
 }
@@ -231,8 +244,11 @@ body {
   color: var(--ink);
   font-family: var(--body);
   font-size: var(--fs-body);
-  line-height: 1.6;
-  font-variation-settings: 'BNCE' 0, 'INFM' 0;
+  /* A script at 400 goes spidery in a paragraph, and joined letterforms
+     need the leading opened before lines stop tangling. */
+  font-weight: 500;
+  line-height: 1.72;
+  font-variation-settings: normal;
   -webkit-font-smoothing: antialiased;
   transition: background 0.35s ease, color 0.35s ease;
 }
@@ -385,9 +401,12 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   font-family: var(--display);
   font-size: var(--fs-display);
   font-weight: 700;
-  font-variation-settings: 'BNCE' 48, 'INFM' 42;
-  line-height: 1.02;
-  letter-spacing: -0.014em;
+  /* Caveat has no bounce axes, and joined letterforms need their tracking
+     left alone — pulling them together breaks the join. The long ascenders
+     and descenders want the extra leading too. */
+  font-variation-settings: normal;
+  line-height: 1.12;
+  letter-spacing: 0;
   margin: 0;
   /* Bound the measure first, then balance — balance alone will happily
      set a 60-character single line across a wide card. */
@@ -400,9 +419,9 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   font-family: var(--display);
   font-size: var(--fs-h2);
   font-weight: 700;
-  font-variation-settings: 'BNCE' 34, 'INFM' 32;
-  line-height: 1.1;
-  letter-spacing: -0.008em;
+  font-variation-settings: normal;
+  line-height: 1.2;
+  letter-spacing: 0;
   margin: 0;
   max-inline-size: 24ch;
   text-wrap: balance;
@@ -411,17 +430,19 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
 /* Tier 3 — the name of a thing */
 .h3 {
   font-family: var(--display);
+  /* A script face at 24px needs the extra weight to still read as a tier
+     above the paragraph next to it. */
   font-size: var(--fs-h3);
-  font-weight: 600;
-  font-variation-settings: 'BNCE' 20, 'INFM' 22;
-  line-height: 1.24;
+  font-weight: 700;
+  font-variation-settings: normal;
+  line-height: 1.3;
   margin: 0;
 }
 
 /* Tier 4 — reading copy */
 .lead {
   font-size: var(--fs-lead);
-  line-height: 1.5;
+  line-height: 1.62;
   margin: 0;
   text-wrap: pretty;
 }
@@ -449,18 +470,20 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   margin: 0;
 }
 
-/* Tier 5 — machine labels. Smallest, widest, quietest. */
+/* Tier 5 — the quiet label. Smallest and lightest; it can no longer be
+   the widest, because uppercasing a joined script breaks every join and
+   0.14em of tracking pulls the rest apart. It stays distinct by being
+   small, spaced a little, and set in the lighter weight. */
 .tag {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   font-family: var(--mono);
   font-size: var(--fs-micro);
-  font-weight: 500;
+  font-weight: 600;
   font-variation-settings: normal;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  line-height: 1;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
 }
 
 .tag-pill {
