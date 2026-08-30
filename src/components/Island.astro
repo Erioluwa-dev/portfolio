@@ -1,0 +1,251 @@
+---
+// The island is the only fixed chrome on the site. Collapsed, it names the page
+// you're on; expanded, it hands you the rest of them.
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+
+const links = [
+  { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects" },
+  { label: "About", href: "/about" },
+  { label: "Letters", href: "/letters" },
+  { label: "Contact", href: "/contact" },
+];
+
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+
+const current = links.find((l) => isActive(l.href))?.label ?? "Home";
+---
+
+<header id="island" class="island" data-open="false">
+  <div
+    class="pill"
+    id="pill"
+    role="button"
+    tabindex="0"
+    aria-expanded="false"
+    aria-label={`Navigation — currently on ${current}`}
+  >
+    <span class="compact" aria-hidden="true">
+      <span class="dot dot-pulse compact-dot"></span>
+      <span class="tag compact-label">{current}</span>
+    </span>
+
+    <nav class="nav" aria-label="Pages">
+      {links.map((link, i) => (
+        <a
+          href={link.href}
+          class:list={["nav-link", { "is-active": isActive(link.href) }]}
+          style={`--i:${i}`}
+          aria-current={isActive(link.href) ? "page" : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+
+      <button
+        id="theme-toggle"
+        class="theme-toggle"
+        style={`--i:${links.length}`}
+        aria-label="Switch between light and dark"
+      >
+        <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4.5"></circle>
+          <path d="M12 1.5v2M12 20.5v2M3.6 3.6l1.4 1.4M19 19l1.4 1.4M1.5 12h2M20.5 12h2M3.6 20.4L5 19M19 5l1.4-1.4"></path>
+        </svg>
+        <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .island {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding-top: 22px;
+    pointer-events: none;
+  }
+
+  .pill {
+    pointer-events: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    width: 168px;
+    padding: 0 18px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--r-pill);
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(23, 22, 15, 0.22);
+    transition: width 0.42s cubic-bezier(0.34, 1.32, 0.5, 1), background 0.35s ease;
+  }
+
+  .compact {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    transition: opacity 0.15s ease;
+  }
+
+  .compact-dot { background: var(--amber); }
+
+  .compact-label {
+    color: var(--paper);
+    opacity: 0.85;
+  }
+
+  .nav {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 0 10px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.18s ease, visibility 0s 0.2s;
+  }
+
+  .nav-link {
+    font-family: var(--body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(232, 227, 214, 0.66);
+    text-decoration: none;
+    padding: 8px 13px;
+    border-radius: var(--r-pill);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: color 0.18s ease, background 0.18s ease, opacity 0.22s ease, transform 0.22s ease;
+  }
+
+  .nav-link:hover { color: #fff; background: rgba(255, 255, 255, 0.09); }
+
+  .nav-link.is-active {
+    color: var(--on-amber);
+    background: var(--amber);
+    font-weight: 600;
+  }
+
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    margin-left: 5px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border: 0;
+    border-radius: 50%;
+    color: rgba(232, 227, 214, 0.7);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: color 0.18s ease, background 0.18s ease, opacity 0.22s ease, transform 0.22s ease;
+  }
+
+  .theme-toggle:hover { color: #fff; background: rgba(255, 255, 255, 0.16); }
+
+  .theme-toggle .icon-moon { display: none; }
+  :global(html[data-theme="dark"]) .theme-toggle .icon-sun { display: none; }
+  :global(html[data-theme="dark"]) .theme-toggle .icon-moon { display: block; }
+
+  /* ── Open ── */
+  .island[data-open="true"] .pill,
+  .pill:hover {
+    width: min(546px, calc(100vw - 28px));
+  }
+
+  .island[data-open="true"] .compact,
+  .pill:hover .compact { opacity: 0; }
+
+  .island[data-open="true"] .nav,
+  .pill:hover .nav {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.2s ease 0.1s, visibility 0s 0.1s;
+  }
+
+  .island[data-open="true"] .nav-link,
+  .island[data-open="true"] .theme-toggle,
+  .pill:hover .nav-link,
+  .pill:hover .theme-toggle {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.14s + var(--i, 0) * 0.035s);
+  }
+
+  /* Touch devices get tap-to-open only; hover would fire on first tap. */
+  @media (hover: none) {
+    .pill:hover { width: 168px; }
+    .pill:hover .compact { opacity: 1; }
+    .pill:hover .nav { opacity: 0; visibility: hidden; pointer-events: none; }
+  }
+
+  @media (max-width: 620px) {
+    .island { padding-top: 14px; }
+    .nav-link { font-size: 0.8rem; padding: 7px 9px; }
+    .nav { gap: 0; padding: 0 8px; }
+  }
+</style>
+
+<script>
+  (function () {
+    const island = document.getElementById("island");
+    const pill = document.getElementById("pill");
+    const toggle = document.getElementById("theme-toggle");
+    if (!island || !pill) return;
+
+    const setOpen = (open: boolean) => {
+      island.dataset.open = String(open);
+      pill.setAttribute("aria-expanded", String(open));
+    };
+
+    pill.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("#theme-toggle")) return;
+      if (target.closest(".nav-link")) { setOpen(false); return; }
+      setOpen(island.dataset.open !== "true");
+    });
+
+    pill.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setOpen(island.dataset.open !== "true");
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!(e.target as HTMLElement).closest("#pill")) setOpen(false);
+    });
+
+    toggle?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+  })();
+</script>
