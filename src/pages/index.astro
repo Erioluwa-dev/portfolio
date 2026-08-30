@@ -17,48 +17,50 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
     <div class="opener">
       <PortraitCard />
 
-      <div class="card card-amber intro">
-        <p class="hand greeting">Hi — I'm Eri.</p>
-        <h1 class="display" id="thesis">
-          I build software that works when the internet doesn't.
-        </h1>
-        <p class="lead intro-lead">
-          Frontend engineer in Lagos, Nigeria. Self-taught, still learning, and
-          currently teaching a camera to read a basketball game.
-        </p>
-        <p class="tag scroll-hint">
-          <span class="dot dot-pulse"></span>
-          Scroll sideways
-        </p>
+      <div class="opener-stack">
+        <div class="card card-amber intro">
+          <p class="hand greeting">Hi — I'm Eri.</p>
+          <h1 class="display" id="thesis">
+            I build software that works when the internet doesn't.
+          </h1>
+          <p class="lead intro-lead">
+            Frontend engineer in Lagos, Nigeria. Self-taught, still learning, and
+            currently teaching a camera to read a basketball game.
+          </p>
+          <p class="tag scroll-hint">
+            <span class="dot dot-pulse"></span>
+            Scroll sideways
+          </p>
+        </div>
+
+        <div class="card open">
+          <div class="open-text">
+            <span class="tag muted">Open to</span>
+            <p class="body open-body">
+              Frontend roles, QA testing, and collaborations where the
+              constraints are real.
+            </p>
+          </div>
+          <a class="btn open-btn" href="/contact">
+            Start a conversation
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d={arrow} />
+            </svg>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 2 — where things stand -->
   <section class="panel panel-sm" aria-label="Status">
-    <div class="split">
-      <div class="card card-teal now">
-        <span class="tag now-label"><span class="dot dot-pulse"></span> Currently</span>
-        <h2 class="h2 now-title">CourtVision</h2>
-        <p class="body now-body">
-          Detection and tracking hold through traffic. The conversational layer
-          is what I'm building next.
-        </p>
-      </div>
-
-      <div class="card open">
-        <span class="tag muted">Open to</span>
-        <p class="body open-body">
-          Frontend roles, QA testing, and collaborations where the constraints
-          are real.
-        </p>
-        <a class="btn open-btn" href="/contact">
-          Start a conversation
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d={arrow} />
-          </svg>
-        </a>
-      </div>
+    <div class="card card-teal now">
+      <span class="tag now-label"><span class="dot dot-pulse"></span> Currently</span>
+      <h2 class="h2 now-title">CourtVision</h2>
+      <p class="body now-body">
+        Detection and tracking hold through traffic. The conversational layer
+        is what I'm building next.
+      </p>
     </div>
   </section>
 
@@ -163,6 +165,16 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 
   .opener > :global(*) { min-height: 0; }
 
+  /* Who I am sits at φ, what I'm open to at 1, directly beneath it. */
+  .opener-stack {
+    display: grid;
+    grid-template-rows: 1.618fr 1fr;
+    gap: var(--sp-2);
+    min-height: 0;
+  }
+
+  .opener-stack > :global(*) { min-height: 0; }
+
   .intro { justify-content: center; }
   .greeting { opacity: 0.72; }
   .intro-lead { max-width: 46ch; opacity: 0.86; }
@@ -177,9 +189,17 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   .now-title { color: var(--amber); }
   .now-body { opacity: 0.86; max-width: 34ch; }
 
-  .open { justify-content: center; }
-  .open-body { color: var(--ink-soft); max-width: 34ch; }
-  .open-btn { align-self: flex-start; margin-top: var(--sp-1); }
+  .open {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+
+  .open-text { display: flex; flex-direction: column; gap: 6px; }
+  .open-body { color: var(--ink-soft); max-width: 42ch; }
+  .open-btn { flex-shrink: 0; }
 
   .toolkit { flex: 1; justify-content: center; }
 
@@ -258,6 +278,8 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 
   @media (max-width: 899px) {
     .opener { grid-template-columns: 1fr; }
+    .opener-stack { grid-template-rows: none; grid-auto-rows: min-content; }
     .work-row { grid-template-columns: 1fr; }
+    .open { flex-direction: column; align-items: flex-start; }
   }
 </style>
