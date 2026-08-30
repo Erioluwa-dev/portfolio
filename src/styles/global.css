@@ -1,81 +1,340 @@
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(2px); }
-  to { opacity: 1; transform: none; }
+/* ═══════════════════════════════════════════════════════════════
+   ERIOLUWA — design system
+   Warm chalk paper · hardwood amber · court teal · one live magenta.
+
+   Type is handwritten: Shantell Sans carries the voice (bouncy and
+   informal at display size, settled for reading), Grape Nuts is the pen
+   used for margin notes, and DM Mono is the machine talking back — the
+   only non-human face on the site.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Surface ── */
+  --paper:      #e8e3d6;
+  --chalk:      #f7f4ec;
+  --ink:        #17160f;
+  --ink-soft:   #5b584a;
+  --ink-faint:  #8d8877;
+  --hairline:   rgba(23, 22, 15, 0.14);
+
+  /* ── Card fills ── */
+  --amber:      #e9a22b;
+  --teal:       #1d4b45;
+  --live:       #e8447f;
+
+  /* Text that sits on a filled card */
+  --on-amber:   #17160f;
+  --on-teal:    #f2efe4;
+
+  /* ── Radii ── */
+  --r-lg: 28px;
+  --r-md: 18px;
+  --r-sm: 10px;
+  --r-pill: 999px;
+
+  /* ── Rhythm ── */
+  --gap: 14px;
+  --pad: 30px;
+  --shell: 1140px;
+
+  /* ── Type ── */
+  --display: 'Shantell Sans', 'Comic Sans MS', cursive;
+  --body:    'Shantell Sans', 'Trebuchet MS', sans-serif;
+  --hand:    'Grape Nuts', 'Segoe Script', cursive;
+  --mono:    'DM Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --fs-display: clamp(2.4rem, 5.8vw, 4rem);
+  --fs-h2:      clamp(1.7rem, 3.2vw, 2.45rem);
+  --fs-h3:      clamp(1.2rem, 2.1vw, 1.5rem);
+  --fs-lead:    1.05rem;
+  --fs-body:    0.975rem;
+  --fs-micro:   0.6875rem;
+
+  color-scheme: light;
 }
 
-html {
-  scroll-behavior: smooth;
-  /* Default: dark theme */
-  --bg: #000;
-  --bg-card: #111;
-  --bg-subtle: #1a1a1a;
-  --text: #e0e0e0;
-  --text-muted: #888;
-  --text-faint: #555;
-  --border: #1a1a1a;
-  --accent: #54C5F8;
+html[data-theme="dark"] {
+  --paper:      #12110c;
+  --chalk:      #1c1a13;
+  --ink:        #ede8da;
+  --ink-soft:   #a19c8c;
+  --ink-faint:  #6e6a5c;
+  --hairline:   rgba(237, 232, 218, 0.16);
+
+  --amber:      #dd991f;
+  --teal:       #24605a;
+  --live:       #ef5b8d;
+
+  --on-amber:   #14130d;
+  --on-teal:    #f2efe4;
+
+  color-scheme: dark;
 }
 
-html[data-theme="light"] {
-  --bg: #d9d9d9;
-  --bg-card: #fdfdfd;
-  --bg-subtle: rgba(0, 0, 0, 0.04);
-  --text: #2a2a2a;
-  --text-muted: #666;
-  --text-faint: #999;
-  --border: rgba(0, 0, 0, 0.08);
-  --accent: #54C5F8;
-}
+* { box-sizing: border-box; }
 
-* {
-  box-sizing: border-box;
-}
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: var(--fs-body);
+  line-height: 1.62;
+  /* Reading copy sits still on the baseline; only display type bounces. */
+  font-variation-settings: 'BNCE' 0, 'INFM' 0;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
+::selection { background: var(--live); color: #fff; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: var(--r-pill); }
+
+:focus-visible {
+  outline: 2px solid var(--live);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ═══ Shell ═══════════════════════════════════════════════════ */
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.page {
+  padding: 118px 0 var(--gap);
+}
+
+/* ═══ Bento grid ══════════════════════════════════════════════ */
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+}
+
+.bento + .bento { margin-top: var(--gap); }
+
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-7  { grid-column: span 7; }
+.col-8  { grid-column: span 8; }
+.col-9  { grid-column: span 9; }
+.col-12 { grid-column: span 12; }
+
+@media (max-width: 900px) {
+  .col-3, .col-4, .col-5, .col-7, .col-8, .col-9 { grid-column: span 6; }
+}
+
+@media (max-width: 620px) {
+  .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9 { grid-column: span 12; }
+}
+
+/* ═══ Card primitives ═════════════════════════════════════════ */
+
+.card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background: var(--bg);
-  font-family: 'Lora', Georgia, serif;
-  color: var(--text);
-  transition: background 0.3s ease, color 0.3s ease;
+  padding: var(--pad);
+  border-radius: var(--r-lg);
+  background: var(--chalk);
+  border: 1px solid var(--hairline);
+  transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
 }
 
-::-webkit-scrollbar { width: 4px; background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--bg-subtle); }
-
-a:hover { color: var(--accent) !important; }
-button:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
-
-.cta-btn:hover { color: var(--accent) !important; border-color: var(--accent) !important; }
-
-.icon-btn { transition: all 0.18s ease !important; }
-.icon-github:hover { border-color: #c9d1d9 !important; }
-.icon-github:hover img { filter: brightness(1.4); }
-.icon-email:hover { border-color: #EA4335 !important; }
-.icon-email:hover img { filter: brightness(1.4) sepia(1) hue-rotate(-10deg) saturate(5); }
-.icon-instagram:hover { border-color: #E4405F !important; }
-.icon-instagram:hover img { filter: brightness(1.4) sepia(1) hue-rotate(-30deg) saturate(4); }
-
-.footer-icon { width: auto; height: auto; }
-
-.project-link-icon:hover { border-color: var(--accent) !important; background: rgba(84, 197, 248, 0.08) !important; }
-.project-link-icon:hover svg { stroke: var(--accent) !important; }
-
-.page-content section { animation: fadeIn 0.5s ease both; }
-
-.tech-chip:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
-.nav-link:hover { color: var(--accent) !important; }
-.project-card:hover { border-color: rgba(84, 197, 248, 0.25) !important; }
-.footer-btn:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
-.social-icon:hover { border-color: var(--accent) !important; }
-
-@media (max-width: 700px) {
-  nav { overflow-x: auto; }
-  nav::-webkit-scrollbar { height: 2px; }
+.card-amber {
+  background: var(--amber);
+  border-color: transparent;
+  color: var(--on-amber);
 }
 
-@media (max-width: 768px) {
-  .page-content { padding-left: 1.5rem !important; }
+.card-teal {
+  background: var(--teal);
+  border-color: transparent;
+  color: var(--on-teal);
+}
+
+.card-ink {
+  background: var(--ink);
+  border-color: transparent;
+  color: var(--paper);
+}
+
+.card-bare {
+  background: transparent;
+  border-color: var(--hairline);
+}
+
+.card-tight { padding: 22px; }
+
+/* ═══ Type primitives ═════════════════════════════════════════ */
+
+.display {
+  font-family: var(--display);
+  font-size: var(--fs-display);
+  font-weight: 700;
+  font-variation-settings: 'BNCE' 48, 'INFM' 42;
+  line-height: 1.06;
+  letter-spacing: -0.012em;
+  margin: 0;
+}
+
+.h2 {
+  font-family: var(--display);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  font-variation-settings: 'BNCE' 36, 'INFM' 34;
+  line-height: 1.14;
+  letter-spacing: -0.008em;
+  margin: 0;
+}
+
+.h3 {
+  font-family: var(--display);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  font-variation-settings: 'BNCE' 22, 'INFM' 24;
+  line-height: 1.24;
+  margin: 0;
+}
+
+/* Margin notes, asides, signatures — an actual pen, not a typeface. */
+.hand {
+  font-family: var(--hand);
+  font-weight: 400;
+  font-variation-settings: normal;
+  line-height: 1.4;
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.58;
+  margin: 0;
+}
+
+.prose p { margin: 0 0 1em; }
+.prose p:last-child { margin-bottom: 0; }
+
+.muted { color: var(--ink-soft); }
+
+/* Small mono label — the machine-vision voice, set against the handwriting. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  font-variation-settings: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.tag-pill {
+  padding: 7px 11px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline);
+}
+
+.tag-live {
+  background: var(--live);
+  border-color: transparent;
+  color: #fff;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.dot-pulse { animation: pulse 2.4s ease-in-out infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ═══ Links & buttons ═════════════════════════════════════════ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 22px;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--body);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.btn:hover { transform: translateY(-2px); }
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--hairline);
+  color: inherit;
+}
+
+.btn-ghost:hover { border-color: currentColor; }
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+
+.link-arrow svg { transition: transform 0.2s ease; }
+.link-arrow:hover svg { transform: translateX(4px); }
+
+/* ═══ Hairline divider ════════════════════════════════════════ */
+
+.rule {
+  height: 1px;
+  background: var(--hairline);
+  border: 0;
+  margin: 0;
+}
+
+/* ═══ Reduced motion ══════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media (max-width: 620px) {
+  :root { --pad: 22px; --r-lg: 22px; }
+  .page { padding-top: 96px; }
 }
