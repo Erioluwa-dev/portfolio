@@ -1,6 +1,10 @@
 ---
-// The signature element: the portrait framed the way CourtVision frames a
-// player — corner brackets, an ID tag, and a live clock in his actual timezone.
+// The signature element: the mark framed the way CourtVision frames a player —
+// corner brackets, an ID tag, and a live clock in his actual timezone.
+//
+// It is a signature, not an argument, so it is sized to the mark and no
+// larger. Stretching it to fill a full-height column letterboxed a square
+// image inside a tall box and took room away from the claim next to it.
 interface Props {
   tag?: string;
 }
@@ -8,31 +12,38 @@ interface Props {
 const { tag = "eri · lagos" } = Astro.props;
 ---
 
-<div class="portrait card card-amber">
+<figure class="portrait card card-amber">
   <div class="frame">
-    <img src="/brand.jpg" alt="Fawehinmi Erioluwa" width="600" height="800" />
+    <img src="/brand.jpg" alt="Fawehinmi Erioluwa" width="538" height="570" />
 
     <span class="bracket br-tl"></span>
     <span class="bracket br-tr"></span>
     <span class="bracket br-bl"></span>
     <span class="bracket br-br"></span>
+  </div>
 
-    <span class="id-tag tag">{tag}</span>
-
-    <span class="clock tag" id="lagos-clock">
+  <figcaption class="meta">
+    <span class="tag">{tag}</span>
+    <span class="tag clock">
       <span class="dot dot-pulse"></span>
       <span id="lagos-time">--:--</span> WAT
     </span>
-  </div>
-</div>
+  </figcaption>
+</figure>
 
 <style>
-  .portrait { padding: var(--sp-2); min-height: 0; }
+  .portrait {
+    /* Content-sized, and centred against whatever tall thing sits beside it. */
+    align-self: center;
+    margin: 0;
+    padding: var(--sp-2);
+    gap: var(--sp-2);
+    max-width: 24rem;
+  }
 
   .frame {
     position: relative;
-    flex: 1;
-    min-height: 240px;
+    aspect-ratio: 538 / 570;
     border-radius: var(--r-md);
     overflow: hidden;
     /* The mark is drawn in black on white, so its mat stays white in both
@@ -40,54 +51,49 @@ const { tag = "eri · lagos" } = Astro.props;
     background: #fff;
   }
 
-  /* It is a signature, so it gets shown whole rather than cropped. */
   .frame img {
     width: 100%;
     height: 100%;
-    min-height: 240px;
-    padding: var(--sp-6) var(--sp-5);
+    padding: var(--sp-3);
     object-fit: contain;
   }
 
   /* Detection brackets — they draw themselves in once, then hold. */
   .bracket {
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border: 3px solid var(--on-amber);
     opacity: 0;
     animation: lock 0.5s ease forwards;
   }
 
-  .br-tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; animation-delay: 0.15s; }
-  .br-tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; border-radius: 0 8px 0 0; animation-delay: 0.24s; }
-  .br-bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; animation-delay: 0.33s; }
-  .br-br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; animation-delay: 0.42s; }
+  .br-tl { top: 12px; left: 12px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; animation-delay: 0.15s; }
+  .br-tr { top: 12px; right: 12px; border-left: 0; border-bottom: 0; border-radius: 0 8px 0 0; animation-delay: 0.24s; }
+  .br-bl { bottom: 12px; left: 12px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; animation-delay: 0.33s; }
+  .br-br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; animation-delay: 0.42s; }
 
   @keyframes lock {
     from { opacity: 0; transform: scale(1.35); }
     to { opacity: 1; transform: none; }
   }
 
-  .id-tag,
-  .clock {
-    position: absolute;
-    padding: 7px 11px;
-    border-radius: var(--r-pill);
-    background: var(--on-amber);
-    color: var(--amber);
-    white-space: nowrap;
+  /* The readout sits under the frame rather than on top of it — floating it
+     over a contained image meant it covered the mark at every useful size. */
+  .meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    flex-wrap: wrap;
+    padding: 0 var(--sp-1) 2px;
   }
 
-  .id-tag { top: 26px; left: 50%; transform: translateX(-50%); }
-  .clock { bottom: 26px; left: 50%; transform: translateX(-50%); gap: 6px; }
-  .clock .dot { background: var(--live); }
+  .clock { gap: 6px; white-space: nowrap; }
+  .clock .dot { background: var(--live-ink); }
 
   @media (max-width: 899px) {
-    .frame { min-height: 200px; max-height: 44vh; }
-    .frame img { min-height: 200px; padding: var(--sp-4) var(--sp-3); }
-    .id-tag { top: var(--sp-3); }
-    .clock { bottom: var(--sp-3); }
+    .portrait { max-width: 17rem; align-self: flex-start; }
   }
 
   @media (prefers-reduced-motion: reduce) {
