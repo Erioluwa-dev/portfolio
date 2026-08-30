@@ -1,111 +1,266 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import DynamicIslandHeader from '../components/DynamicIslandHeader.astro';
-import Hero from '../components/Hero.astro';
-import Technologies from '../components/Technologies.astro';
-import Repos from '../components/Repos.astro';
-import Philosophy from '../components/Philosophy.astro';
-import CardFooter from '../components/CardFooter.astro';
-import CommandPalette from '../components/CommandPalette.astro';
+import PortraitCard from '../components/PortraitCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects, stack, letters, social } from '../data/site';
+
+const flagship = projects.find((p) => p.flagship);
+const rest = projects.filter((p) => !p.flagship).slice(0, 2);
+const recent = letters.slice(0, 2);
 ---
 
-<Layout title="Erioluwa — Portfolio">
-  <DynamicIslandHeader />
-  <CommandPalette />
-
-  <main class="stage">
-    <div class="content-card">
-      <Hero />
-      <Technologies />
-
-      <div class="split">
-        <Repos />
-        <Philosophy />
+<Layout title="Fawehinmi Erioluwa — Frontend Engineer">
+  <div class="shell">
+    <!-- ── Hero ── -->
+    <section class="bento" aria-labelledby="thesis">
+      <div class="col-5 stretch">
+        <PortraitCard />
       </div>
 
-      <CardFooter />
-    </div>
-  </main>
+      <div class="col-7 hero-right">
+        <div class="card card-amber intro">
+          <p class="hand greeting">Hi — I'm Eri.</p>
+          <h1 class="display" id="thesis">
+            I build software that works when the internet doesn't.
+          </h1>
+          <p class="lead intro-lead">
+            Frontend engineer in Lagos, Nigeria. Self-taught, still learning, and
+            currently teaching a camera to read a basketball game.
+          </p>
+        </div>
+
+        <div class="hero-row">
+          <div class="card card-teal now">
+            <span class="tag now-label"><span class="dot dot-pulse"></span> Currently</span>
+            <p class="h3 now-title">CourtVision</p>
+            <p class="now-body">
+              Detection and tracking hold through traffic. The conversational
+              layer is what I'm building next.
+            </p>
+          </div>
+
+          <div class="card open">
+            <span class="tag muted">Open to</span>
+            <p class="open-list">
+              Frontend roles, QA testing, and collaborations where the constraints
+              are real.
+            </p>
+            <a class="btn open-btn" href="/contact">
+              Start a conversation
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h13M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Flagship + stack ── -->
+    <section class="bento" aria-label="Current build">
+      {flagship && (
+        <div class="col-7 stretch">
+          <ProjectCard project={flagship} expanded />
+        </div>
+      )}
+
+      <div class="col-5 stretch">
+        <div class="card stack-card">
+          <span class="tag muted">The toolkit</span>
+          <div class="stack-groups">
+            {stack.map((g) => (
+              <div class="stack-group">
+                <p class="stack-group-name hand">{g.group}</p>
+                <ul class="stack-list">
+                  {g.items.map((item) => <li class="tag stack-item">{item}</li>)}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Selected work ── -->
+    <section class="bento" aria-labelledby="work-heading">
+      <div class="col-12 section-head">
+        <h2 class="h2" id="work-heading">Things I've built</h2>
+        <a class="link-arrow" href="/projects">
+          All projects
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h13M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </div>
+
+      {rest.map((p) => (
+        <div class="col-6 stretch">
+          <ProjectCard project={p} />
+        </div>
+      ))}
+    </section>
+
+    <!-- ── Letters + contact ── -->
+    <section class="bento" aria-labelledby="letters-heading">
+      <div class="col-7 stretch">
+        <div class="card letters-card">
+          <div class="section-head">
+            <h2 class="h3" id="letters-heading">Letters</h2>
+            <a class="link-arrow" href="/letters">
+              Read all
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h13M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </div>
+
+          <ul class="letter-list">
+            {recent.map((l) => (
+              <li>
+                <a class="letter" href={`/letters/${l.slug}`}>
+                  <span class="tag muted">{new Date(l.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                  <span class="letter-title">{l.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-5 stretch">
+        <div class="card card-ink contact-card">
+          <p class="hand contact-note">Got something you want built?</p>
+          <p class="h3 contact-title">Tell me what it needs to do.</p>
+          <a class="btn contact-btn" href={`mailto:${social.email}`}>
+            {social.email}
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
 </Layout>
 
-<style is:global>
-  /* ── Homepage-only overrides. ── */
-  body {
-    background: linear-gradient(160deg, #d9d9d9 0%, #b4b4b4 48%, #a6a6a6 100%) !important;
-    color: #2a2a2a;
-    transition: background 0.3s ease, color 0.3s ease;
-  }
-
-  html[data-theme="dark"] body {
-    background: #000 !important;
-    color: #e0e0e0;
-  }
-
-  /* The scanline overlay belongs to the dark editorial theme — hide on light. */
-  .scanline-overlay { display: none !important; }
-  html[data-theme="dark"] .scanline-overlay { display: block !important; }
-</style>
-
 <style>
-  .stage {
-    flex: 1;
-    padding: 108px 5vw 48px;
-    position: relative;
-    z-index: 1;
+  .stretch { display: flex; }
+  .stretch > :global(*) { flex: 1; }
+
+  /* ── Hero ── */
+  .hero-right {
     display: flex;
     flex-direction: column;
+    gap: var(--gap);
   }
 
-  /* The page background is now the grey itself — no floating card.
-       Content flows edge-to-edge (within page padding) across the full screen. */
-  .content-card {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1.25rem, 3vw, 2rem);
-    flex: 1;
-  }
+  .intro { gap: 14px; }
 
-  /* Repos (wide) + Philosophy (narrow) side by side. */
-  .split {
-    display: grid;
-    grid-template-columns: 1.7fr 1fr;
-    gap: clamp(1.25rem, 3vw, 2rem);
-    align-items: stretch;
-  }
-
-  @media (max-width: 820px) {
-    .split { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 480px) {
-    .stage { padding: 92px 14px 28px; }
-  }
-
-  /* ── Shared card primitives used across sections on this page ── */
-  .stage :global(.surface-card) {
-    background: var(--bg-card);
-    border-radius: 18px;
-    border: 1px solid var(--border);
-    padding: clamp(1.4rem, 3vw, 2rem);
-    box-shadow:
-      0 10px 24px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    transition: background 0.3s ease, border-color 0.3s ease;
-  }
-
-  html[data-theme="dark"] .stage :global(.surface-card) {
-    box-shadow:
-      0 10px 24px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
-
-  .stage :global(.card-label) {
+  .greeting {
     margin: 0;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-muted);
+    font-size: 1.45rem;
+    opacity: 0.7;
+  }
+
+  .intro-lead { max-width: 44ch; opacity: 0.85; }
+
+  .hero-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+  }
+
+  .now { gap: 10px; }
+  .now-label { opacity: 0.75; }
+  .now-title { color: var(--amber); }
+  .now-body { margin: 0; opacity: 0.82; }
+
+  .open { gap: 12px; }
+  .open-list { margin: 0; color: var(--ink-soft); }
+  .open-btn { margin-top: auto; align-self: flex-start; }
+
+  /* ── Stack ── */
+  .stack-card { gap: 22px; }
+
+  .stack-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .stack-group-name {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+  }
+
+  .stack-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stack-item {
+    padding: 7px 11px;
+    border-radius: var(--r-pill);
+    background: var(--paper);
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Section heads ── */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* ── Letters ── */
+  .letters-card { gap: 20px; }
+
+  .letter-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .letter-list li + li { border-top: 1px solid var(--hairline); }
+
+  .letter {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 16px 0;
+    text-decoration: none;
+    transition: transform 0.18s ease;
+  }
+
+  .letter:hover { transform: translateX(5px); }
+  .letter:hover .letter-title { color: var(--live); }
+
+  .letter-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    transition: color 0.18s ease;
+  }
+
+  /* ── Contact ── */
+  .contact-card { gap: 10px; justify-content: center; }
+  .contact-note { margin: 0; font-size: 1.35rem; color: var(--amber); }
+  .contact-title { margin: 0 0 14px; }
+
+  .contact-btn {
+    background: var(--amber);
+    color: var(--on-amber);
+    align-self: flex-start;
+    word-break: break-word;
+  }
+
+  @media (max-width: 620px) {
+    .hero-row { grid-template-columns: 1fr; }
   }
 </style>
