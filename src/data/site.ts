@@ -44,7 +44,7 @@ export const projects: Project[] = [
     summary:
       "Music recommendation as a graph problem — users and tracks as nodes, taste as the edges between them.",
     detail:
-      "A graph neural network over a user–item graph, learning embeddings that carry more than a similarity score does: who listens adjacent to whom, and which tracks sit between two scenes. I am not claiming GNN expertise. I am claiming I wanted to understand recommendation from the representation up rather than by importing someone's ranker.",
+      "A graph neural network over a user–item graph, computing embeddings that carry more than a similarity score does: who listens adjacent to whom, and which tracks sit between two scenes. Built from the representation up rather than by importing someone's ranker.",
     stack: ["Python", "PyTorch", "PyTorch Geometric", "Pandas"],
   },
   {
@@ -93,7 +93,7 @@ export const stack: StackGroup[] = [
     items: ["Node.js", "Bun", "Hono", "PostgreSQL", "Redis", "REST APIs", "Auth"],
   },
   {
-    group: "Growing — real projects, still learning",
+    group: "Applied in production",
     items: ["Python", "PyTorch", "Computer vision", "YOLO", "OpenCV", "Graph ML"],
   },
   {
@@ -101,7 +101,7 @@ export const stack: StackGroup[] = [
     items: ["Docker", "Queues", "Object storage", "Supabase", "Git", "Figma"],
   },
   {
-    group: "Exploring on purpose",
+    group: "Active in",
     items: ["Rust", "Systems programming"],
   },
 ];
