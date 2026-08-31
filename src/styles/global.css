@@ -507,8 +507,12 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   font-family: var(--hand);
   font-weight: 400;
   font-variation-settings: normal;
-  font-size: var(--fs-h3);
-  line-height: 1.3;
+  /* A step below the heading tier: Gochi Hand sets ~15% wider than the
+     body hand at the same size, so at h3 size an aside out-shouted the
+     heading beside it — and unmeasured it ran the full card. */
+  font-size: var(--fs-lead);
+  line-height: 1.35;
+  max-inline-size: 34ch;
   margin: 0;
 }
 
