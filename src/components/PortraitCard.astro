@@ -93,7 +93,8 @@ const { tag = "eri · lagos" } = Astro.props;
   .clock .dot { background: var(--live-ink); }
 
   @media (max-width: 899px) {
-    .portrait { max-width: 17rem; align-self: flex-start; }
+    .portrait { width: 17rem; justify-self: center; }
+    .frame { width: 100%; }
   }
 
   @media (prefers-reduced-motion: reduce) {
