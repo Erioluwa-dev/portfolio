@@ -1,6 +1,7 @@
 ---
-// The island is the only fixed chrome at the top. Collapsed, it names the page
-// you're on; expanded, it hands you the rest of them.
+// The island is the only fixed chrome at the top.
+// Desktop: a centered pill that expands on hover/click.
+// Mobile (<=899px): a hamburger that opens a slide-in sidebar from the left.
 interface Props {
   path: string;
 }
@@ -21,6 +22,7 @@ const isActive = (href: string) =>
 const current = links.find((l) => isActive(l.href))?.label ?? "Home";
 ---
 
+<!-- ══════ Desktop pill (hidden on mobile via CSS) ══════ -->
 <header id="island" class="island" data-open="false">
   <div
     class="pill"
@@ -70,7 +72,71 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
   </div>
 </header>
 
+<!-- ══════ Mobile hamburger + sidebar ══════ -->
+<button
+  id="sidebar-toggle"
+  class="sidebar-toggle"
+  aria-label="Open navigation"
+  aria-expanded="false"
+  aria-controls="sidebar"
+>
+  <svg class="icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <path d="M4 7h16M4 12h16M4 17h16" />
+  </svg>
+  <svg class="icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <path d="M18 6L6 18M6 6l12 12" />
+  </svg>
+</button>
+
+<div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+<aside id="sidebar" class="sidebar" aria-label="Navigation" data-open="false">
+  <div class="sidebar-head">
+    <span class="sidebar-brand tag">Eri</span>
+    <button
+      id="sidebar-close"
+      class="sidebar-close"
+      aria-label="Close navigation"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav" aria-label="Pages">
+    {links.map((link) => (
+      <a
+        href={link.href}
+        class:list={["sidebar-link", { "is-active": isActive(link.href) }]}
+        aria-current={isActive(link.href) ? "page" : undefined}
+      >
+        {link.label}
+      </a>
+    ))}
+  </nav>
+
+  <div class="sidebar-foot">
+    <button
+      id="sidebar-theme-toggle"
+      class="sidebar-theme-toggle"
+      aria-label="Switch between light and dark"
+    >
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4.5"></circle>
+        <path d="M12 1.5v2M12 20.5v2M3.6 3.6l1.4 1.4M19 19l1.4 1.4M1.5 12h2M20.5 12h2M3.6 20.4L5 19M19 5l1.4-1.4"></path>
+      </svg>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
+</aside>
+
 <style>
+  /* ═══════════════════════════════════════════════════════
+     DESKTOP PILL — unchanged from original
+     ═══════════════════════════════════════════════════════ */
   .island {
     position: fixed;
     inset: 0 0 auto 0;
@@ -177,7 +243,7 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
   :global(html[data-theme="dark"]) .theme-toggle .icon-sun { display: none; }
   :global(html[data-theme="dark"]) .theme-toggle .icon-moon { display: block; }
 
-  /* ── Open ── */
+  /* ── Pill open ── */
   .island[data-open="true"] .pill,
   .pill:hover {
     width: min(600px, calc(100vw - var(--sp-4)));
@@ -203,60 +269,302 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
     transition-delay: calc(0.14s + var(--i, 0) * 0.035s);
   }
 
-  /* Touch devices get tap-to-open only; hover would fire on first tap. */
   @media (hover: none) {
     .pill:hover { width: 208px; }
     .pill:hover .compact { opacity: 1; }
     .pill:hover .nav { opacity: 0; visibility: hidden; pointer-events: none; }
   }
 
-  @media (max-width: 620px) {
-    .island { padding-top: var(--sp-2); }
-    .pill { height: 48px; width: 190px; }
-    .nav-link { font-size: 0.78rem; padding: 0 9px; }
-    .nav { gap: 0; padding: 0 7px; }
+  /* ═══════════════════════════════════════════════════════
+     MOBILE SIDEBAR TOGGLE (hamburger)
+     ═══════════════════════════════════════════════════════ */
+  .sidebar-toggle {
+    display: none; /* hidden on desktop */
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     SIDEBAR PANEL
+     ═══════════════════════════════════════════════════════ */
+  .sidebar-overlay {
+    display: none; /* hidden on desktop */
+  }
+
+  .sidebar {
+    display: none; /* hidden on desktop */
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     MOBILE — ≤899px
+     ═══════════════════════════════════════════════════════ */
+  @media (max-width: 899px) {
+    /* Hide the desktop pill entirely */
+    .island { display: none; }
+
+    /* ── Hamburger button ── */
+    .sidebar-toggle {
+      display: grid;
+      place-items: center;
+      position: fixed;
+      z-index: 1100;
+      top: var(--sp-2);
+      left: var(--sp-2);
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      background: var(--chrome-bg);
+      color: var(--chrome-fg);
+      border: 1px solid var(--chrome-line);
+      border-radius: var(--r-md);
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    .sidebar-toggle:hover { background: rgba(244, 241, 232, 0.14); }
+    .sidebar-toggle:active { transform: scale(0.94); }
+
+    .sidebar-toggle .icon-close { display: none; }
+    .sidebar-toggle[aria-expanded="true"] .icon-menu { display: none; }
+    .sidebar-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+    /* ── Overlay ── */
+    .sidebar-overlay {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 1050;
+      background: rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0s 0.3s;
+      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay[data-visible="true"] {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 0.3s ease, visibility 0s;
+    }
+
+    /* ── Sidebar panel ── */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      z-index: 1060;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: min(280px, 78vw);
+      background: var(--chrome-bg);
+      color: var(--chrome-fg);
+      border-right: 1px solid var(--chrome-line);
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.34, 1.15, 0.64, 1);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      box-shadow: 8px 0 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar[data-open="true"] {
+      transform: translateX(0);
+    }
+
+    /* ── Sidebar head ── */
+    .sidebar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-3) var(--sp-3) var(--sp-2);
+      border-bottom: 1px solid var(--chrome-line);
+    }
+
+    .sidebar-brand {
+      font-family: var(--display);
+      font-size: var(--fs-h3);
+      font-weight: 700;
+      color: var(--amber);
+      letter-spacing: 0.02em;
+    }
+
+    .sidebar-close {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      background: rgba(244, 241, 232, 0.08);
+      border: 1px solid var(--chrome-line);
+      border-radius: var(--r-sm);
+      color: var(--chrome-fg);
+      cursor: pointer;
+      transition: background 0.18s ease;
+    }
+
+    .sidebar-close:hover { background: rgba(244, 241, 232, 0.16); }
+
+    /* ── Sidebar nav links ── */
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1.618rem;
+      padding: var(--sp-3) var(--sp-3);
+      flex: 1;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      min-height: 52px;
+      padding: 0 var(--sp-3);
+      font-family: var(--body);
+      font-size: var(--fs-body);
+      font-weight: 400;
+      color: var(--chrome-fg);
+      text-decoration: none;
+      border-radius: var(--r-md);
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+
+    .sidebar-link:hover {
+      background: rgba(244, 241, 232, 0.1);
+    }
+
+    .sidebar-link.is-active {
+      background: var(--amber);
+      color: var(--on-amber);
+      font-weight: 400;
+    }
+
+    /* ── Sidebar footer ── */
+    .sidebar-foot {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: var(--sp-2) var(--sp-3) var(--sp-3);
+      border-top: 1px solid var(--chrome-line);
+    }
+
+    .sidebar-theme-toggle {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      background: rgba(244, 241, 232, 0.08);
+      border: 1px solid var(--chrome-line);
+      border-radius: 50%;
+      color: var(--chrome-fg);
+      cursor: pointer;
+      transition: background 0.18s ease;
+    }
+
+    .sidebar-theme-toggle:hover { background: rgba(244, 241, 232, 0.18); }
+
+    .sidebar-theme-toggle .icon-moon { display: none; }
+    :global(html[data-theme="dark"]) .sidebar-theme-toggle .icon-sun { display: none; }
+    :global(html[data-theme="dark"]) .sidebar-theme-toggle .icon-moon { display: block; }
   }
 </style>
 
 <script>
   (function () {
+    // ── Desktop pill logic (unchanged) ──
     const island = document.getElementById("island");
     const pill = document.getElementById("pill");
     const toggle = document.getElementById("theme-toggle");
-    if (!island || !pill) return;
+    if (island && pill) {
+      const setOpen = (open: boolean) => {
+        island.dataset.open = String(open);
+        pill.setAttribute("aria-expanded", String(open));
+      };
 
-    const setOpen = (open: boolean) => {
-      island.dataset.open = String(open);
-      pill.setAttribute("aria-expanded", String(open));
+      pill.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest("#theme-toggle")) return;
+        if (target.closest(".nav-link")) { setOpen(false); return; }
+        setOpen(island.dataset.open !== "true");
+      });
+
+      pill.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          setOpen(island.dataset.open !== "true");
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") setOpen(false);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!(e.target as HTMLElement).closest("#pill")) setOpen(false);
+      });
+
+      toggle?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+      });
+    }
+
+    // ── Mobile sidebar logic ──
+    const sidebarToggle = document.getElementById("sidebar-toggle");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebar-overlay");
+    const sidebarClose = document.getElementById("sidebar-close");
+    const sidebarThemeToggle = document.getElementById("sidebar-theme-toggle");
+
+    if (!sidebar || !sidebarToggle || !sidebarOverlay) return;
+
+    const openSidebar = () => {
+      sidebar.dataset.open = "true";
+      sidebarOverlay.dataset.visible = "true";
+      sidebarToggle.setAttribute("aria-expanded", "true");
+      sidebarOverlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
     };
 
-    pill.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      if (target.closest("#theme-toggle")) return;
-      if (target.closest(".nav-link")) { setOpen(false); return; }
-      setOpen(island.dataset.open !== "true");
+    const closeSidebar = () => {
+      sidebar.dataset.open = "false";
+      sidebarOverlay.dataset.visible = "false";
+      sidebarToggle.setAttribute("aria-expanded", "false");
+      sidebarOverlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    };
+
+    sidebarToggle.addEventListener("click", () => {
+      const isOpen = sidebar.dataset.open === "true";
+      if (isOpen) closeSidebar();
+      else openSidebar();
     });
 
-    pill.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        setOpen(island.dataset.open !== "true");
-      }
+    sidebarClose?.addEventListener("click", closeSidebar);
+    sidebarOverlay.addEventListener("click", closeSidebar);
+
+    // Close on link click (navigate away)
+    sidebar.querySelectorAll(".sidebar-link").forEach((link) => {
+      link.addEventListener("click", closeSidebar);
     });
 
+    // Escape key closes
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape" && sidebar.dataset.open === "true") closeSidebar();
     });
 
-    document.addEventListener("click", (e) => {
-      if (!(e.target as HTMLElement).closest("#pill")) setOpen(false);
-    });
-
-    toggle?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    // ── Shared theme toggle logic ──
+    const applyTheme = (next: string) => {
       document.documentElement.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
+    };
+
+    sidebarThemeToggle?.addEventListener("click", () => {
+      const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(next);
     });
   })();
 </script>
