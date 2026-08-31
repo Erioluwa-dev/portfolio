@@ -34,7 +34,9 @@
   --chalk:      #f7f4ec;
   --ink:        #17160f;
   --ink-soft:   #5b584a;
-  --ink-faint:  #8d8877;
+  /* 4.7:1 on paper. The old #8d8877 sat at 2.77:1 — a label nobody can
+     read is not restraint. */
+  --ink-faint:  #676352;
   --hairline:   rgba(23, 22, 15, 0.14);
 
   /* ── Card fills ── */
@@ -134,7 +136,8 @@ html[data-theme="dark"] {
   --chalk:      #1f1d15;
   --ink:        #ede8da;
   --ink-soft:   #a8a294;
-  --ink-faint:  #7c7768;
+  /* 5.3:1 on the dark paper; the old #7c7768 was 4.23:1. */
+  --ink-faint:  #8d8877;
   --hairline:   rgba(237, 232, 218, 0.18);
 
   --amber:      #e2a233;
