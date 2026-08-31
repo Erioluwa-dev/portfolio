@@ -275,10 +275,10 @@ body {
   color: var(--ink);
   font-family: var(--body);
   font-size: var(--fs-body);
-  /* A script at 400 goes spidery in a paragraph, so the weight stays up.
-     1.55 is the low end of the readable band for body text and the one
-     lever here that buys height back without touching size. */
-  font-weight: 500;
+  /* Patrick Hand ships one weight. Asking for 500 only got a synthetic
+     bold that thickened the strokes unevenly; 1.55 leading is the lever
+     that buys readability instead. */
+  font-weight: 400;
   line-height: 1.55;
   font-variation-settings: normal;
   -webkit-font-smoothing: antialiased;
@@ -519,7 +519,7 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   gap: 7px;
   font-family: var(--mono);
   font-size: var(--fs-micro);
-  font-weight: 600;
+  font-weight: 400;
   font-variation-settings: normal;
   letter-spacing: 0.04em;
   line-height: 1.15;
@@ -590,7 +590,7 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   color: var(--chrome-fg);
   font-family: var(--body);
   font-size: var(--fs-body);
-  font-weight: 600;
+  font-weight: 400;
   text-decoration: none;
   cursor: pointer;
   transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
@@ -613,7 +613,7 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   align-items: center;
   gap: 7px;
   min-height: 44px;
-  font-weight: 600;
+  font-weight: 400;
   text-decoration: none;
   color: inherit;
 }
