@@ -13,7 +13,6 @@ Build a **minimalist, dark-themed developer portfolio** as a single-page React a
 | Field | Value |
 |---|---|
 | Name | Fawehinmi Erioluwa |
-| Age | 17 |
 | Role | Frontend Engineer (+ backend instincts) |
 | Location | Lagos, Nigeria |
 | Status | Self-taught · always learning |
@@ -42,7 +41,6 @@ Animated typewriter block. Lines appear sequentially. Blinking cursor (`█`). L
 ```
 > loading persona...
 > name: Fawehinmi Erioluwa
-> age: 17
 > role: Frontend Engineer (+ backend instincts)
 > status: self-learning // always
 > open_to: collaborations = true
@@ -120,7 +118,7 @@ A small block, no heading, just quiet facts in a terminal-list style. Use `>` pr
 
 Keep the email button. Add:
 - A GitHub link button (`→ github`) — placeholder `href="https://github.com/erioluwafawehinmi"` (or update if known)
-- The small text: `17 · open to collabs · self-taught · Lagos, NG`
+- The small text: `open to collabs · self-taught · Lagos, NG`
 
 ---
 
@@ -149,7 +147,7 @@ The existing component (`ErioluwaPersona`) is the starting point. Do not discard
 
 ## Tone & Voice
 
-This portfolio should feel like a developer terminal, not a marketing page. Descriptions are dry, confident, and precise — not hype-driven. No buzzwords. Code comments (`//`) instead of section headings. The owner is 17, self-taught, building ambitious things alone. Let the work speak.
+This portfolio should feel like a developer terminal, not a marketing page. Descriptions are dry, confident, and precise — not hype-driven. No buzzwords. Code comments (`//`) instead of section headings. The owner is self-taught, building ambitious things alone. Let the work speak.
 
 ---
 
