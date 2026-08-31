@@ -206,8 +206,8 @@ html[data-theme="dark"] {
     --fs-display: clamp(2.2rem, 7.8cqi, 4.2rem);
 
     --r-lg:   22px;
-    --head-h: 76px;
-    --foot-h: 72px;
+    --head-h: 56px;
+    --foot-h: 56px;
 
     --rail-gutter:  var(--sp-3);
     --rail-flow:    column;
