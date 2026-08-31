@@ -3,15 +3,19 @@
 
    Warm chalk paper · hardwood amber · court teal · one live magenta.
 
-   Type is cursive throughout. Caveat sets everything — claims, reading
-   copy, buttons, labels — and Grape Nuts is the thinner pen kept for
-   margin notes, so an aside still reads as a different hand. Nothing on
-   the site is set in a non-script face.
+   Type is handwritten throughout — the hand of a jazz lead sheet.
+   Kalam Bold sets the headings, the way chord symbols sit heavier on the
+   staff than the markings around them; Patrick Hand sets reading copy,
+   buttons and controls, and its small-caps cut carries the quiet labels.
+   Gochi Hand is the marker kept for margin notes, so an aside still reads
+   as a different hand. Nothing on the site is set in a non-script face.
 
-   This is a deliberate trade. A joined script is hardest to read exactly
-   where there is most to read, so the whole scale is stepped up and
-   opened out to buy legibility back: script faces sit small in the em,
-   and 16px of Caveat is not 16px of a sans.
+   Kalam is the only one of the three with a real 700 — the other faces
+   ship a single weight, so nothing asks them for one they do not have.
+
+   This is a deliberate trade. A pen face is hardest to read exactly where
+   there is most to read, so the whole scale is stepped up and opened out
+   to buy legibility back: 16px of a hand is not 16px of a sans.
 
    Every scale below is golden-ratio derived. Space steps by φ (1.618)
    from an 8px base; type steps by the cube root of φ (1.174) from 16px,
@@ -70,7 +74,7 @@
      476px card — which is most of why the small panels looked jammed.
      Everything below display size stays on the 16 · φ^(n/3) steps. */
 /* Every step carries ~1.1 over the derived scale — enough to answer
-     Caveat's small x-height, and no more.
+     the hand's optical size, and no more.
 
      The tiers that can grow tall are also sized against viewport HEIGHT,
      not just card width. A panel is 100dvh minus fixed chrome, so on a
@@ -84,12 +88,12 @@
   --vh: 1svh;
   --fs-body:  clamp(1rem, calc(2 * var(--vh)), 1.1rem);       /* 16 → 17.6 */
   --fs-lead:  clamp(1.06rem, calc(2.3 * var(--vh)), 1.28rem); /* 17 → 20.5 */
-  /* The display tiers run ~1.12 over the derived scale: Caveat and Grape
-     Nuts both sit small in the em, and matching the sans optically matters
-     more than matching it numerically. */
-  --fs-h3:    clamp(1.3rem, calc(2.7 * var(--vh)), 1.55rem);  /* 20.8 → 24.8 */
-  --fs-h2:    clamp(1.5rem, min(4.6cqi, calc(4.4 * var(--vh))), 2.6rem);    /* → 41.6 */
-  --fs-display: clamp(2.1rem, min(7.8cqi, calc(7.6 * var(--vh))), 4.2rem);  /* → 67.2 */
+  /* The display tiers run ~1.12 over the derived scale: the hand sits
+     small in the em, and matching the sans optically matters more than
+     matching it numerically. */
+  --fs-h3:    clamp(1.2rem, calc(2.5 * var(--vh)), 1.45rem);  /* 19.2 → 23.2 */
+  --fs-h2:    clamp(1.4rem, min(4.25cqi, calc(4.05 * var(--vh))), 2.4rem);  /* → 38.4 */
+  --fs-display: clamp(1.95rem, min(7.2cqi, calc(7 * var(--vh))), 3.9rem);   /* → 62.4 */
 
   /* ── Chrome heights ──
      head + foot = 89 + 55 = 144 = --sp-7, so a panel's usable height
@@ -109,13 +113,18 @@
   --pad:    clamp(var(--sp-3), calc(3.2 * var(--vh)), var(--sp-4));
   --pad-lg: var(--sp-5);
 
-  /* ── Faces ── */
-  --display: 'Caveat', 'Segoe Script', 'Brush Script MT', cursive;
-  --body:    'Caveat', 'Segoe Script', 'Brush Script MT', cursive;
-  --hand:    'Grape Nuts', 'Segoe Script', cursive;
+  /* ── Faces ──
+     The hand of a jazz lead sheet: upright and pen-printed rather than
+     joined. Patrick Hand is the closest free stand-in for the Real Book
+     / Finale Jazz face. */
+  /* Kalam is the one hand here with a real 700 — the heading tier needs
+     a weight the browser is not faking. */
+  --display: 'Kalam', 'Segoe Print', 'Comic Sans MS', cursive;
+  --body:    'Patrick Hand', 'Segoe Print', 'Comic Sans MS', cursive;
+  --hand:    'Gochi Hand', 'Segoe Print', cursive;
   /* Named for the role it plays — the quiet label — not for a monospace
      it no longer is. */
-  --mono:    'Caveat', 'Segoe Script', 'Brush Script MT', cursive;
+  --mono:    'Patrick Hand SC', 'Patrick Hand', 'Segoe Print', cursive;
 
   color-scheme: light;
 }
@@ -428,19 +437,19 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   font-family: var(--display);
   font-size: var(--fs-display);
   font-weight: 700;
-  /* Caveat has no bounce axes, and joined letterforms need their tracking
-     left alone — pulling them together breaks the join. The long ascenders
-     and descenders want the extra leading too. */
+  /* Patrick Hand has no bounce axes, and a pen face wants its tracking
+     left alone — pulling it together closes up the letterforms. The long
+     ascenders and descenders want the extra leading too. */
   font-variation-settings: normal;
   line-height: 1.12;
   letter-spacing: 0;
   margin: 0;
   /* Bound the measure first, then balance — balance alone will happily
      set a 60-character single line across a wide card. */
-  /* A ch in Caveat is much narrower than a ch in a sans, so the old
+  /* A ch in the hand is much narrower than a ch in a sans, so the old
      measure was setting these headlines a line or two longer than they
      need to be. Widened to hold the same physical line length. */
-  max-inline-size: 28ch;
+  max-inline-size: 25ch;
   text-wrap: balance;
 }
 
@@ -453,7 +462,7 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   line-height: 1.2;
   letter-spacing: 0;
   margin: 0;
-  max-inline-size: 30ch;
+  max-inline-size: 27ch;
   text-wrap: balance;
 }
 
