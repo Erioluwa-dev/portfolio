@@ -1,6 +1,6 @@
 ---
-// The signature element: the mark framed the way CourtVision frames a player —
-// corner brackets, an ID tag, and a live clock in his actual timezone.
+// The signature element: the mark framed like a detection box — corner
+// brackets, an ID tag, and a live clock in the actual timezone.
 //
 // It is a signature, not an argument, so it is sized to the mark and no
 // larger. Stretching it to fill a full-height column letterboxed a square
@@ -33,8 +33,8 @@ const { tag = "eri · lagos" } = Astro.props;
 
 <style>
   .portrait {
-    /* Content-sized, and centred against whatever tall thing sits beside it. */
-    align-self: center;
+    /* Content-sized, and aligned to the top of whatever sits beside it. */
+    align-self: start;
     margin: 0;
     padding: var(--sp-2);
     gap: var(--sp-2);

@@ -34,18 +34,14 @@ const year = new Date().getFullYear();
 
 <style>
   .bar {
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    right: 0;
-    bottom: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--sp-4);
-    height: var(--foot-h);
-    padding: 0 var(--sp-5);
-    background: var(--paper);
+    min-height: var(--foot-h);
+    max-width: calc(var(--page-max) + var(--gutter) * 2);
+    margin: 0 auto;
+    padding: var(--sp-3) var(--gutter);
     border-top: 1px solid var(--hairline);
     transition: background 0.35s ease, border-color 0.35s ease;
   }
@@ -69,8 +65,6 @@ const year = new Date().getFullYear();
     gap: var(--sp-3);
   }
 
-  /* The bar is 55px tall, so the links take all of it as hit area rather
-     than sitting as a 20px sliver in the middle of it. */
   .link {
     display: inline-flex;
     align-items: center;
@@ -91,12 +85,7 @@ const year = new Date().getFullYear();
   .place { color: var(--ink-faint); }
 
   @media (max-width: 899px) {
-    .bar {
-      height: auto;
-      min-height: var(--foot-h);
-      padding: var(--sp-2) var(--sp-3);
-      gap: var(--sp-2);
-    }
+    .bar { gap: var(--sp-2); padding-bottom: calc(var(--sp-6) + var(--sp-1)); }
 
     .line { display: none; }
     .elsewhere { flex-direction: column; align-items: flex-start; gap: 6px; }
@@ -105,6 +94,6 @@ const year = new Date().getFullYear();
 
   @media (max-width: 480px) {
     .place { display: none; }
-    .elsewhere { flex-direction: row; align-items: baseline; }
+    .elsewhere { flex-direction: row; align-items: baseline; gap: var(--sp-2); }
   }
 </style>

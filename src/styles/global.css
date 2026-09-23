@@ -21,11 +21,8 @@
    from an 8px base; type steps by the cube root of φ (1.174) from 16px,
    so the sizes stay usable while the ratio holds.
 
-   The site reads left to right: content sits on a horizontal rail of
-   panels, with fixed chrome above and below. Below 900px — and whenever
-   reduced motion is asked for — it falls back to ordinary vertical
-   scrolling, because forcing a phone sideways, or moving anyone sideways
-   against a stated preference, is worse than the effect is worth.
+   The site reads top to bottom in a single capped column. The nav is
+   the only fixed chrome; everything else scrolls the ordinary way.
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
@@ -71,35 +68,19 @@
 
   /* ── Type ──
      Display and section headings size against the card they sit in
-     (cqi), not the window. On a rail the panel width is fixed while the
-     viewport is not, so viewport units drop a 68px headline into a
-     476px card — which is most of why the small panels looked jammed.
-     Everything below display size stays on the 16 · φ^(n/3) steps. */
-/* Every step carries ~1.1 over the derived scale — enough to answer
-     the hand's optical size, and no more.
-
-     The tiers that can grow tall are also sized against viewport HEIGHT,
-     not just card width. A panel is 100dvh minus fixed chrome, so on a
-     short laptop the box shrinks while a rem-fixed headline does not —
-     which is exactly how the cards ended up scrolling. Reading copy
-     carries a floor: it shrinks a little, never below legibility. */
+     (cqi), not the window, so a headline never outgrows its box.
+     Everything below display size stays on the 16 · φ^(n/3) steps,
+     carried ~1.1 over the derived scale to answer the hand's optical size. */
   --fs-micro: 0.8rem;    /* 12.8 */
   --fs-small: 0.94rem;   /* 15.0 */
-  /* One hop through --vh so the height term can be pinned in a test
-     harness; in the browser it is exactly 1svh. */
-  --vh: 1svh;
-  --fs-body:  clamp(1rem, calc(2 * var(--vh)), 1.1rem);       /* 16 → 17.6 */
-  --fs-lead:  clamp(1.06rem, calc(2.3 * var(--vh)), 1.28rem); /* 17 → 20.5 */
-  /* The display tiers run ~1.12 over the derived scale: the hand sits
-     small in the em, and matching the sans optically matters more than
-     matching it numerically. */
-  --fs-h3:    clamp(1.2rem, calc(2.5 * var(--vh)), 1.45rem);  /* 19.2 → 23.2 */
-  --fs-h2:    clamp(1.4rem, min(4.25cqi, calc(4.05 * var(--vh))), 2.4rem);  /* → 38.4 */
-  --fs-display: clamp(1.95rem, min(7.2cqi, calc(7 * var(--vh))), 3.9rem);   /* → 62.4 */
+  --fs-body:  1.1rem;    /* 17.6 */
+  --fs-lead:  1.28rem;   /* 20.5 */
+  --fs-h3:    1.45rem;   /* 23.2 */
+  --fs-h2:    clamp(1.6rem, 4.6cqi, 2.5rem);
+  --fs-display: clamp(2.2rem, 7.4cqi, 4rem);
 
   /* ── Chrome heights ──
-     head + foot = 89 + 55 = 144 = --sp-7, so a panel's usable height
-     comes off the viewport in one clean step of the scale. */
+     Only the nav is fixed; the page starts below it. */
   --head-h: var(--sp-6);
   --foot-h: var(--sp-5);
 
@@ -112,7 +93,7 @@
   /* Cards carrying a display headline get the wider inset; everything
      else stays on --pad. One padding for every card size is what made
      big claims feel boxed in and small notes feel over-padded. */
-  --pad:    clamp(var(--sp-3), calc(3.2 * var(--vh)), var(--sp-4));
+  --pad:    var(--sp-4);
   --pad-lg: var(--sp-5);
 
   /* ── Faces ──
@@ -159,111 +140,30 @@ html[data-theme="dark"] {
   color-scheme: dark;
 }
 
-/* ═══ Layout mode ═════════════════════════════════════════════
-   Rail and column are the same rules with different values, so the
-   switch is declared once here rather than written out twice. Anything
-   that differs between the two layouts is a variable.
+/* ═══ Layout ════════════════════════════════════════════════
+   One vertical column, capped at a readable width. Sections are
+   separated by a single step of the space scale; cards inside a section
+   by the one below it. Cards size to their content — stretching them
+   to fill the screen is what left short copy floating in empty boxes.
    ═════════════════════════════════════════════════════════════ */
 
 :root {
-  --rail-gutter:  var(--sp-5);
-  /* A gutter of the next panel stays visible: on a horizontal track the
-     peek is the only honest signal that there is more to the right. */
-  --rail-room:    calc(100vw - var(--rail-gutter) * 2 - var(--sp-5));
-
-  --rail-flow:    row;
-  --rail-h:       100dvh;
-  --rail-pad:     var(--head-h) var(--rail-gutter) var(--foot-h);
-  --rail-over-x:  auto;
-  --rail-over-y:  hidden;
-  --rail-align:   stretch;
-  --body-over:    hidden;
-
-  --panel-h:      100%;
-  --panel-w-sm:   min(34rem, var(--rail-room));
-  --panel-w-md:   min(55rem, var(--rail-room));
-  --panel-w-lg:   min(89rem, var(--rail-room));
-
-  --fill:         1;               /* a card stretching to fill its panel */
-  --split-rows:   1.618fr 1fr;
-  --even-rows:    1fr 1fr;
-  --row-cols:     1fr 1fr;
-  --row-cols-phi: 1.618fr 1fr;
-  --inner-scroll: auto;            /* cards that scroll inside themselves */
-  --edge-fade:    block;
-  --rail-only:    inline-flex;     /* copy that is only true on the rail */
+  --page-max:    72rem;
+  --gutter:      var(--sp-5);
+  --section-gap: var(--sp-6);
+  --grid-gap:    var(--sp-3);
 }
 
 @media (max-width: 899px) {
   :root {
     --pad:    var(--sp-3);
     --pad-lg: var(--sp-4);
-
-    --fs-body:  1.1rem;
-    --fs-lead:  1.28rem;
-    --fs-h3:    1.55rem;
-    --fs-h2:    clamp(1.7rem, 4.6cqi, 2.6rem);
-    --fs-display: clamp(2.2rem, 7.8cqi, 4.2rem);
-
     --r-lg:   22px;
-    --head-h: 56px;
-    --foot-h: 56px;
+    --head-h: 76px;
 
-    --rail-gutter:  var(--sp-3);
-    --rail-flow:    column;
-    --rail-h:       auto;
-    --rail-pad:     var(--head-h) var(--rail-gutter) calc(var(--foot-h) + var(--sp-4));
-    --rail-over-x:  visible;
-    --rail-over-y:  visible;
-    --rail-align:   center;
-    --body-over:    visible;
-
-    --panel-h:      auto;
-    --panel-w-sm:   100%;
-    --panel-w-md:   100%;
-    --panel-w-lg:   100%;
-
-    --fill:         0 0 auto;
-    --split-rows:   none;
-    --even-rows:    none;
-    --row-cols:     1fr;
-    --row-cols-phi: 1fr;
-    --inner-scroll: visible;
-    --edge-fade:    none;
-    --rail-only:    none;
-  }
-}
-
-/* A wheel gesture that drives the page sideways is exactly the effect
-   reduced-motion exists to prevent, so the rail unwinds into a column
-   for anyone who has asked not to be moved. */
-@media (prefers-reduced-motion: reduce) {
-  :root {
-
-    --fs-body:  1.1rem;
-    --fs-lead:  1.28rem;
-    --fs-h3:    1.55rem;
-    --fs-h2:    clamp(1.7rem, 4.6cqi, 2.6rem);
-    --fs-display: clamp(2.2rem, 7.8cqi, 4.2rem);
-
-    --rail-flow:    column;
-    --rail-h:       auto;
-    --rail-pad:     var(--head-h) var(--rail-gutter) calc(var(--foot-h) + var(--sp-4));
-    --rail-over-x:  visible;
-    --rail-over-y:  visible;
-    --rail-align:   center;
-    --body-over:    visible;
-
-    --panel-h:      auto;
-    --panel-w-sm:   min(58rem, 100%);
-    --panel-w-md:   min(58rem, 100%);
-    --panel-w-lg:   min(58rem, 100%);
-
-    --fill:         0 0 auto;
-    --split-rows:   none;
-    --even-rows:    none;
-    --inner-scroll: visible;
-    --rail-only:    none;
+    --gutter:      var(--sp-2);
+    --section-gap: var(--sp-5);
+    --grid-gap:    var(--sp-2);
   }
 }
 
@@ -273,7 +173,6 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  overflow: var(--body-over);
   background: var(--paper);
   color: var(--ink);
   font-family: var(--body);
@@ -299,98 +198,56 @@ a { color: inherit; }
   border-radius: 4px;
 }
 
-/* ═══ The rail ════════════════════════════════════════════════
-   One horizontal track. Panels are laid side by side and the page
-   advances left to right from opening statement to contact.
-   ═════════════════════════════════════════════════════════════ */
-
-.rail {
-  display: flex;
-  flex-direction: var(--rail-flow);
-  align-items: var(--rail-align);
-  gap: var(--sp-3);
-  height: var(--rail-h);
-  padding: var(--rail-pad);
-  overflow-x: var(--rail-over-x);
-  overflow-y: var(--rail-over-y);
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-}
-
-.rail::-webkit-scrollbar { height: 0; }
-
-/* No scroll-behavior here on purpose. The rail is eased by hand in
-   Layout.astro so a gesture keeps a 1:1 relationship with the wheel and
-   settles wherever it is let go; the CSS property would instead restart
-   its own animation on every notch. Keyboard jumps pass `behavior:
-   "smooth"` at the call site. */
-
-/* Which end of the rail you are at, drawn as depth rather than as a
-   progress bar — the track is the story, not a completion metric. */
-.rail-edge {
-  position: fixed;
-  z-index: 500;
-  top: var(--head-h);
-  bottom: var(--foot-h);
-  width: var(--sp-5);
-  display: var(--edge-fade);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.rail-edge-start { left: 0;  background: linear-gradient(to right, var(--paper), transparent); }
-.rail-edge-end   { right: 0; background: linear-gradient(to left,  var(--paper), transparent); }
-
-body[data-rail-pos="mid"] .rail-edge,
-body[data-rail-pos="end"] .rail-edge-start,
-body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
-
-.panel {
-  flex: 0 0 auto;
+.page {
   display: flex;
   flex-direction: column;
-  justify-content: safe center;
-  gap: var(--sp-2);
-  height: var(--panel-h);
-  min-height: 0;
+  gap: var(--section-gap);
+  width: 100%;
+  max-width: calc(var(--page-max) + var(--gutter) * 2);
+  margin: 0 auto;
+  padding: calc(var(--head-h) + var(--sp-3)) var(--gutter) var(--sp-6);
 }
 
-/* Panel widths hold the same ratio as the space scale: 34 → 55 → 89. */
-.panel-sm { width: var(--panel-w-sm); }
-.panel-md { width: var(--panel-w-md); }
-.panel-lg { width: var(--panel-w-lg); }
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--grid-gap);
+  scroll-margin-top: var(--head-h);
+}
 
-/* A lone card fills its panel. */
-.panel > .card { flex: var(--fill); }
+/* A section title that sits on the page rather than inside a card. */
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  padding: 0 var(--sp-1);
+}
 
-/* A pair of cards stacked inside one panel, in φ proportion. */
-.split {
+.section-head .h2 { max-inline-size: none; }
+
+.grid {
   display: grid;
-  grid-template-rows: var(--split-rows);
-  grid-auto-rows: min-content;
-  gap: var(--sp-2);
-  min-height: 0;
-  flex: var(--fill);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: var(--grid-gap);
 }
 
-.split-even {
-  display: grid;
-  grid-template-rows: var(--even-rows);
-  grid-auto-rows: min-content;
-  gap: var(--sp-2);
-  min-height: 0;
-  flex: var(--fill);
-}
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
 .row {
   display: grid;
-  grid-template-columns: var(--row-cols);
-  gap: var(--sp-2);
-  min-height: 0;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--grid-gap);
 }
 
-.row-phi { grid-template-columns: var(--row-cols-phi); }
+.row-phi { grid-template-columns: 1.618fr 1fr; }
+
+@media (max-width: 899px) {
+  .grid-2,
+  .row,
+  .row-phi { grid-template-columns: 1fr; }
+}
 
 /* ═══ Cards ═══════════════════════════════════════════════════ */
 
@@ -400,9 +257,7 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   container-type: inline-size;
   display: flex;
   flex-direction: column;
-  /* The gaps add up: a project card stacks six children, so a few pixels
-     each is most of a line of copy on a short panel. */
-  gap: clamp(var(--sp-1), calc(1.45 * var(--vh)), var(--sp-2));
+  gap: var(--sp-2);
   padding: var(--pad);
   border-radius: var(--r-lg);
   background: var(--chalk);
@@ -418,21 +273,12 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
 
 .card-tight { padding: var(--sp-3); }
 
-/* A card whose job is to carry the claim gets the room to carry it —
-   but at --sp-5 the inset alone was taking 110px of vertical budget on a
-   panel that cannot grow. One step down, and the gap with it. */
-.card-hero { padding: var(--sp-4); gap: var(--sp-2); }
-
-/* Cards that can outgrow their panel scroll inside themselves rather
-   than pushing the rail out of shape. */
-.card-scroll {
-  overflow-y: var(--inner-scroll);
-  overscroll-behavior: contain;
-}
+/* A card whose job is to carry the claim gets the room to carry it. */
+.card-hero { padding: var(--pad-lg); gap: var(--sp-3); }
 
 /* ═══ Hierarchy ═══════════════════════════════════════════════
    Five tiers, each separated by size, weight, and colour at once —
-   never by size alone. One tier-1 element per panel, no exceptions.
+   never by size alone. One tier-1 element per section, no exceptions.
    ═════════════════════════════════════════════════════════════ */
 
 /* Tier 1 — the claim */
@@ -456,7 +302,7 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   text-wrap: balance;
 }
 
-/* Tier 2 — what a panel is about */
+/* Tier 2 — what a section is about */
 .h2 {
   font-family: var(--display);
   font-size: var(--fs-h2);
@@ -537,8 +383,6 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
   border-radius: var(--r-pill);
   border: 1px solid var(--hairline);
 }
-
-.tag-live { background: var(--live-ink); border-color: transparent; color: var(--on-live); }
 
 .dot {
   width: 6px;
@@ -627,9 +471,6 @@ body[data-rail-pos="start"] .rail-edge-end { opacity: 1; }
 
 .link-arrow svg { transition: transform 0.2s ease; }
 .link-arrow:hover svg { transform: translateX(4px); }
-
-/* Instructions that stop being true once the rail unwinds. */
-.rail-only { display: var(--rail-only); }
 
 .rule { height: 1px; background: var(--hairline); border: 0; margin: 0; }
 

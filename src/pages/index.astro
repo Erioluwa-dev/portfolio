@@ -4,21 +4,18 @@ import PortraitCard from '../components/PortraitCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { projects, stack, letters, social } from '../data/site';
 
-const flagship = projects.find((p) => p.flagship);
-const rest = projects.filter((p) => !p.flagship).slice(0, 2);
 const recent = letters.slice(0, 2);
 
 const arrow = "M5 12h13M13 6l6 6-6 6";
 ---
 
 <Layout title="Fawehinmi Erioluwa — Product Engineer">
-  <!-- 1 — the claim -->
-  <section class="panel panel-lg" aria-labelledby="thesis">
+  <section class="section" aria-labelledby="thesis">
     <div class="opener">
       <PortraitCard />
 
       <div class="opener-stack">
-        <div class="card card-amber card-hero card-scroll intro">
+        <div class="card card-amber card-hero intro">
           <p class="hand greeting">Hi — I'm Eri.</p>
           <h1 class="display" id="thesis">
             I build whole products, not just the part you can see.
@@ -26,11 +23,7 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
           <p class="lead intro-lead">
             Product engineer in Lagos, Nigeria. Interfaces first — that is where
             I am deepest — then the API, the data, and the machine
-            learning underneath. Currently teaching a camera to read a basketball game.
-          </p>
-          <p class="tag rail-only scroll-hint">
-            <span class="dot dot-pulse"></span>
-            Scroll — the page runs sideways
+            learning underneath.
           </p>
         </div>
 
@@ -53,28 +46,24 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
     </div>
   </section>
 
-  <!-- 2 — where things stand -->
-  <section class="panel panel-sm" aria-label="Status">
-    <div class="card card-teal now">
-      <span class="tag now-label"><span class="dot dot-pulse"></span> Currently</span>
-      <h2 class="h2 now-title">CourtVision</h2>
-      <p class="lead now-body">
-        Detection and tracking hold through traffic. Possession inference and
-        the conversational layer are what I'm building next.
-      </p>
+  <section class="section" aria-labelledby="work-heading">
+    <div class="section-head">
+      <h2 class="h2" id="work-heading">Things I've built</h2>
+      <a class="link-arrow" href="/projects">
+        All projects
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d={arrow} />
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid">
+      {projects.map((p) => <ProjectCard project={p} level={3} />)}
     </div>
   </section>
 
-  <!-- 3 — the flagship -->
-  {flagship && (
-    <section class="panel panel-md" aria-label="Current build">
-      <ProjectCard project={flagship} expanded />
-    </section>
-  )}
-
-  <!-- 4 — the toolkit -->
-  <section class="panel panel-md" aria-labelledby="toolkit-heading">
-    <div class="card toolkit card-scroll">
+  <section class="section" aria-labelledby="toolkit-heading">
+    <div class="card toolkit">
       <span class="tag muted">The toolkit</span>
       <h2 class="h2" id="toolkit-heading">What I reach for</h2>
       <p class="body muted toolkit-note">
@@ -95,107 +84,68 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
     </div>
   </section>
 
-  <!-- 5 — the rest of the work -->
-  <section class="panel panel-md" aria-labelledby="work-heading">
-    <div class="card card-bare work-head card-tight">
-      <h2 class="h2" id="work-heading">Things I've built</h2>
-      <a class="link-arrow" href="/projects">
-        All projects
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d={arrow} />
-        </svg>
-      </a>
+  <div class="section">
+    <div class="row">
+      <section class="card letters" aria-labelledby="letters-heading">
+        <span class="tag muted">Letters</span>
+        <h2 class="h2" id="letters-heading">Notes from inside the build</h2>
+
+        <ul class="letter-list">
+          {recent.map((l) => (
+            <li>
+              <a class="letter" href={`/letters/${l.slug}`}>
+                <span class="tag muted">
+                  {new Date(l.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                </span>
+                <span class="letter-title">{l.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <a class="link-arrow letters-all" href="/letters">
+          Read all
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d={arrow} />
+          </svg>
+        </a>
+      </section>
+
+      <section class="card card-ink card-hero closing" aria-labelledby="contact-heading">
+        <p class="hand closing-note">You made it to the end.</p>
+        <h2 class="h2" id="contact-heading">Tell me what it needs to do.</h2>
+        <a class="btn btn-amber closing-btn" href={`mailto:${social.email}`}>
+          {social.email}
+        </a>
+        <a class="link-arrow closing-link" href="/contact">
+          Other ways to reach me
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d={arrow} />
+          </svg>
+        </a>
+      </section>
     </div>
-
-    <div class="row work-row">
-      {rest.map((p) => <ProjectCard project={p} level={3} />)}
-    </div>
-  </section>
-
-  <!-- 6 — writing -->
-  <section class="panel panel-sm" aria-labelledby="letters-heading">
-    <div class="card letters card-scroll">
-      <span class="tag muted">Letters</span>
-      <h2 class="h2" id="letters-heading">Notes from inside the build</h2>
-
-      <ul class="letter-list">
-        {recent.map((l) => (
-          <li>
-            <a class="letter" href={`/letters/${l.slug}`}>
-              <span class="tag muted">
-                {new Date(l.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-              </span>
-              <span class="letter-title">{l.title}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <a class="link-arrow letters-all" href="/letters">
-        Read all
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d={arrow} />
-        </svg>
-      </a>
-    </div>
-  </section>
-
-  <!-- 7 — the end of the rail -->
-  <section class="panel panel-sm" aria-labelledby="contact-heading">
-    <div class="card card-ink card-hero card-scroll closing">
-      <p class="hand closing-note">You made it to the end.</p>
-      <h2 class="h2" id="contact-heading">Tell me what it needs to do.</h2>
-      <a class="btn btn-amber closing-btn" href={`mailto:${social.email}`}>
-        {social.email}
-      </a>
-      <a class="link-arrow closing-link" href="/contact">
-        Other ways to reach me
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d={arrow} />
-        </svg>
-      </a>
-    </div>
-  </section>
+  </div>
 </Layout>
 
 <style>
-  /* The mark sits at 1, the claim at φ². It used to be 1 : φ, which handed
-     38% of the widest panel on the site to a logo and squeezed the sentence
-     that the whole page exists to make. */
+  /* The mark sits at 1, the claim at φ². */
   .opener {
     display: grid;
     grid-template-columns: 1fr 2.618fr;
-    gap: var(--sp-3);
-    flex: var(--fill);
-    min-height: 0;
+    gap: var(--grid-gap);
+    align-items: stretch;
   }
 
-  .opener > :global(*) { min-height: 0; }
-
-  /* Who I am at φ², what I'm open to at 1, directly beneath it. */
   .opener-stack {
-    display: grid;
-    grid-template-rows: var(--opener-rows, 2.618fr 1fr);
-    grid-auto-rows: min-content;
-    gap: var(--sp-2);
-    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--grid-gap);
   }
 
-  .opener-stack > :global(*) { min-height: 0; }
-
-  .intro { justify-content: safe center; }
+  .intro { flex: 1; justify-content: center; }
   .greeting { opacity: 0.78; }
-  /* 46ch was measured against the old sans; a ch in the hand is far
-     narrower, so the same cap was forcing this lead an extra line long
-     and pushing the hero card past its panel. */
   .intro-lead { max-width: 56ch; }
-
-  .scroll-hint { margin-top: var(--sp-1); opacity: 0.78; }
-
-  .now { justify-content: safe center; }
-  .now-label { opacity: 0.85; }
-  .now-title { color: var(--amber); }
-  .now-body { max-width: 34ch; }
 
   .open {
     flex-direction: row;
@@ -209,34 +159,17 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   .open-body { color: var(--ink-soft); max-width: 42ch; }
   .open-btn { flex-shrink: 0; }
 
-  .toolkit { flex: var(--fill); justify-content: safe center; }
+  .toolkit { padding: var(--pad-lg); }
+  .toolkit-note { max-width: 52ch; }
 
-  .toolkit-note { max-width: 46ch; }
-
-  /* Five depth tiers is more than one column wants; the wider panel lets
-     them pair up instead of scrolling out of sight. */
   .tool-groups {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: var(--sp-3) var(--sp-4);
-    margin-top: var(--sp-2);
+    gap: var(--sp-4);
+    margin-top: var(--sp-3);
   }
 
-  .tool-group { margin-bottom: var(--sp-1); color: var(--ink-soft); }
-
-  .work-head {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--sp-2);
-    flex-wrap: wrap;
-    flex: 0 0 auto;
-  }
-
-  .work-row { flex: var(--fill); min-height: 0; }
-  .work-row > :global(*) { min-height: 0; }
-
-  .letters { flex: var(--fill); justify-content: safe center; }
+  .tool-group { margin-bottom: var(--sp-2); color: var(--ink-soft); }
 
   .letter-list {
     margin: var(--sp-1) 0 0;
@@ -265,20 +198,15 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
     transition: color 0.18s ease;
   }
 
-  .letters-all { margin-top: var(--sp-2); }
+  .letters-all { margin-top: auto; }
 
-  .closing { flex: var(--fill); justify-content: safe center; }
+  .closing { justify-content: center; }
   .closing-note { color: var(--amber); }
   .closing-btn { align-self: flex-start; margin-top: var(--sp-1); word-break: break-word; }
   .closing-link { opacity: 0.82; }
 
   @media (max-width: 899px) {
     .opener { grid-template-columns: 1fr; }
-    .opener-stack { --opener-rows: none; }
     .open { flex-direction: column; align-items: flex-start; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .opener-stack { --opener-rows: none; }
   }
 </style>

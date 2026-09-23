@@ -8,17 +8,17 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 
 <Layout
   title="Projects — Fawehinmi Erioluwa"
-  description="Computer vision, graph ML, offline-first systems, realtime interfaces, and the small builds that taught me the fundamentals."
+  description="Offline-first systems, hand-built interfaces, and the small builds that taught me the fundamentals."
 >
-  <section class="panel panel-md" aria-labelledby="projects-heading">
-    <div class="split">
+  <section class="section" aria-labelledby="projects-heading">
+    <div class="row row-phi">
       <div class="card card-amber card-hero head">
         <span class="tag">Projects</span>
-        <h1 class="display" id="projects-heading">Five builds.</h1>
+        <h1 class="display" id="projects-heading">Three builds.</h1>
         <p class="lead head-lead">
-          Vision pipelines, a platform that syncs when the network returns, a
-          recommender built on a graph, and the small one that is here
-          because it is where I started. None of them are tutorials.
+          A platform that syncs when the network returns, the site you are
+          reading, and the small one that is here because it is where I
+          started. None of them are tutorials.
         </p>
       </div>
 
@@ -34,14 +34,14 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
     </div>
   </section>
 
-  {projects.map((p) => (
-    <section class:list={["panel", p.flagship ? "panel-md" : "panel-sm"]} aria-label={p.name}>
-      <ProjectCard project={p} expanded />
-    </section>
-  ))}
+  <section class="section" aria-label="All projects">
+    <div class="grid">
+      {projects.map((p) => <ProjectCard project={p} expanded />)}
+    </div>
+  </section>
 
-  <section class="panel panel-sm" aria-labelledby="projects-end">
-    <div class="card card-ink closing">
+  <section class="section" aria-labelledby="projects-end">
+    <div class="card card-ink card-hero closing">
       <p class="hand closing-note">That's the shelf.</p>
       <h2 class="h2" id="projects-end">Want one built for you?</h2>
       <a class="btn btn-amber" href="/contact">
@@ -55,12 +55,11 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 </Layout>
 
 <style>
-  .head { justify-content: safe center; }
-  .head-lead { max-width: 42ch; opacity: 0.86; }
+  .head-lead { max-width: 46ch; opacity: 0.86; }
 
-  .repo { justify-content: safe center; }
+  .repo { justify-content: center; }
   .repo-note { color: var(--ink-soft); }
 
-  .closing { flex: var(--fill); justify-content: safe center; align-items: flex-start; }
+  .closing { align-items: flex-start; }
   .closing-note { color: var(--amber); }
 </style>

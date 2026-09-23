@@ -2,29 +2,15 @@ export type Project = {
   slug: string;
   name: string;
   kind: string;
-  status: "building" | "shipped" | "private" | "archive";
+  status: "shipped" | "private" | "archive";
   summary: string;
   detail: string;
   stack: string[];
   repo?: string;
   live?: string;
-  flagship?: boolean;
 };
 
 export const projects: Project[] = [
-  {
-    slug: "courtvision",
-    name: "CourtVision",
-    kind: "Computer vision · Applied ML",
-    status: "building",
-    summary:
-      "A basketball analyst that watches the tape with you and answers questions about what it saw.",
-    detail:
-      "The whole pipeline is mine: detection, tracking, team classification, possession inference, then the statistics that fall out of it — trajectories, heatmaps, shot analysis. YOLOv8 and DeepSORT hold identity through traffic, MediaPipe reads body position, and every player's tendencies get written into a database a Groq-backed LangChain layer can be asked about in plain English. Machine learning is the computation here, not an API call bolted onto a UI. Built solo, on a $0 budget, over 26 weeks.",
-    stack: ["Python", "YOLOv8", "DeepSORT", "MediaPipe", "OpenCV", "Groq", "LangChain", "Supabase", "Streamlit"],
-    repo: "https://github.com/Erioluwa-dev/CourtVision",
-    flagship: true,
-  },
   {
     slug: "yems",
     name: "YEMS",
@@ -35,17 +21,6 @@ export const projects: Project[] = [
     detail:
       "The Youth Educational Management System is the project where I stopped owning only the interface. Auth, the API, the business logic, the Postgres schema, the sync engine, six containers and the deploy — all of it had to be reasoned about together, because offline-first is not a frontend feature. A teacher finishes what they started without ever learning the network state underneath.",
     stack: ["Next.js", "TypeScript", "Node.js", "PostgreSQL", "Redis", "Docker"],
-  },
-  {
-    slug: "song-graph",
-    name: "Song Graph",
-    kind: "Graph ML · Recommenders",
-    status: "building",
-    summary:
-      "Music recommendation as a graph problem — users and tracks as nodes, taste as the edges between them.",
-    detail:
-      "A graph neural network over a user–item graph, computing embeddings that carry more than a similarity score does: who listens adjacent to whom, and which tracks sit between two scenes. Built from the representation up rather than by importing someone's ranker.",
-    stack: ["Python", "PyTorch", "PyTorch Geometric", "Pandas"],
   },
   {
     slug: "portfolio",
@@ -73,7 +48,6 @@ export const projects: Project[] = [
 ];
 
 export const statusLabel: Record<Project["status"], string> = {
-  building: "in progress",
   shipped: "shipped",
   private: "private repo",
   archive: "early work",
@@ -94,7 +68,7 @@ export const stack: StackGroup[] = [
   },
   {
     group: "Applied in production",
-    items: ["Python", "PyTorch", "Computer vision", "YOLO", "OpenCV", "Graph ML"],
+    items: ["Python", "OpenCV", "Graph ML"],
   },
   {
     group: "Around the work",
@@ -114,13 +88,6 @@ export type Letter = {
 };
 
 export const letters: Letter[] = [
-  {
-    slug: "building-courtvision",
-    title: "Building CourtVision: A 26-Week Solo Journey",
-    date: "2026-07-01",
-    excerpt:
-      "What it actually takes to teach a camera to read a basketball game when you are the whole team.",
-  },
   {
     slug: "why-astro",
     title: "Why I Chose Astro for My Portfolio",
