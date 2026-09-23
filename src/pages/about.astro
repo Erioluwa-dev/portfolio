@@ -3,8 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import PortraitCard from '../components/PortraitCard.astro';
 import { stack } from '../data/site';
 
-// A real chronology — and on a rail that runs left to right, the order is the
-// point. The labels mark position in time, not decoration.
+// A real chronology — the order is the point. The labels mark position in
+// time, not decoration.
 const beats = [
   {
     when: "Before",
@@ -26,23 +26,13 @@ const beats = [
     what: "Owning the layers under the interface",
     body: "Node, Bun, Hono, Postgres, Redis, queues, storage. Not because backend is fashionable — because I kept hitting product decisions I could not make from the interface alone.",
   },
-  {
-    when: "Now",
-    what: "CourtVision — 26 weeks, solo",
-    body: "Detection, tracking, team classification, possession, statistics. Machine learning as the actual computation, not a call to somebody's API. It sits further outside my comfort zone than anything I have shipped, which is most of why I am building it.",
-  },
-  {
-    when: "Also now",
-    what: "Recommendation as a graph problem",
-    body: "A recommender built on a graph neural network — embeddings, user-item edges, taste as structure rather than a similarity score. Exploratory, and off to one side of everything else I know. I would rather learn the tool a problem asks for than reshape the problem around the tools I already have.",
-  },
 ];
 
 const facts = [
   { label: "Based in", value: "Lagos, Nigeria" },
   { label: "Deepest in", value: "Frontend, UI/UX, TypeScript, product thinking" },
   { label: "Depth in", value: "Backend, infrastructure, applied ML" },
-  { label: "Active in", value: "Computer vision, graph ML, Rust" },
+  { label: "Active in", value: "Graph ML, Rust" },
   { label: "Open to", value: "Product and full-stack roles, collaborations" },
 ];
 ---
@@ -51,7 +41,7 @@ const facts = [
   title="About — Fawehinmi Erioluwa"
   description="How a self-taught engineer in Lagos went from avoiding code to building whole products — interfaces, backends, and the machine learning underneath."
 >
-  <section class="panel panel-lg" aria-labelledby="about-heading">
+  <section class="section" aria-labelledby="about-heading">
     <div class="opener">
       <PortraitCard tag="eri · 2026" />
 
@@ -68,18 +58,23 @@ const facts = [
     </div>
   </section>
 
-  {beats.map((b) => (
-    <section class="panel panel-sm" aria-label={b.when}>
-      <div class="card beat">
-        <span class="tag beat-when">{b.when}</span>
-        <h2 class="h2 beat-what">{b.what}</h2>
-        <p class="lead beat-body muted">{b.body}</p>
-      </div>
-    </section>
-  ))}
+  <section class="section" aria-labelledby="story-heading">
+    <div class="section-head">
+      <h2 class="h2" id="story-heading">How I got here</h2>
+    </div>
+    <ol class="grid grid-2 beats">
+      {beats.map((b) => (
+        <li class="card beat">
+          <span class="tag beat-when">{b.when}</span>
+          <h3 class="h3 beat-what">{b.what}</h3>
+          <p class="body beat-body muted">{b.body}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
 
-  <section class="panel panel-sm" aria-labelledby="belief-heading">
-    <div class="card card-amber belief">
+  <section class="section" aria-labelledby="belief-heading">
+    <div class="card card-amber card-hero belief">
       <p class="hand belief-note">What I actually believe</p>
       <h2 class="h2" id="belief-heading">Clean interfaces are the easy half.</h2>
       <p class="lead belief-body">
@@ -89,9 +84,9 @@ const facts = [
     </div>
   </section>
 
-  <section class="panel panel-lg" aria-labelledby="tools-heading">
+  <section class="section" aria-labelledby="tools-heading">
     <div class="row row-phi">
-      <div class="card tools card-scroll">
+      <div class="card tools">
         <span class="tag muted">The toolkit</span>
         <h2 class="h3" id="tools-heading">What I reach for</h2>
         <p class="body muted tools-note">
@@ -125,32 +120,22 @@ const facts = [
 </Layout>
 
 <style>
-  /* The mark at 1, the story at φ². A logo does not need a third of the
-     widest panel on the site. */
+  /* The mark at 1, the story at φ². */
   .opener {
     display: grid;
     grid-template-columns: 1fr 2.618fr;
-    gap: var(--sp-3);
-    flex: var(--fill);
-    min-height: 0;
+    gap: var(--grid-gap);
   }
 
-  .opener > :global(*) { min-height: 0; }
-
-  .head { justify-content: safe center; }
-  /* Measured against the old sans; a ch in the hand is far narrower. */
+  .head { justify-content: center; }
   .head-lead { max-width: 62ch; opacity: 0.88; }
 
-  .beat { justify-content: safe center; }
+  .beats { margin: 0; padding: 0; list-style: none; }
   .beat-when { color: var(--live-ink); }
-  .beat-what { max-width: 20ch; }
-  .beat-body { max-width: 40ch; }
+  .beat-body { max-width: 52ch; }
 
-  .belief { justify-content: safe center; }
   .belief-note { opacity: 0.75; }
-  .belief-body { max-width: 40ch; }
-
-  .tools { justify-content: safe center; }
+  .belief-body { max-width: 48ch; }
 
   .tools-note { max-width: 52ch; }
 
@@ -163,13 +148,11 @@ const facts = [
 
   .tool-group { margin-bottom: var(--sp-1); color: var(--ink-soft); }
 
-  .facts { justify-content: safe center; }
-
   .fact-list {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--sp-2);
+    gap: var(--sp-3);
   }
 
   .fact { display: flex; flex-direction: column; gap: 4px; }

@@ -14,18 +14,9 @@ const p = project;
 const Heading = `h${level}` as 'h2' | 'h3';
 ---
 
-<article
-  class:list={[
-    "project", "card", "card-scroll",
-    p.flagship ? "card-teal" : "",
-    expanded ? "is-expanded" : "",
-  ]}
->
+<article class:list={["project", "card", { "is-expanded": expanded }]}>
   <header class="project-head">
-    <span class:list={["tag", "tag-pill", p.status === "building" ? "tag-live" : ""]}>
-      {p.status === "building" && <span class="dot dot-pulse"></span>}
-      {statusLabel[p.status]}
-    </span>
+    <span class="tag tag-pill">{statusLabel[p.status]}</span>
     <span class="tag muted">{p.kind}</span>
   </header>
 
@@ -74,17 +65,14 @@ const Heading = `h${level}` as 'h2' | 'h3';
     flex-wrap: wrap;
   }
 
-  .project-name { margin: 4px 0 0; }
+  .project-name { margin: var(--sp-1) 0 0; }
 
   .project-summary { max-width: 46ch; }
 
-  /* The longest block of copy on the site; it sets the height of the
-     flagship card, so it reads at the tight end of the body range. */
-  .project-detail { line-height: 1.5; max-width: 62ch; }
+  .project-detail { line-height: 1.6; max-width: 62ch; }
 
-  /* Pinned to the foot of the card so a row of cards lines its chips up,
-     but only when there is slack to give. */
-  .project-stack { margin-top: auto; padding-top: var(--sp-1); }
+  /* Pinned to the foot of the card so a row of cards lines its chips up. */
+  .project-stack { margin-top: auto; padding-top: var(--sp-2); }
 
   .project-links {
     display: flex;

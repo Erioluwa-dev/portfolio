@@ -42,11 +42,6 @@ const numbered = groups.map((g) => ({
 }));
 ---
 
-<button id="cmdk-trigger" class="trigger" aria-label="Search this site (Control K)">
-  <span class="tag">Search</span>
-  <kbd class="key">Ctrl K</kbd>
-</button>
-
 <div id="cmdk-overlay" class="overlay" hidden></div>
 
 <div id="cmdk-panel" class="cmdk" role="dialog" aria-modal="true" aria-label="Search the site" hidden>
@@ -94,33 +89,6 @@ const numbered = groups.map((g) => ({
 </div>
 
 <style>
-  /* The bar is fixed and 55px tall, so a control 20px off the bottom sat
-     underneath it — visible in no theme and clickable in none. */
-  .trigger {
-    position: fixed;
-    right: var(--sp-3);
-    bottom: calc(var(--foot-h) + var(--sp-2));
-    z-index: 1100;
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    min-height: 44px;
-    padding: 11px 15px;
-    border: 1px solid var(--hairline);
-    border-radius: var(--r-pill);
-    background: var(--chalk);
-    color: var(--ink-soft);
-    cursor: pointer;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
-  }
-
-  .trigger:hover {
-    transform: translateY(-2px);
-    border-color: var(--ink);
-    color: var(--ink);
-  }
-
   .key {
     font-family: var(--mono);
     /* A script at 0.65rem is unreadable on a key cap. */
@@ -148,7 +116,7 @@ const numbered = groups.map((g) => ({
   .item[hidden],
   .empty[hidden] { display: none; }
 
-  /* Not ".panel" — that class belongs to the rail, and the global rules for
+  /* Not ".panel" — kept distinct from page layout classes, and the global rules for
      it were stretching this dialog to a fixed 66vh of mostly empty box. */
   .cmdk {
     position: fixed;
@@ -248,25 +216,25 @@ const numbered = groups.map((g) => ({
   }
 
   @media (max-width: 620px) {
-    .trigger { right: var(--sp-2); }
     .cmdk-foot { display: none; }
   }
 </style>
 
 <script>
   (function () {
-    const trigger = document.getElementById("cmdk-trigger");
+    // Openers live in the island header; any element can ask for the palette.
+    const triggers = Array.from(document.querySelectorAll<HTMLElement>("[data-cmdk-open]"));
     const overlay = document.getElementById("cmdk-overlay");
     const panel = document.getElementById("cmdk-panel");
     const input = document.getElementById("cmdk-input") as HTMLInputElement | null;
     const empty = document.getElementById("cmdk-empty");
-    if (!trigger || !overlay || !panel || !input || !empty) return;
+    if (!overlay || !panel || !input || !empty) return;
 
     const items = Array.from(panel.querySelectorAll<HTMLAnchorElement>("[data-item]"));
     const groups = Array.from(panel.querySelectorAll<HTMLElement>("[data-group]"));
     // Everything the dialog covers is sealed off while it is open, so a
     // screen reader or a Tab press cannot wander behind it.
-    const behind = ["#rail", "#island", "footer"]
+    const behind = ["#main", "#island", "footer"]
       .map((sel) => document.querySelector(sel))
       .filter((el): el is HTMLElement => el instanceof HTMLElement);
 
@@ -308,7 +276,7 @@ const numbered = groups.map((g) => ({
 
     const open = () => {
       const from = document.activeElement;
-      restoreFocusTo = from instanceof HTMLElement && from !== document.body ? from : trigger;
+      restoreFocusTo = from instanceof HTMLElement && from !== document.body ? from : null;
       overlay.hidden = false;
       panel.hidden = false;
       behind.forEach((el) => el.setAttribute("inert", ""));
@@ -323,7 +291,7 @@ const numbered = groups.map((g) => ({
       panel.hidden = true;
       behind.forEach((el) => el.removeAttribute("inert"));
       // Focus goes back where it came from, not to the top of the document.
-      (restoreFocusTo ?? trigger).focus();
+      restoreFocusTo?.focus();
     };
 
     const move = (step: number) => {
@@ -331,7 +299,7 @@ const numbered = groups.map((g) => ({
       paint();
     };
 
-    trigger.addEventListener("click", open);
+    triggers.forEach((t) => t.addEventListener("click", open));
     overlay.addEventListener("click", close);
     input.addEventListener("input", () => filter(input.value));
 

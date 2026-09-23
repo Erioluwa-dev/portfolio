@@ -15,7 +15,8 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   title="Contact — Fawehinmi Erioluwa"
   description="Get in touch with Fawehinmi Erioluwa — product and full-stack roles, frontend-heavy work, and collaborations."
 >
-  <section class="panel panel-md" aria-labelledby="contact-heading">
+  <section class="section" aria-labelledby="contact-heading">
+    <div class="row row-phi">
     <div class="card card-ink card-hero head">
       <span class="tag">Contact</span>
       <h1 class="display" id="contact-heading">Say what you need built.</h1>
@@ -28,10 +29,8 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
         {social.email}
       </a>
     </div>
-  </section>
 
-  <section class="panel panel-sm" aria-labelledby="open-heading">
-    <div class="card card-amber open">
+    <section class="card card-amber open" aria-labelledby="open-heading">
       <p class="hand open-note">Right now</p>
       <h2 class="h2" id="open-heading">I'm open to</h2>
       <ul class="open-list">
@@ -43,10 +42,11 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
       <p class="body open-foot">
         Lagos, Nigeria — remote-friendly and used to working across timezones.
       </p>
+    </section>
     </div>
   </section>
 
-  <section class="panel panel-lg" aria-label="Ways to reach me">
+  <section class="section" aria-label="Ways to reach me">
     <div class="channels">
       {channels.map((c) => (
         <a
@@ -68,11 +68,11 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
 </Layout>
 
 <style>
-  .head { justify-content: safe center; }
+  .head { justify-content: center; }
   .head-lead { max-width: 46ch; opacity: 0.84; }
   .head-btn { align-self: flex-start; margin-top: var(--sp-1); word-break: break-word; }
 
-  .open { justify-content: safe center; }
+  .open { justify-content: center; }
   .open-note { opacity: 0.75; }
 
   .open-list {
@@ -103,14 +103,11 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   .channels {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--sp-2);
-    flex: 1;
-    min-height: 0;
+    gap: var(--grid-gap);
   }
 
   .channel {
-    justify-content: safe center;
-    gap: 6px;
+    gap: var(--sp-1);
     text-decoration: none;
     transition: transform 0.18s ease, border-color 0.18s ease;
   }
@@ -118,7 +115,7 @@ const arrow = "M5 12h13M13 6l6 6-6 6";
   .channel:hover { transform: translateY(-3px); border-color: var(--live-ink); }
   .channel:hover .channel-arrow { transform: translateX(4px); color: var(--live-ink); }
 
-  /* A 27-character address in a third-of-a-panel card is the one place
+  /* A 27-character address in a third-width card is the one place
      the fixed h3 step broke down, so this one sizes to its card. */
   .channel-value {
     font-size: clamp(var(--fs-body), 6.2cqi, var(--fs-h3));
