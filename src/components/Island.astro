@@ -1,8 +1,8 @@
 ---
 // The island is the only fixed chrome at the top.
-// Desktop: a centered pill that expands on hover/click, with search beside it.
-// Mobile (<=899px): a bar with search and a hamburger; the menu drops down
-// out of the island itself rather than sliding in from the side.
+// Desktop: a centered pill that expands on hover/click.
+// Mobile (<=899px): a compact pill — name, current page, hamburger — whose
+// menu drops down out of the island itself rather than sliding in.
 interface Props {
   path: string;
 }
@@ -71,14 +71,6 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
       </button>
     </nav>
   </div>
-
-  <button class="search-btn" type="button" data-cmdk-open aria-label="Search this site (Control K)">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <circle cx="11" cy="11" r="7"></circle>
-      <path d="M20 20l-3.5-3.5"></path>
-    </svg>
-    <kbd class="key-hint">Ctrl K</kbd>
-  </button>
 </header>
 
 <!-- ══════ Mobile island ══════ -->
@@ -90,29 +82,21 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
       <span class="tag m-current">{current}</span>
     </a>
 
-    <div class="m-actions">
-      <button class="m-btn" type="button" data-cmdk-open aria-label="Search this site">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"></circle>
-          <path d="M20 20l-3.5-3.5"></path>
-        </svg>
-      </button>
-      <button
-        id="m-toggle"
-        class="m-btn"
-        type="button"
-        aria-label="Open navigation"
-        aria-expanded="false"
-        aria-controls="m-menu"
-      >
-        <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
-        <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+    <button
+      id="m-toggle"
+      class="m-btn"
+      type="button"
+      aria-label="Open navigation"
+      aria-expanded="false"
+      aria-controls="m-menu"
+    >
+      <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+      <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </button>
   </div>
 
   <div id="m-menu" class="m-menu">
@@ -289,35 +273,6 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
   }
 
 
-  /* Search sits beside the pill as part of the island, instead of a
-     floating button that covered content in the corner. */
-  .search-btn {
-    pointer-events: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-1);
-    height: var(--sp-5);
-    padding: 0 var(--sp-3);
-    background: var(--chrome-bg);
-    color: var(--chrome-fg);
-    border: 1px solid var(--chrome-line);
-    border-radius: var(--r-pill);
-    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.24);
-    cursor: pointer;
-    transition: transform 0.18s ease;
-  }
-
-  .search-btn:hover { transform: translateY(-2px); }
-
-  .key-hint {
-    font-family: var(--mono);
-    font-size: var(--fs-micro);
-    color: var(--chrome-dim);
-    padding: 3px 7px;
-    border: 1px solid var(--chrome-line);
-    border-radius: 6px;
-  }
-
   .m-island,
   .m-overlay { display: none; }
 
@@ -332,8 +287,11 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
       position: fixed;
       z-index: 1100;
       top: var(--sp-2);
-      left: var(--sp-2);
-      right: var(--sp-2);
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      min-width: 12.5rem;
+      max-width: calc(100vw - var(--sp-4));
       background: var(--chrome-bg);
       color: var(--chrome-fg);
       border: 1px solid var(--chrome-line);
@@ -346,8 +304,9 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 52px;
-      padding: 0 6px 0 var(--sp-3);
+      gap: var(--sp-2);
+      height: 48px;
+      padding: 0 4px 0 var(--sp-2);
     }
 
     .m-brand {
@@ -361,8 +320,6 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
 
     .m-name { font-family: var(--display); font-weight: 700; font-size: 1.15rem; }
     .m-current { color: var(--chrome-dim); }
-
-    .m-actions { display: flex; gap: 4px; }
 
     .m-btn {
       display: grid;
@@ -426,6 +383,7 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
       align-items: center;
       gap: var(--sp-1);
       min-height: 48px;
+      width: calc(100% - var(--sp-1) * 2);
       margin: 0 var(--sp-1) var(--sp-1);
       padding: 0 var(--sp-2);
       background: transparent;
@@ -516,7 +474,7 @@ const current = links.find((l) => isActive(l.href))?.label ?? "Home";
 
     mToggle.addEventListener("click", () => setMenu(mIsland.dataset.open !== "true"));
     mOverlay.addEventListener("click", () => setMenu(false));
-    mIsland.querySelectorAll("[data-cmdk-open], .m-link").forEach((el) => {
+    mIsland.querySelectorAll(".m-link").forEach((el) => {
       el.addEventListener("click", () => setMenu(false));
     });
     document.getElementById("m-theme")?.addEventListener("click", applyTheme);

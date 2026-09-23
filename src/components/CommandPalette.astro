@@ -42,6 +42,11 @@ const numbered = groups.map((g) => ({
 }));
 ---
 
+<button class="trigger" type="button" data-cmdk-open aria-label="Search this site (Control K)">
+  <span class="tag">Search</span>
+  <kbd class="key">Ctrl K</kbd>
+</button>
+
 <div id="cmdk-overlay" class="overlay" hidden></div>
 
 <div id="cmdk-panel" class="cmdk" role="dialog" aria-modal="true" aria-label="Search the site" hidden>
@@ -89,6 +94,31 @@ const numbered = groups.map((g) => ({
 </div>
 
 <style>
+  .trigger {
+    position: fixed;
+    right: var(--sp-3);
+    bottom: var(--sp-3);
+    z-index: 1100;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 8px 10px 8px 15px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-pill);
+    background: var(--chalk);
+    color: var(--ink-soft);
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  }
+
+  .trigger:hover {
+    transform: translateY(-2px);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
   .key {
     font-family: var(--mono);
     /* A script at 0.65rem is unreadable on a key cap. */
@@ -216,13 +246,14 @@ const numbered = groups.map((g) => ({
   }
 
   @media (max-width: 620px) {
+    .trigger { right: var(--sp-2); bottom: var(--sp-2); }
     .cmdk-foot { display: none; }
   }
 </style>
 
 <script>
   (function () {
-    // Openers live in the island header; any element can ask for the palette.
+    // Any element marked data-cmdk-open can ask for the palette.
     const triggers = Array.from(document.querySelectorAll<HTMLElement>("[data-cmdk-open]"));
     const overlay = document.getElementById("cmdk-overlay");
     const panel = document.getElementById("cmdk-panel");
