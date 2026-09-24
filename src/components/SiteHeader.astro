@@ -114,15 +114,17 @@ const isActive = (href: string) => path.startsWith(href);
 
   /* The mark is a black scribble on a white JPEG. Multiply drops the white
      on a light ground; in dark mode it is inverted first so screen can
-     drop the black instead. */
+     drop the black instead. The JPEG's white is not quite pure, so contrast
+     is pushed first or a faint box shows around the mark. */
   .mark {
     width: 30px;
     height: auto;
+    filter: grayscale(1) brightness(1.1) contrast(1.5);
     mix-blend-mode: multiply;
   }
 
   :global(html[data-theme="dark"]) .mark {
-    filter: invert(1);
+    filter: grayscale(1) brightness(1.1) contrast(1.5) invert(1);
     mix-blend-mode: screen;
   }
 
