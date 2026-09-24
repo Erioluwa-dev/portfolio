@@ -5,7 +5,10 @@ export type Project = {
   status: "shipped" | "private" | "archive";
   summary: string;
   detail: string;
+  /** Left empty rather than guessed when I can't vouch for the whole stack. */
   stack: string[];
+  /** People who built it with me, credited on the card. */
+  collaborators?: { name: string; url?: string }[];
   repo?: string;
   live?: string;
   /** A screenshot in /public, e.g. { src: "/projects/yems.png", alt: "…" }. */
@@ -23,6 +26,36 @@ export const projects: Project[] = [
     detail:
       "The Youth Educational Management System is the project where I stopped owning only the interface. Auth, the API, the business logic, the Postgres schema, the sync engine, six containers and the deploy — all of it had to be reasoned about together, because offline-first is not a frontend feature. A teacher finishes what they started without ever learning the network state underneath.",
     stack: ["Next.js", "TypeScript", "Node.js", "PostgreSQL", "Redis", "Docker"],
+    collaborators: [
+      { name: "Osibanjo Damilare", url: "https://github.com/dev-dami" },
+      { name: "Anthony Ochefu" },
+      { name: "Mohie Daniel" },
+      { name: "Ikeola Ayomide" },
+    ],
+    live: "https://home.yeshuahigh.com",
+  },
+  {
+    slug: "flyaux",
+    name: "Flyaux",
+    kind: "AI product",
+    status: "shipped",
+    summary: "A collaboration, built end to end with Osibanjo Damilare.",
+    detail:
+      "Flyaux AI was built as a two-person effort: every part of it came out of working alongside Osibanjo Damilare.",
+    stack: [],
+    collaborators: [{ name: "Osibanjo Damilare", url: "https://github.com/dev-dami" }],
+    live: "https://ai.flyaux.com",
+  },
+  {
+    slug: "yeshua-high",
+    name: "Yeshua High School",
+    kind: "School website",
+    status: "shipped",
+    summary: "The public website for Yeshua High School.",
+    detail:
+      "The school's public face on the web, the front door that sits alongside YEMS.",
+    stack: [],
+    live: "https://www.yeshuahigh.com",
   },
   {
     slug: "portfolio",
