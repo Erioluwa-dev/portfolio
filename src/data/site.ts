@@ -2,7 +2,7 @@ export type Project = {
   slug: string;
   name: string;
   kind: string;
-  status: "shipped" | "private" | "archive";
+  status: "live" | "prelaunch" | "shipped" | "private" | "archive";
   summary: string;
   detail: string;
   /** Left empty rather than guessed when I can't vouch for the whole stack. */
@@ -20,7 +20,7 @@ export const projects: Project[] = [
     slug: "yems",
     name: "YEMS",
     kind: "Full-stack platform",
-    status: "private",
+    status: "live",
     summary:
       "School management for places where the connection drops in the middle of registering a student.",
     detail:
@@ -37,11 +37,12 @@ export const projects: Project[] = [
   {
     slug: "flyaux",
     name: "Flyaux",
-    kind: "AI product",
-    status: "shipped",
-    summary: "A collaboration, built end to end with Osibanjo Damilare.",
+    kind: "Internship, AI flight search",
+    status: "prelaunch",
+    summary:
+      "Describe a trip in plain language and get back an itinerary you can actually compare.",
     detail:
-      "Flyaux AI was built as a two-person effort: every part of it came out of working alongside Osibanjo Damilare.",
+      "Flyaux turns a sentence like \"Lagos to London next month, under $900, non-stop\" into a refined itinerary through a chat-like flow, laying out baggage rules, layovers, cancellation terms and fares side by side before anyone books. I built it during my internship, working alongside Osibanjo Damilare on all of it. It is pre-launch for now, taking a waitlist rather than live bookings.",
     stack: [],
     collaborators: [{ name: "Osibanjo Damilare", url: "https://github.com/dev-dami" }],
     live: "https://ai.flyaux.com",
@@ -51,9 +52,10 @@ export const projects: Project[] = [
     name: "Yeshua High School",
     kind: "School website",
     status: "shipped",
-    summary: "The public website for Yeshua High School.",
+    summary:
+      "The public website for a Christian co-educational secondary school in Sabo-Ojodu, Lagos.",
     detail:
-      "The school's public face on the web, the front door that sits alongside YEMS.",
+      "Yeshua High School has been running since 2005, and the site is where families meet it first: admissions and an application form, academics and results, the gallery and events, the school's mission, contact details and a way into the school portal.",
     stack: [],
     live: "https://www.yeshuahigh.com",
   },
@@ -83,6 +85,8 @@ export const projects: Project[] = [
 ];
 
 export const statusLabel: Record<Project["status"], string> = {
+  live: "Deployed and live",
+  prelaunch: "Pre-launch, waitlist open",
   shipped: "Shipped",
   private: "Private repo",
   archive: "Early work",

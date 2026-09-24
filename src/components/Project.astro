@@ -48,6 +48,9 @@ const Heading = `h${level}` as 'h2' | 'h3';
         {p.live && (
           <a class="link" href={p.live} target="_blank" rel="noopener noreferrer">
             Open {p.name}
+            <svg class="cta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 17L17 7M8 7h9v9" />
+            </svg>
           </a>
         )}
         {p.repo && (
@@ -91,6 +94,14 @@ const Heading = `h${level}` as 'h2' | 'h3';
   .stack { margin: 0.5rem 0 0; }
 
   .collaborators { margin: 0; }
+
+  .cta-icon { display: inline-block; margin-left: 0.25em; vertical-align: -0.1em; transition: transform 0.15s ease; }
+
+  .links a:hover .cta-icon { transform: translate(2px, -2px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-icon { transition: none; }
+  }
 
   .links { display: flex; gap: 1.5rem; margin: 0; font-weight: 500; }
 
