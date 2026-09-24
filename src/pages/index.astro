@@ -1,212 +1,190 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import PortraitCard from '../components/PortraitCard.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import { projects, stack, letters, social } from '../data/site';
+import Project from '../components/Project.astro';
+import { projects, layers, learning, letters, social } from '../data/site';
 
 const recent = letters.slice(0, 2);
 
-const arrow = "M5 12h13M13 6l6 6-6 6";
+const fmt = (d: string) =>
+  new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <Layout title="Fawehinmi Erioluwa — Product Engineer">
-  <section class="section" aria-labelledby="thesis">
-    <div class="opener">
-      <PortraitCard />
+  <section class="hero" aria-labelledby="thesis">
+    <p class="hand">Hi — I'm Eri.</p>
+    <h1 class="display" id="thesis">I build whole products, not just the part you can see.</h1>
 
-      <div class="opener-stack">
-        <div class="card card-amber card-hero intro">
-          <p class="hand greeting">Hi — I'm Eri.</p>
-          <h1 class="display" id="thesis">
-            I build whole products, not just the part you can see.
-          </h1>
-          <p class="lead intro-lead">
-            Product engineer in Lagos, Nigeria. Interfaces first — that is where
-            I am deepest — then the API, the data, and the machine
-            learning underneath.
-          </p>
-        </div>
-
-        <div class="card open">
-          <div class="open-text">
-            <span class="tag muted">Open to</span>
-            <p class="body open-body">
-              Product and full-stack roles, frontend-heavy work, and
-              collaborations where the constraints are real.
-            </p>
-          </div>
-          <a class="btn open-btn" href="/contact">
-            Start a conversation
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d={arrow} />
-            </svg>
-          </a>
-        </div>
+    <div class="intro">
+      <p class="lead">
+        Product engineer in Lagos, Nigeria. Interfaces first — that is where
+        I am deepest — then the API, the data, and the machine learning
+        underneath.
+      </p>
+      <div class="actions">
+        <a class="btn" href={`mailto:${social.email}`}>Email me</a>
+        <a class="btn btn-quiet" href="/projects">See the work</a>
       </div>
     </div>
+
+    <figure class="strata" aria-labelledby="strata-caption">
+      <ol class="layers">
+        {layers.map((l, i) => (
+          <li class="layer" style={`--i:${i}`}>
+            <span class="layer-name">{l.name}</span>
+            <span class="layer-role">{l.role}</span>
+            <span class="layer-tools">{l.tools.join(", ")}</span>
+            {i === 0 && <span class="hand layer-note" aria-hidden="true">the part you can see</span>}
+          </li>
+        ))}
+      </ol>
+      <figcaption id="strata-caption" class="small muted">
+        The layers of a product and what I build each one with. Learning now: {learning.join(" and ")}.
+      </figcaption>
+    </figure>
   </section>
 
   <section class="section" aria-labelledby="work-heading">
     <div class="section-head">
       <h2 class="h2" id="work-heading">Things I've built</h2>
-      <a class="link-arrow" href="/projects">
-        All projects
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d={arrow} />
-        </svg>
-      </a>
+      <a class="link" href="/projects">All projects</a>
     </div>
 
-    <div class="grid">
-      {projects.map((p) => <ProjectCard project={p} level={3} />)}
-    </div>
+    <ul class="rows">
+      {projects.map((p) => <li><Project project={p} /></li>)}
+    </ul>
   </section>
 
-  <section class="section" aria-labelledby="toolkit-heading">
-    <div class="card toolkit">
-      <span class="tag muted">The toolkit</span>
-      <h2 class="h2" id="toolkit-heading">What I reach for</h2>
-      <p class="body muted toolkit-note">
-        Ordered by depth, not by preference. The distance between the first
-        group and the last one is the honest part.
-      </p>
-
-      <div class="tool-groups">
-        {stack.map((g) => (
-          <div>
-            <p class="hand tool-group">{g.group}</p>
-            <ul class="chip-list">
-              {g.items.map((item) => <li class="tag chip chip-solid">{item}</li>)}
-            </ul>
-          </div>
-        ))}
-      </div>
+  <section class="section" aria-labelledby="letters-heading">
+    <div class="section-head">
+      <h2 class="h2" id="letters-heading">Letters</h2>
+      <a class="link" href="/letters">Read all</a>
     </div>
+
+    <ul class="rows">
+      {recent.map((l) => (
+        <li>
+          <a class="letter" href={`/letters/${l.slug}`}>
+            <span class="h3 letter-title">{l.title}</span>
+            <span class="small faint">{fmt(l.date)}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
   </section>
 
-  <div class="section">
-    <div class="row">
-      <section class="card letters" aria-labelledby="letters-heading">
-        <span class="tag muted">Letters</span>
-        <h2 class="h2" id="letters-heading">Notes from inside the build</h2>
-
-        <ul class="letter-list">
-          {recent.map((l) => (
-            <li>
-              <a class="letter" href={`/letters/${l.slug}`}>
-                <span class="tag muted">
-                  {new Date(l.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                </span>
-                <span class="letter-title">{l.title}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <a class="link-arrow letters-all" href="/letters">
-          Read all
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d={arrow} />
-          </svg>
-        </a>
-      </section>
-
-      <section class="card card-ink card-hero closing" aria-labelledby="contact-heading">
-        <p class="hand closing-note">You made it to the end.</p>
-        <h2 class="h2" id="contact-heading">Tell me what it needs to do.</h2>
-        <a class="btn btn-amber closing-btn" href={`mailto:${social.email}`}>
-          {social.email}
-        </a>
-        <a class="link-arrow closing-link" href="/contact">
-          Other ways to reach me
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d={arrow} />
-          </svg>
-        </a>
-      </section>
+  <section class="closing" aria-labelledby="contact-heading">
+    <h2 class="display closing-title" id="contact-heading">Tell me what it needs to do.</h2>
+    <p class="lead">
+      Open to product and full-stack roles, frontend-heavy work, and
+      collaborations where the constraints are real.
+    </p>
+    <div class="actions">
+      <a class="btn btn-yellow" href={`mailto:${social.email}`}>{social.email}</a>
+      <a class="btn btn-quiet" href="/contact">Other ways to reach me</a>
     </div>
-  </div>
+  </section>
 </Layout>
 
 <style>
-  /* The mark sits at 1, the claim at φ². */
-  .opener {
-    display: grid;
-    grid-template-columns: 1fr 2.618fr;
-    gap: var(--grid-gap);
-    align-items: stretch;
-  }
+  .hero { display: flex; flex-direction: column; gap: 1.5rem; }
 
-  .opener-stack {
+  .hero .display { max-width: 15ch; }
+
+  .intro {
     display: flex;
-    flex-direction: column;
-    gap: var(--grid-gap);
-  }
-
-  .intro { flex: 1; justify-content: center; }
-  .greeting { opacity: 0.78; }
-  .intro-lead { max-width: 56ch; }
-
-  .open {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--sp-3);
     flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 3rem;
+    margin-top: 0.5rem;
   }
 
-  .open-text { display: flex; flex-direction: column; gap: 6px; min-width: 18ch; }
-  .open-body { color: var(--ink-soft); max-width: 42ch; }
-  .open-btn { flex-shrink: 0; }
+  .intro .lead { max-width: 30em; }
 
-  .toolkit { padding: var(--pad-lg); }
-  .toolkit-note { max-width: 52ch; }
+  /* ═══ The cross-section ════════════════════════════════════
+     The one loud thing on the site. The headline claims the work goes
+     below the surface; this draws the surface and what sits under it. */
 
-  .tool-groups {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: var(--sp-4);
-    margin-top: var(--sp-3);
-  }
+  .strata { margin: clamp(2rem, 1rem + 3vw, 4rem) 0 0; }
 
-  .tool-group { margin-bottom: var(--sp-2); color: var(--ink-soft); }
-
-  .letter-list {
-    margin: var(--sp-1) 0 0;
+  .layers {
+    margin: 0 0 1rem;
     padding: 0;
     list-style: none;
+    border-radius: var(--r-lg);
+    overflow: hidden;
   }
 
-  .letter-list li + li { border-top: 1px solid var(--hairline); }
+  .layer {
+    display: grid;
+    grid-template-columns: 11rem 11rem 1fr auto;
+    align-items: baseline;
+    gap: 0.25rem 1.5rem;
+    padding: 1.1rem 1.5rem;
+    background: var(--stratum-5);
+    animation: wipe 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(0.15s + var(--i) * 0.08s);
+  }
+
+  .layer:nth-child(1) { background: var(--yellow); color: var(--on-yellow); padding-block: 1.6rem; }
+  .layer:nth-child(2) { background: var(--stratum-2); }
+  .layer:nth-child(3) { background: var(--stratum-3); }
+  .layer:nth-child(4) { background: var(--stratum-4); }
+
+  .layer-name {
+    font-weight: 700;
+    font-stretch: 108%;
+    font-size: 1.0625rem;
+  }
+
+  .layer-role { color: var(--ink-2); font-size: var(--fs-sm); }
+  .layer:nth-child(1) .layer-role { color: inherit; opacity: 0.8; }
+
+  .layer-tools { font-size: 1rem; }
+
+  .layer-note {
+    color: inherit;
+    font-size: 1.1rem;
+    opacity: 0.8;
+    transform: rotate(-3deg);
+  }
+
+  @keyframes wipe {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0 0 0); }
+  }
+
+  /* ═══ Letters ═══ */
 
   .letter {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: var(--sp-2) 0;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    flex-wrap: wrap;
+    padding: 1.5rem 0;
     text-decoration: none;
-    transition: transform 0.18s ease;
   }
-
-  .letter:hover { transform: translateX(5px); }
-  .letter:hover .letter-title { color: var(--live-ink); }
 
   .letter-title {
-    font-size: var(--fs-lead);
-    font-weight: 400;
-    line-height: 1.3;
-    transition: color 0.18s ease;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 0.15s ease;
   }
 
-  .letters-all { margin-top: auto; }
+  .letter:hover .letter-title { text-decoration-color: currentColor; }
 
-  .closing { justify-content: center; }
-  .closing-note { color: var(--amber); }
-  .closing-btn { align-self: flex-start; margin-top: var(--sp-1); word-break: break-word; }
-  .closing-link { opacity: 0.82; }
+  /* ═══ Closing ═══ */
 
-  @media (max-width: 899px) {
-    .opener { grid-template-columns: 1fr; }
-    .open { flex-direction: column; align-items: flex-start; }
+  .closing { display: flex; flex-direction: column; gap: 1.5rem; }
+  .closing-title { font-size: clamp(2.25rem, 1rem + 4.5vw, 4.25rem); max-width: 14ch; }
+  .closing .btn-yellow { overflow-wrap: anywhere; }
+
+  @media (max-width: 859px) {
+    .layer { grid-template-columns: 1fr; padding: 1rem 1.25rem; }
+    .layer:nth-child(1) { padding-block: 1.25rem; }
+    .layer-note { justify-self: end; margin-top: 0.25rem; }
   }
 </style>

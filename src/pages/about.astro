@@ -1,10 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import PortraitCard from '../components/PortraitCard.astro';
-import { stack } from '../data/site';
 
-// A real chronology — the order is the point. The labels mark position in
-// time, not decoration.
+// A real chronology — the order is the point.
 const beats = [
   {
     when: "Before",
@@ -41,124 +38,92 @@ const facts = [
   title="About — Fawehinmi Erioluwa"
   description="How a self-taught engineer in Lagos went from avoiding code to building whole products — interfaces, backends, and the machine learning underneath."
 >
-  <section class="section" aria-labelledby="about-heading">
-    <div class="opener">
-      <PortraitCard tag="eri · 2026" />
-
-      <div class="card card-teal card-hero head">
-        <span class="tag">About</span>
-        <h1 class="display" id="about-heading">It started with laziness, honestly.</h1>
-        <p class="lead head-lead">
-          I am Fawehinmi Erioluwa — a product engineer, self-taught, based in
-          Lagos. I started at the interface and kept going down: the API, the
-          data, the models. Far more interested in whether a thing holds up
-          under real conditions than in whether it demos well.
-        </p>
-      </div>
-    </div>
-  </section>
+  <header class="page-head">
+    <h1 class="display">It started with laziness, honestly.</h1>
+    <p class="lead">
+      I am Fawehinmi Erioluwa — a product engineer, self-taught, based in
+      Lagos. I started at the interface and kept going down: the API, the
+      data, the models. Far more interested in whether a thing holds up
+      under real conditions than in whether it demos well.
+    </p>
+  </header>
 
   <section class="section" aria-labelledby="story-heading">
-    <div class="section-head">
-      <h2 class="h2" id="story-heading">How I got here</h2>
-    </div>
-    <ol class="grid grid-2 beats">
+    <h2 class="h2" id="story-heading">How I got here</h2>
+    <ol class="rows beats">
       {beats.map((b) => (
-        <li class="card beat">
-          <span class="tag beat-when">{b.when}</span>
-          <h3 class="h3 beat-what">{b.what}</h3>
-          <p class="body beat-body muted">{b.body}</p>
+        <li class="beat">
+          <p class="small faint beat-when">{b.when}</p>
+          <div class="beat-text">
+            <h3 class="h3">{b.what}</h3>
+            <p class="muted">{b.body}</p>
+          </div>
         </li>
       ))}
     </ol>
   </section>
 
-  <section class="section" aria-labelledby="belief-heading">
-    <div class="card card-amber card-hero belief">
-      <p class="hand belief-note">What I actually believe</p>
-      <h2 class="h2" id="belief-heading">Clean interfaces are the easy half.</h2>
-      <p class="lead belief-body">
-        The hard half is code that still makes sense to you a year later, on a
-        project nobody funded, under constraints nobody chose.
-      </p>
-    </div>
+  <section class="belief" aria-labelledby="belief-heading">
+    <h2 class="display belief-title" id="belief-heading">Clean interfaces are the easy half.</h2>
+    <p class="lead">
+      The hard half is code that still makes sense to you a year later, on a
+      project nobody funded, under constraints nobody chose.
+    </p>
   </section>
 
-  <section class="section" aria-labelledby="tools-heading">
-    <div class="row row-phi">
-      <div class="card tools">
-        <span class="tag muted">The toolkit</span>
-        <h2 class="h3" id="tools-heading">What I reach for</h2>
-        <p class="body muted tools-note">
-          Grouped by depth, not by preference.
-        </p>
-
-        <div class="tool-groups">
-          {stack.map((g) => (
-            <div>
-              <p class="hand tool-group">{g.group}</p>
-              <ul class="chip-list">
-                {g.items.map((i) => <li class="tag chip chip-solid">{i}</li>)}
-              </ul>
-            </div>
-          ))}
+  <section class="section" aria-labelledby="facts-heading">
+    <h2 class="h2" id="facts-heading">The short version</h2>
+    <dl class="facts">
+      {facts.map((f) => (
+        <div class="fact">
+          <dt class="small faint">{f.label}</dt>
+          <dd>{f.value}</dd>
         </div>
-      </div>
-
-      <div class="card card-bare facts">
-        <dl class="fact-list">
-          {facts.map((f) => (
-            <div class="fact">
-              <dt class="tag muted">{f.label}</dt>
-              <dd>{f.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </div>
+      ))}
+    </dl>
   </section>
 </Layout>
 
 <style>
-  /* The mark at 1, the story at φ². */
-  .opener {
+  .page-head { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .beat {
     display: grid;
-    grid-template-columns: 1fr 2.618fr;
-    gap: var(--grid-gap);
+    grid-template-columns: 10rem 1fr;
+    gap: 0.5rem 2rem;
+    padding: 1.75rem 0;
   }
 
-  .head { justify-content: center; }
-  .head-lead { max-width: 62ch; opacity: 0.88; }
+  .beat-when { margin: 0.35rem 0 0; }
+  .beat-text { display: flex; flex-direction: column; gap: 0.5rem; }
+  .beat-text p { margin: 0; max-width: 38em; }
 
-  .beats { margin: 0; padding: 0; list-style: none; }
-  .beat-when { color: var(--live-ink); }
-  .beat-body { max-width: 52ch; }
-
-  .belief-note { opacity: 0.75; }
-  .belief-body { max-width: 48ch; }
-
-  .tools-note { max-width: 52ch; }
-
-  .tool-groups {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: var(--sp-3) var(--sp-4);
-    margin-top: var(--sp-2);
-  }
-
-  .tool-group { margin-bottom: var(--sp-1); color: var(--ink-soft); }
-
-  .fact-list {
-    margin: 0;
+  /* The one yellow moment on this page: a rule, not a box. */
+  .belief {
     display: flex;
     flex-direction: column;
-    gap: var(--sp-3);
+    gap: 1.25rem;
+    padding-left: clamp(1.25rem, 3vw, 2.5rem);
+    border-left: 6px solid var(--yellow);
   }
 
-  .fact { display: flex; flex-direction: column; gap: 4px; }
-  .fact dd { margin: 0; }
+  .belief-title { font-size: clamp(2rem, 1rem + 3.5vw, 3.5rem); max-width: 16ch; }
 
-  @media (max-width: 899px) {
-    .opener { grid-template-columns: 1fr; }
+  .facts { margin: 0; border-top: 1px solid var(--line); }
+
+  .fact {
+    display: grid;
+    grid-template-columns: 10rem 1fr;
+    gap: 0.25rem 2rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fact dt { margin-top: 0.15rem; }
+  .fact dd { margin: 0; font-size: 1.125rem; }
+
+  @media (max-width: 719px) {
+    .beat, .fact { grid-template-columns: 1fr; }
+    .beat-when { margin: 0; }
   }
 </style>

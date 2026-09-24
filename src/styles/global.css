@@ -1,478 +1,233 @@
-/* ═══════════════════════════════════════════════════════════════
-   ERIOLUWA — design system
-
-   Warm chalk paper · hardwood amber · court teal · one live magenta.
-
-   Type is handwritten throughout — the hand of a jazz lead sheet.
-   Kalam Bold sets the headings, the way chord symbols sit heavier on the
-   staff than the markings around them; Patrick Hand sets reading copy,
-   buttons and controls, and its small-caps cut carries the quiet labels.
-   Gochi Hand is the marker kept for margin notes, so an aside still reads
-   as a different hand. Nothing on the site is set in a non-script face.
-
-   Kalam is the only one of the three with a real 700 — the other faces
-   ship a single weight, so nothing asks them for one they do not have.
-
-   This is a deliberate trade. A pen face is hardest to read exactly where
-   there is most to read, so the whole scale is stepped up and opened out
-   to buy legibility back: 16px of a hand is not 16px of a sans.
-
-   Every scale below is golden-ratio derived. Space steps by φ (1.618)
-   from an 8px base; type steps by the cube root of φ (1.174) from 16px,
-   so the sizes stay usable while the ratio holds.
-
-   The site reads top to bottom in a single capped column. The nav is
-   the only fixed chrome; everything else scrolls the ordinary way.
-   ═══════════════════════════════════════════════════════════════ */
+/* Neutral ground, one accent. The yellow is a Lagos danfo, and it is only
+   ever a fill under dark text — as text on the light ground it fails
+   contrast, so it never carries words itself. */
 
 :root {
-  /* ── Surface ── */
-  --paper:      #e8e3d6;
-  --chalk:      #f7f4ec;
-  --ink:        #17160f;
-  --ink-soft:   #5b584a;
-  /* 4.7:1 on paper. The old #8d8877 sat at 2.77:1 — a label nobody can
-     read is not restraint. */
-  --ink-faint:  #676352;
-  --hairline:   rgba(23, 22, 15, 0.14);
+  --bg:          #f6f6f3;
+  --surface:     #ffffff;
+  --ink:         #15171a;
+  --ink-2:       #4a4f56;
+  --ink-3:       #686d75;
+  --line:        #dcded9;
+  --line-strong: #b9bcb5;
 
-  /* ── Card fills ── */
-  --amber:      #e9a22b;
-  --teal:       #1d4b45;
-  --live:       #e8447f;
-  /* Darker magenta for small text — the fill colour misses AA on paper. */
-  --live-ink:   #bd275d;
+  --yellow:      #f4c20d;
+  --on-yellow:   #15171a;
 
-  /* Text that sits on a filled card */
-  --on-amber:   #17160f;
-  --on-teal:    #f2efe4;
-  --on-live:    #ffffff;
+  /* Strata step darker the deeper the layer sits, in both themes. */
+  --stratum-2:   #e8e9e4;
+  --stratum-3:   #dddfd9;
+  --stratum-4:   #d2d4cd;
+  --stratum-5:   #c7c9c1;
 
-  /* ── Chrome ──
-     The island and footer keep their own pair in both themes. Reusing
-     --ink here is what made the nav invisible in dark mode: --ink flips
-     to cream, so the pill and its labels became light on light. */
-  --chrome-bg:   #17160f;
-  --chrome-fg:   #f4f1e8;
-  --chrome-dim:  rgba(244, 241, 232, 0.62);
-  --chrome-line: rgba(244, 241, 232, 0.16);
+  --sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --hand: 'Kalam', 'Segoe Print', cursive;
 
-  /* ── Space: 8 · φ ── */
-  --sp-1: 8px;
-  --sp-2: 13px;
-  --sp-3: 21px;
-  --sp-4: 34px;
-  --sp-5: 55px;
-  --sp-6: 89px;
-  --sp-7: 144px;
+  --fs-sm:      0.875rem;
+  --fs-base:    1.0625rem;
+  --fs-lead:    1.3125rem;
+  --fs-h3:      1.5rem;
+  --fs-h2:      clamp(1.75rem, 1.25rem + 1.8vw, 2.25rem);
+  --fs-display: clamp(2.5rem, 1rem + 6vw, 5.5rem);
 
-  /* ── Type ──
-     Display and section headings size against the card they sit in
-     (cqi), not the window, so a headline never outgrows its box.
-     Everything below display size stays on the 16 · φ^(n/3) steps,
-     carried ~1.1 over the derived scale to answer the hand's optical size. */
-  --fs-micro: 0.8rem;    /* 12.8 */
-  --fs-small: 0.94rem;   /* 15.0 */
-  --fs-body:  1.1rem;    /* 17.6 */
-  --fs-lead:  1.28rem;   /* 20.5 */
-  --fs-h3:    1.45rem;   /* 23.2 */
-  --fs-h2:    clamp(1.6rem, 4.6cqi, 2.5rem);
-  --fs-display: clamp(2.2rem, 7.4cqi, 4rem);
+  --page-max:    72rem;
+  --gutter:      clamp(1rem, 4vw, 3rem);
+  --section-gap: clamp(5rem, 3rem + 6vw, 8rem);
+  --head-h:      4rem;
 
-  /* ── Chrome heights ──
-     Only the nav is fixed; the page starts below it. */
-  --head-h: var(--sp-6);
-  --foot-h: var(--sp-5);
-
-  /* ── Radii ── */
-  --r-lg: 28px;
-  --r-md: 18px;
-  --r-sm: 10px;
-  --r-pill: 999px;
-
-  /* Cards carrying a display headline get the wider inset; everything
-     else stays on --pad. One padding for every card size is what made
-     big claims feel boxed in and small notes feel over-padded. */
-  --pad:    var(--sp-4);
-  --pad-lg: var(--sp-5);
-
-  /* ── Faces ──
-     The hand of a jazz lead sheet: upright and pen-printed rather than
-     joined. Patrick Hand is the closest free stand-in for the Real Book
-     / Finale Jazz face. */
-  /* Kalam is the one hand here with a real 700 — the heading tier needs
-     a weight the browser is not faking. */
-  --display: 'Kalam', 'Segoe Print', 'Comic Sans MS', cursive;
-  --body:    'Patrick Hand', 'Segoe Print', 'Comic Sans MS', cursive;
-  --hand:    'Gochi Hand', 'Segoe Print', cursive;
-  /* Named for the role it plays — the quiet label — not for a monospace
-     it no longer is. */
-  --mono:    'Patrick Hand SC', 'Patrick Hand', 'Segoe Print', cursive;
+  --r-sm: 8px;
+  --r-lg: 14px;
 
   color-scheme: light;
 }
 
 html[data-theme="dark"] {
-  --paper:      #12110c;
-  --chalk:      #1f1d15;
-  --ink:        #ede8da;
-  --ink-soft:   #a8a294;
-  /* 5.3:1 on the dark paper; the old #7c7768 was 4.23:1. */
-  --ink-faint:  #8d8877;
-  --hairline:   rgba(237, 232, 218, 0.18);
+  --bg:          #121417;
+  --surface:     #1a1d21;
+  --ink:         #eceef0;
+  --ink-2:       #b3b8bf;
+  --ink-3:       #8d939b;
+  --line:        #2a2e34;
+  --line-strong: #454b53;
 
-  --amber:      #e2a233;
-  /* Deep enough that cream copy on it still clears AA once stepped back. */
-  --teal:       #23574f;
-  --live:       #f0679a;
-  --live-ink:   #f88cb2;
+  /* Pulled back a step so a band of it does not glare against charcoal. */
+  --yellow:      #e3b30e;
+  --on-yellow:   #121417;
 
-  --on-amber:   #14130d;
-  --on-teal:    #f2efe4;
-  --on-live:    #14130d;
-
-  /* Raised, not inverted — the chrome stays darker than the cards. */
-  --chrome-bg:   #262218;
-  --chrome-fg:   #f4f1e8;
-  --chrome-dim:  rgba(244, 241, 232, 0.66);
-  --chrome-line: rgba(244, 241, 232, 0.18);
+  --stratum-2:   #2c3036;
+  --stratum-3:   #25292e;
+  --stratum-4:   #1f2227;
+  --stratum-5:   #1a1c20;
 
   color-scheme: dark;
 }
 
-/* ═══ Layout ════════════════════════════════════════════════
-   One vertical column, capped at a readable width. Sections are
-   separated by a single step of the space scale; cards inside a section
-   by the one below it. Cards size to their content — stretching them
-   to fill the screen is what left short copy floating in empty boxes.
-   ═════════════════════════════════════════════════════════════ */
-
-:root {
-  --page-max:    72rem;
-  --gutter:      var(--sp-5);
-  --section-gap: var(--sp-6);
-  --grid-gap:    var(--sp-3);
-}
-
-@media (max-width: 899px) {
-  :root {
-    --pad:    var(--sp-3);
-    --pad-lg: var(--sp-4);
-    --r-lg:   22px;
-    --head-h: 76px;
-
-    --gutter:      var(--sp-2);
-    --section-gap: var(--sp-5);
-    --grid-gap:    var(--sp-2);
-  }
-}
-
 * { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--head-h) + 1rem);
+}
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--bg);
   color: var(--ink);
-  font-family: var(--body);
-  font-size: var(--fs-body);
-  /* Patrick Hand ships one weight. Asking for 500 only got a synthetic
-     bold that thickened the strokes unevenly; 1.55 leading is the lever
-     that buys readability instead. */
-  font-weight: 400;
-  line-height: 1.55;
-  font-variation-settings: normal;
+  font-family: var(--sans);
+  font-size: var(--fs-base);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  transition: background 0.35s ease, color 0.35s ease;
 }
 
 img { max-width: 100%; display: block; }
 a { color: inherit; }
 
-::selection { background: var(--live); color: var(--on-live); }
+::selection { background: var(--yellow); color: var(--on-yellow); }
 
 :focus-visible {
-  outline: 2px solid var(--live-ink);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 .page {
   display: flex;
   flex-direction: column;
   gap: var(--section-gap);
-  width: 100%;
   max-width: calc(var(--page-max) + var(--gutter) * 2);
   margin: 0 auto;
-  padding: calc(var(--head-h) + var(--sp-3)) var(--gutter) var(--sp-6);
+  padding: clamp(3rem, 2rem + 4vw, 6rem) var(--gutter) var(--section-gap);
 }
 
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--grid-gap);
-  scroll-margin-top: var(--head-h);
-}
+.section { display: flex; flex-direction: column; gap: 2rem; }
 
-/* A section title that sits on the page rather than inside a card. */
 .section-head {
   display: flex;
-  align-items: flex-end;
+  align-items: baseline;
   justify-content: space-between;
-  gap: var(--sp-2);
+  gap: 1rem;
   flex-wrap: wrap;
-  padding: 0 var(--sp-1);
 }
 
-.section-head .h2 { max-inline-size: none; }
+/* ═══ Type ═══════════════════════════════════════════════════ */
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
-  gap: var(--grid-gap);
-}
-
-.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--grid-gap);
-}
-
-.row-phi { grid-template-columns: 1.618fr 1fr; }
-
-@media (max-width: 899px) {
-  .grid-2,
-  .row,
-  .row-phi { grid-template-columns: 1fr; }
-}
-
-/* ═══ Cards ═══════════════════════════════════════════════════ */
-
-.card {
-  position: relative;
-  /* Headings size against this box, not against the window. */
-  container-type: inline-size;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-  padding: var(--pad);
-  border-radius: var(--r-lg);
-  background: var(--chalk);
-  border: 1px solid var(--hairline);
-  min-height: 0;
-  transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
-}
-
-.card-amber { background: var(--amber); border-color: transparent; color: var(--on-amber); }
-.card-teal  { background: var(--teal);  border-color: transparent; color: var(--on-teal); }
-.card-ink   { background: var(--chrome-bg); border-color: transparent; color: var(--chrome-fg); }
-.card-bare  { background: transparent; border-color: var(--hairline); }
-
-.card-tight { padding: var(--sp-3); }
-
-/* A card whose job is to carry the claim gets the room to carry it. */
-.card-hero { padding: var(--pad-lg); gap: var(--sp-3); }
-
-/* ═══ Hierarchy ═══════════════════════════════════════════════
-   Five tiers, each separated by size, weight, and colour at once —
-   never by size alone. One tier-1 element per section, no exceptions.
-   ═════════════════════════════════════════════════════════════ */
-
-/* Tier 1 — the claim */
 .display {
-  font-family: var(--display);
+  margin: 0;
   font-size: var(--fs-display);
-  font-weight: 700;
-  /* Patrick Hand has no bounce axes, and a pen face wants its tracking
-     left alone — pulling it together closes up the letterforms. The long
-     ascenders and descenders want the extra leading too. */
-  font-variation-settings: normal;
-  line-height: 1.12;
-  letter-spacing: 0;
-  margin: 0;
-  /* Bound the measure first, then balance — balance alone will happily
-     set a 60-character single line across a wide card. */
-  /* A ch in the hand is much narrower than a ch in a sans, so the old
-     measure was setting these headlines a line or two longer than they
-     need to be. Widened to hold the same physical line length. */
-  max-inline-size: 25ch;
+  font-weight: 800;
+  font-stretch: 112%;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
-/* Tier 2 — what a section is about */
 .h2 {
-  font-family: var(--display);
-  font-size: var(--fs-h2);
-  font-weight: 700;
-  font-variation-settings: normal;
-  line-height: 1.2;
-  letter-spacing: 0;
   margin: 0;
-  max-inline-size: 27ch;
+  font-size: var(--fs-h2);
+  font-weight: 750;
+  font-stretch: 108%;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 
-/* Tier 3 — the name of a thing */
 .h3 {
-  font-family: var(--display);
-  /* A script face at 24px needs the extra weight to still read as a tier
-     above the paragraph next to it. */
+  margin: 0;
   font-size: var(--fs-h3);
   font-weight: 700;
-  font-variation-settings: normal;
-  line-height: 1.3;
-  margin: 0;
+  font-stretch: 105%;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
-/* Tier 4 — reading copy */
 .lead {
+  margin: 0;
   font-size: var(--fs-lead);
   line-height: 1.5;
-  margin: 0;
+  color: var(--ink-2);
+  max-width: 38em;
   text-wrap: pretty;
 }
 
-.body { font-size: var(--fs-body); margin: 0; }
+.small { font-size: var(--fs-sm); line-height: 1.5; }
+.muted { color: var(--ink-2); }
+.faint { color: var(--ink-3); }
 
-.muted { color: var(--ink-soft); }
+.hand {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: 1.25rem;
+  line-height: 1.3;
+  color: var(--ink-2);
+}
 
-/* On a filled card the muted token is the wrong ink entirely — step the
-   card's own foreground back rather than reaching for a paper grey. */
-.card-amber .muted,
-.card-teal .muted,
-.card-ink .muted { color: color-mix(in srgb, currentColor 82%, transparent); }
-
-.prose p { margin: 0 0 0.9em; }
+.prose p { margin: 0 0 1em; }
 .prose p:last-child { margin-bottom: 0; }
 
-/* Margin notes and asides — an actual pen, not a typeface. */
-.hand {
-  font-family: var(--hand);
-  font-weight: 400;
-  font-variation-settings: normal;
-  /* A step below the heading tier: Gochi Hand sets ~15% wider than the
-     body hand at the same size, so at h3 size an aside out-shouted the
-     heading beside it — and unmeasured it ran the full card. */
-  font-size: var(--fs-lead);
-  line-height: 1.35;
-  max-inline-size: 34ch;
-  margin: 0;
+/* ═══ Links and buttons ══════════════════════════════════════ */
+
+.link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 0.25em;
+  transition: text-decoration-color 0.15s ease;
 }
 
-/* Tier 5 — the quiet label. Smallest and lightest; it can no longer be
-   the widest, because uppercasing a joined script breaks every join and
-   0.14em of tracking pulls the rest apart. It stays distinct by being
-   small, spaced a little, and set in the lighter weight. */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--mono);
-  font-size: var(--fs-micro);
-  font-weight: 400;
-  font-variation-settings: normal;
-  letter-spacing: 0.04em;
-  line-height: 1.15;
+.link:hover {
+  text-decoration-color: currentColor;
 }
-
-.tag-pill {
-  padding: 7px 11px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--hairline);
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  flex-shrink: 0;
-}
-
-.dot-pulse { animation: pulse 2.4s ease-in-out infinite; }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
-}
-
-/* ═══ Chips ═══════════════════════════════════════════════════
-   One chip, used for tech lists everywhere. Kept quiet by its outline,
-   never by dimming the label — a 50% opacity chip is unreadable text
-   pretending to be restraint.
-   ═════════════════════════════════════════════════════════════ */
-
-.chip-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.chip {
-  padding: 7px 11px;
-  border-radius: var(--r-pill);
-  border: 1px solid color-mix(in srgb, currentColor 26%, transparent);
-  text-transform: none;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-.chip-solid { border-color: transparent; background: var(--paper); }
-
-/* ═══ Controls ════════════════════════════════════════════════ */
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  /* 44px minimum target */
-  min-height: 44px;
-  padding: 11px var(--sp-3);
-  border-radius: var(--r-pill);
+  min-height: 48px;
+  padding: 0 1.25rem;
   border: 1px solid transparent;
-  background: var(--chrome-bg);
-  color: var(--chrome-fg);
-  font-family: var(--body);
-  font-size: var(--fs-body);
-  font-weight: 400;
+  border-radius: var(--r-sm);
+  background: var(--ink);
+  color: var(--bg);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.btn:hover { transform: translateY(-2px); }
+.btn:hover { background: var(--ink-2); }
 
-.btn-amber { background: var(--amber); color: var(--on-amber); }
+.btn-yellow { background: var(--yellow); color: var(--on-yellow); }
+.btn-yellow:hover { background: color-mix(in srgb, var(--yellow) 85%, var(--ink)); }
 
-.btn-ghost {
+.btn-quiet {
   background: transparent;
-  border-color: var(--hairline);
-  color: inherit;
+  color: var(--ink);
+  border-color: var(--line-strong);
 }
 
-.btn-ghost:hover { border-color: currentColor; }
+.btn-quiet:hover { background: transparent; border-color: var(--ink); }
 
-.link-arrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 44px;
-  font-weight: 400;
-  text-decoration: none;
-  color: inherit;
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+/* ═══ Lists ═════════════════════════════════════════════════
+   Rows separated by a rule are the only structure most content needs;
+   a box around each item says nothing the rule does not. */
+
+.rows { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.rows > li { border-bottom: 1px solid var(--line); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-
-.link-arrow svg { transition: transform 0.2s ease; }
-.link-arrow:hover svg { transform: translateX(4px); }
-
-.rule { height: 1px; background: var(--hairline); border: 0; margin: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

@@ -42,11 +42,6 @@ const numbered = groups.map((g) => ({
 }));
 ---
 
-<button class="trigger" type="button" data-cmdk-open aria-label="Search this site (Control K)">
-  <span class="tag">Search</span>
-  <kbd class="key">Ctrl K</kbd>
-</button>
-
 <div id="cmdk-overlay" class="overlay" hidden></div>
 
 <div id="cmdk-panel" class="cmdk" role="dialog" aria-modal="true" aria-label="Search the site" hidden>
@@ -69,7 +64,7 @@ const numbered = groups.map((g) => ({
   <div class="cmdk-body" id="cmdk-body" role="listbox" aria-label="Results">
     {numbered.map((g) => (
       <section class="group" role="group" aria-label={g.name} data-group>
-        <p class="tag group-name" aria-hidden="true">{g.name}</p>
+        <p class="group-name" aria-hidden="true">{g.name}</p>
         {g.items.map((item) => (
           <a
             class="item"
@@ -90,53 +85,27 @@ const numbered = groups.map((g) => ({
     <p class="empty" id="cmdk-empty" hidden>Nothing matches that. Try a project name.</p>
   </div>
 
-  <p class="cmdk-foot tag" aria-hidden="true">↑↓ to move · ↵ to open · esc to close</p>
+  <p class="cmdk-foot" aria-hidden="true">Arrow keys to move, Enter to open, Esc to close</p>
 </div>
 
 <style>
-  .trigger {
-    position: fixed;
-    right: var(--sp-3);
-    bottom: var(--sp-3);
-    z-index: 1100;
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    min-height: 44px;
-    padding: 8px 10px 8px 15px;
-    border: 1px solid var(--hairline);
-    border-radius: var(--r-pill);
-    background: var(--chalk);
-    color: var(--ink-soft);
-    cursor: pointer;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
-  }
-
-  .trigger:hover {
-    transform: translateY(-2px);
-    border-color: var(--ink);
-    color: var(--ink);
-  }
-
   .key {
-    font-family: var(--mono);
-    /* A script at 0.65rem is unreadable on a key cap. */
-    font-size: 0.84rem;
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    padding: 4px 7px;
-    border-radius: 6px;
-    background: var(--paper);
-    border: 1px solid var(--hairline);
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 3px 7px;
+    border-radius: 5px;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-3);
   }
 
   .overlay {
     position: fixed;
     inset: 0;
     z-index: 1500;
-    background: rgba(23, 22, 15, 0.42);
-    backdrop-filter: blur(2px);
+    background: color-mix(in srgb, var(--bg) 55%, transparent);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
   }
 
   /* These carry a display value, so the UA [hidden] rule needs restating. */
@@ -146,8 +115,6 @@ const numbered = groups.map((g) => ({
   .item[hidden],
   .empty[hidden] { display: none; }
 
-  /* Not ".panel" — kept distinct from page layout classes, and the global rules for
-     it were stretching this dialog to a fixed 66vh of mostly empty box. */
   .cmdk {
     position: fixed;
     z-index: 1600;
@@ -160,17 +127,17 @@ const numbered = groups.map((g) => ({
     flex-direction: column;
     overflow: hidden;
     border-radius: var(--r-lg);
-    background: var(--chalk);
-    border: 1px solid var(--hairline);
-    box-shadow: 0 26px 60px rgba(23, 22, 15, 0.3);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
   }
 
   .cmdk-head {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 18px 22px;
-    border-bottom: 1px solid var(--hairline);
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
   }
 
   .input {
@@ -179,26 +146,25 @@ const numbered = groups.map((g) => ({
     border: 0;
     background: none;
     color: var(--ink);
-    font-family: var(--body);
-    font-size: 1.02rem;
+    font: inherit;
+    font-size: 1.0625rem;
     outline: none;
   }
 
-  .input::placeholder { color: var(--ink-faint); }
+  .input::placeholder { color: var(--ink-3); }
 
   .cmdk-body {
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: 10px 12px 16px;
+    padding: 8px 10px 14px;
   }
 
   .cmdk-foot {
     margin: 0;
-    padding: 10px 22px;
-    border-top: 1px solid var(--hairline);
-    color: var(--ink-faint);
-    letter-spacing: 0.03em;
-    text-transform: none;
+    padding: 10px 20px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-3);
+    font-size: 0.8125rem;
   }
 
   .group { padding-top: 10px; }
@@ -206,30 +172,32 @@ const numbered = groups.map((g) => ({
   .group-name {
     margin: 0 0 4px;
     padding: 0 10px;
-    color: var(--ink-soft);
+    color: var(--ink-3);
+    font-size: 0.8125rem;
+    font-weight: 500;
   }
 
   .item {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    padding: 10px 12px;
-    border-radius: var(--r-md);
+    padding: 10px;
+    border-radius: var(--r-sm);
     text-decoration: none;
     color: inherit;
   }
 
   .item:hover,
   .item.is-active {
-    background: var(--amber);
-    color: var(--on-amber);
+    background: var(--yellow);
+    color: var(--on-yellow);
   }
 
-  .item-label { font-weight: 400; font-size: 0.95rem; }
+  .item-label { font-weight: 600; font-size: 0.975rem; }
 
   .item-note {
-    font-size: 0.82rem;
-    color: var(--ink-soft);
+    font-size: 0.85rem;
+    color: var(--ink-2);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -241,12 +209,11 @@ const numbered = groups.map((g) => ({
   .empty {
     margin: 0;
     padding: 22px 12px;
-    color: var(--ink-soft);
+    color: var(--ink-2);
     text-align: center;
   }
 
   @media (max-width: 620px) {
-    .trigger { right: var(--sp-2); bottom: var(--sp-2); }
     .cmdk-foot { display: none; }
   }
 </style>
@@ -265,7 +232,7 @@ const numbered = groups.map((g) => ({
     const groups = Array.from(panel.querySelectorAll<HTMLElement>("[data-group]"));
     // Everything the dialog covers is sealed off while it is open, so a
     // screen reader or a Tab press cannot wander behind it.
-    const behind = ["#main", "#island", "footer"]
+    const behind = ["#main", "#site-header", "footer"]
       .map((sel) => document.querySelector(sel))
       .filter((el): el is HTMLElement => el instanceof HTMLElement);
 

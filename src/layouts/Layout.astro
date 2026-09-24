@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import Island from '../components/Island.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 
@@ -35,7 +35,7 @@ const path = Astro.url.pathname;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Kalam:wght@400;700&family=Patrick+Hand&family=Patrick+Hand+SC&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Kalam&display=swap"
     />
 
     <title>{title}</title>
@@ -43,7 +43,8 @@ const path = Astro.url.pathname;
     <script is:inline>
       // Set the theme before first paint so the page never flashes the wrong one.
       (function () {
-        var saved = localStorage.getItem('theme');
+        var saved = null;
+        try { saved = localStorage.getItem('theme'); } catch (e) { saved = null; }
         var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
       })();
@@ -53,7 +54,7 @@ const path = Astro.url.pathname;
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <Island path={path} />
+    <SiteHeader path={path} />
     <CommandPalette />
 
     <main class="page" id="main">
@@ -68,17 +69,15 @@ const path = Astro.url.pathname;
   .skip-link {
     position: absolute;
     top: -100px;
-    left: var(--sp-3);
+    left: var(--gutter);
     z-index: 2000;
-    padding: 12px 18px;
-    border-radius: var(--r-pill);
-    background: var(--chrome-bg);
-    color: var(--chrome-fg);
-    font-family: var(--body);
-    font-weight: 400;
+    padding: 0.75rem 1rem;
+    border-radius: var(--r-sm);
+    background: var(--ink);
+    color: var(--bg);
+    font-weight: 600;
     text-decoration: none;
-    transition: top 0.2s ease;
   }
 
-  .skip-link:focus { top: var(--sp-3); }
+  .skip-link:focus { top: 0.75rem; }
 </style>

@@ -1,65 +1,43 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ProjectCard from '../components/ProjectCard.astro';
+import Project from '../components/Project.astro';
 import { projects, social } from '../data/site';
-
-const arrow = "M5 12h13M13 6l6 6-6 6";
 ---
 
 <Layout
   title="Projects — Fawehinmi Erioluwa"
   description="Offline-first systems, hand-built interfaces, and the small builds that taught me the fundamentals."
 >
-  <section class="section" aria-labelledby="projects-heading">
-    <div class="row row-phi">
-      <div class="card card-amber card-hero head">
-        <span class="tag">Projects</span>
-        <h1 class="display" id="projects-heading">Three builds.</h1>
-        <p class="lead head-lead">
-          A platform that syncs when the network returns, the site you are
-          reading, and the small one that is here because it is where I
-          started. None of them are tutorials.
-        </p>
-      </div>
+  <header class="page-head">
+    <h1 class="display" id="projects-heading">Three builds.</h1>
+    <p class="lead">
+      A platform that syncs when the network returns, the site you are
+      reading, and the small one that is here because it is where I
+      started. None of them are tutorials.
+    </p>
+    <p class="muted">
+      Everything public lives on
+      <a class="link" href={social.github} target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+  </header>
 
-      <div class="card card-bare repo">
-        <p class="hand repo-note">Everything public lives here.</p>
-        <a class="link-arrow" href={social.github} target="_blank" rel="noopener noreferrer">
-          github.com/Erioluwa-dev
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d={arrow} />
-          </svg>
-        </a>
-      </div>
-    </div>
+  <section aria-label="All projects">
+    <ul class="rows">
+      {projects.map((p) => <li><Project project={p} level={2} expanded /></li>)}
+    </ul>
   </section>
 
-  <section class="section" aria-label="All projects">
-    <div class="grid">
-      {projects.map((p) => <ProjectCard project={p} expanded />)}
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="projects-end">
-    <div class="card card-ink card-hero closing">
-      <p class="hand closing-note">That's the shelf.</p>
-      <h2 class="h2" id="projects-end">Want one built for you?</h2>
-      <a class="btn btn-amber" href="/contact">
-        Start a conversation
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d={arrow} />
-        </svg>
-      </a>
+  <section class="closing" aria-labelledby="projects-end">
+    <h2 class="h2" id="projects-end">Want one built for you?</h2>
+    <div class="actions">
+      <a class="btn" href="/contact">Start a conversation</a>
     </div>
   </section>
 </Layout>
 
 <style>
-  .head-lead { max-width: 46ch; opacity: 0.86; }
+  .page-head { display: flex; flex-direction: column; gap: 1.25rem; }
+  .page-head .muted { margin: 0; }
 
-  .repo { justify-content: center; }
-  .repo-note { color: var(--ink-soft); }
-
-  .closing { align-items: flex-start; }
-  .closing-note { color: var(--amber); }
+  .closing { display: flex; flex-direction: column; align-items: flex-start; gap: 1.25rem; }
 </style>

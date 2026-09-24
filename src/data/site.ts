@@ -8,6 +8,8 @@ export type Project = {
   stack: string[];
   repo?: string;
   live?: string;
+  /** A screenshot in /public, e.g. { src: "/projects/yems.png", alt: "…" }. */
+  image?: { src: string; alt: string };
 };
 
 export const projects: Project[] = [
@@ -30,7 +32,7 @@ export const projects: Project[] = [
     summary:
       "Hand-built in Astro. No framework runtime, no component library, no analytics watching you.",
     detail:
-      "Every page here compiles to plain HTML and CSS. JavaScript shows up in three places only: the navigation island, the command palette, and a clock. The type is handwritten on purpose — a portfolio should look like a person made it.",
+      "Every page here compiles to plain HTML and CSS. JavaScript shows up in three places only: the menu, the search, and a clock.",
     stack: ["Astro", "TypeScript", "CSS"],
     repo: "https://github.com/Erioluwa-dev",
   },
@@ -48,37 +50,26 @@ export const projects: Project[] = [
 ];
 
 export const statusLabel: Record<Project["status"], string> = {
-  shipped: "shipped",
-  private: "private repo",
-  archive: "early work",
+  shipped: "Shipped",
+  private: "Private repo",
+  archive: "Early work",
 };
 
-export type StackGroup = { group: string; items: string[] };
+export type Layer = { name: string; role: string; tools: string[] };
 
-// Grouped by honest depth rather than by category. Listing Rust beside
-// TypeScript would be a claim I have not earned yet.
-export const stack: StackGroup[] = [
-  {
-    group: "Deepest — reach for daily",
-    items: ["TypeScript", "React", "Next.js", "Astro", "CSS", "UI/UX"],
-  },
-  {
-    group: "Build the backend with",
-    items: ["Node.js", "Bun", "Hono", "PostgreSQL", "Redis", "REST APIs", "Auth"],
-  },
-  {
-    group: "Applied in production",
-    items: ["Python", "OpenCV", "Graph ML"],
-  },
-  {
-    group: "Around the work",
-    items: ["Docker", "Queues", "Object storage", "Supabase", "Git", "Figma"],
-  },
-  {
-    group: "Active in",
-    items: ["Rust", "Systems programming"],
-  },
+// Top to bottom, the way a request travels: what someone touches first,
+// then everything underneath that has to hold for it to work.
+export const layers: Layer[] = [
+  { name: "Interface", role: "What people touch", tools: ["TypeScript", "React", "Next.js", "Astro", "CSS", "Figma"] },
+  { name: "Server", role: "What answers them", tools: ["Node.js", "Bun", "Hono", "REST APIs", "Auth"] },
+  { name: "Data", role: "What remembers", tools: ["PostgreSQL", "Redis", "Supabase", "Queues", "Object storage"] },
+  { name: "Infrastructure", role: "What it runs on", tools: ["Docker", "Git"] },
+  { name: "Models", role: "What it learns", tools: ["Python", "OpenCV", "Graph ML"] },
 ];
+
+// Kept apart from the layers: listing Rust beside TypeScript would be a
+// claim I have not earned yet.
+export const learning = ["Rust", "systems programming"];
 
 export type Letter = {
   slug: string;

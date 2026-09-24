@@ -3,57 +3,57 @@ import Layout from '../layouts/Layout.astro';
 import { letters } from '../data/site';
 
 const fmt = (d: string) =>
-  new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
-
-const arrow = "M5 12h13M13 6l6 6-6 6";
+  new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <Layout
   title="Letters — Fawehinmi Erioluwa"
   description="Notes on building solo, shipping under constraints, and the tools that earn their place."
 >
-  <section class="section" aria-labelledby="letters-heading">
-    <div class="card card-amber card-hero head">
-      <span class="tag">Letters</span>
-      <h1 class="display" id="letters-heading">Notes from inside the build.</h1>
-      <p class="lead head-lead">
-        Written while the work was still messy, not cleaned up afterwards.
-        Mostly about scope, constraints, and what actually shipped.
-      </p>
-    </div>
-  </section>
+  <header class="page-head">
+    <h1 class="display" id="letters-heading">Notes from inside the build.</h1>
+    <p class="lead">
+      Written while the work was still messy, not cleaned up afterwards.
+      Mostly about scope, constraints, and what actually shipped.
+    </p>
+  </header>
 
-  <section class="section" aria-label="All letters">
-    <div class="grid grid-2">
-  {letters.map((l) => (
-      <a class="card letter" href={`/letters/${l.slug}`}>
-        <span class="tag muted">{fmt(l.date)}</span>
-        <h2 class="h2 letter-title">{l.title}</h2>
-        <p class="lead letter-excerpt muted">{l.excerpt}</p>
-        <span class="link-arrow letter-cta">
-          Read it
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d={arrow} />
-          </svg>
-        </span>
-      </a>
-  ))}
-    </div>
+  <section aria-label="All letters">
+    <ul class="rows">
+      {letters.map((l) => (
+        <li>
+          <a class="letter" href={`/letters/${l.slug}`}>
+            <time class="small faint" datetime={l.date}>{fmt(l.date)}</time>
+            <h2 class="h2 letter-title">{l.title}</h2>
+            <p class="muted excerpt">{l.excerpt}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
   </section>
 </Layout>
 
 <style>
-  .head-lead { max-width: 42ch; opacity: 0.86; }
+  .page-head { display: flex; flex-direction: column; gap: 1.25rem; }
 
   .letter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 2.25rem 0;
     text-decoration: none;
-    transition: transform 0.18s ease, border-color 0.18s ease;
   }
 
-  .letter:hover { transform: translateY(-3px); border-color: var(--live-ink); }
-  .letter:hover .letter-title { color: var(--live-ink); }
+  .letter-title {
+    max-width: 24ch;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.18em;
+    transition: text-decoration-color 0.15s ease;
+  }
 
-  .letter-title { max-width: 18ch; transition: color 0.18s ease; }
-  .letter-excerpt { max-width: 40ch; }
-  .letter-cta { margin-top: auto; }
+  .letter:hover .letter-title { text-decoration-color: var(--yellow); }
+
+  .excerpt { margin: 0; max-width: 38em; }
 </style>

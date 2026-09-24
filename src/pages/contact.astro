@@ -8,126 +8,99 @@ const channels = [
   { label: "Instagram", value: "stay.with.eri", href: social.instagram, note: "Less code, more life." },
 ];
 
-const arrow = "M5 12h13M13 6l6 6-6 6";
+const openTo = [
+  "Product and full-stack engineering roles",
+  "Frontend-heavy work where UI/UX carries weight",
+  "Teams building AI into an actual product",
+  "Collaborations on real products",
+];
 ---
 
 <Layout
   title="Contact — Fawehinmi Erioluwa"
   description="Get in touch with Fawehinmi Erioluwa — product and full-stack roles, frontend-heavy work, and collaborations."
 >
-  <section class="section" aria-labelledby="contact-heading">
-    <div class="row row-phi">
-    <div class="card card-ink card-hero head">
-      <span class="tag">Contact</span>
-      <h1 class="display" id="contact-heading">Say what you need built.</h1>
-      <p class="lead head-lead">
-        A role, contract work, or the project that has been sitting in your
-        notes app for a month. Send it over — I read everything and reply
-        within a day or two.
-      </p>
-      <a class="btn btn-amber head-btn" href={`mailto:${social.email}`}>
-        {social.email}
-      </a>
+  <header class="page-head">
+    <h1 class="display" id="contact-heading">Say what you need built.</h1>
+    <p class="lead">
+      A role, contract work, or the project that has been sitting in your
+      notes app for a month. Send it over — I read everything and reply
+      within a day or two.
+    </p>
+    <div class="actions">
+      <a class="btn btn-yellow email" href={`mailto:${social.email}`}>{social.email}</a>
     </div>
+  </header>
 
-    <section class="card card-amber open" aria-labelledby="open-heading">
-      <p class="hand open-note">Right now</p>
-      <h2 class="h2" id="open-heading">I'm open to</h2>
-      <ul class="open-list">
-        <li>Product and full-stack engineering roles</li>
-        <li>Frontend-heavy work where UI/UX carries weight</li>
-        <li>Teams building AI into an actual product</li>
-        <li>Collaborations on real products</li>
+  <div class="split">
+    <section class="section" aria-labelledby="open-heading">
+      <h2 class="h3" id="open-heading">I'm open to</h2>
+      <ul class="rows open-list">
+        {openTo.map((item) => <li>{item}</li>)}
       </ul>
-      <p class="body open-foot">
-        Lagos, Nigeria — remote-friendly and used to working across timezones.
-      </p>
+      <p class="small muted">Lagos, Nigeria — remote-friendly and used to working across timezones.</p>
     </section>
-    </div>
-  </section>
 
-  <section class="section" aria-label="Ways to reach me">
-    <div class="channels">
-      {channels.map((c) => (
-        <a
-          class="card channel"
-          href={c.href}
-          target={c.href.startsWith('http') ? '_blank' : undefined}
-          rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-        >
-          <span class="tag muted">{c.label}</span>
-          <span class="h3 channel-value">{c.value}</span>
-          <span class="body muted channel-note">{c.note}</span>
-          <svg class="channel-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d={arrow} />
-          </svg>
-        </a>
-      ))}
-    </div>
-  </section>
+    <section class="section" aria-labelledby="channels-heading">
+      <h2 class="h3" id="channels-heading">Where to find me</h2>
+      <ul class="rows">
+        {channels.map((c) => (
+          <li>
+            <a
+              class="channel"
+              href={c.href}
+              target={c.href.startsWith('http') ? '_blank' : undefined}
+              rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            >
+              <span class="small faint">{c.label}</span>
+              <span class="channel-value">{c.value}</span>
+              <span class="small muted">{c.note}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
 </Layout>
 
 <style>
-  .head { justify-content: center; }
-  .head-lead { max-width: 46ch; opacity: 0.84; }
-  .head-btn { align-self: flex-start; margin-top: var(--sp-1); word-break: break-word; }
+  .page-head { display: flex; flex-direction: column; gap: 1.25rem; }
+  .email { overflow-wrap: anywhere; }
 
-  .open { justify-content: center; }
-  .open-note { opacity: 0.75; }
-
-  .open-list {
-    margin: var(--sp-1) 0 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-1);
-    font-size: var(--fs-lead);
-    font-weight: 400;
-  }
-
-  .open-list li { position: relative; padding-left: 22px; }
-
-  .open-list li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.62em;
-    width: 10px;
-    height: 2px;
-    background: currentColor;
-  }
-
-  .open-foot { margin-top: var(--sp-2); opacity: 0.74; }
-
-  .channels {
+  .split {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--grid-gap);
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem 4rem;
+    align-items: start;
   }
+
+  .split .section { gap: 1.25rem; }
+  .split .small.muted { margin: 0; }
+
+  .open-list li { padding: 0.9rem 0; font-size: 1.125rem; }
 
   .channel {
-    gap: var(--sp-1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 1rem 0;
     text-decoration: none;
-    transition: transform 0.18s ease, border-color 0.18s ease;
   }
 
-  .channel:hover { transform: translateY(-3px); border-color: var(--live-ink); }
-  .channel:hover .channel-arrow { transform: translateX(4px); color: var(--live-ink); }
-
-  /* A 27-character address in a third-width card is the one place
-     the fixed h3 step broke down, so this one sizes to its card. */
   .channel-value {
-    font-size: clamp(var(--fs-body), 6.2cqi, var(--fs-h3));
+    font-size: 1.25rem;
+    font-weight: 600;
     overflow-wrap: anywhere;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 0.15s ease;
   }
 
-  .channel-arrow {
-    margin-top: var(--sp-3);
-    transition: transform 0.2s ease, color 0.2s ease;
-  }
+  .channel:hover .channel-value { text-decoration-color: currentColor; }
 
-  @media (max-width: 899px) {
-    .channels { grid-template-columns: 1fr; }
+  @media (max-width: 859px) {
+    .split { grid-template-columns: 1fr; }
   }
 </style>

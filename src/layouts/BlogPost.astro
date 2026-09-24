@@ -9,129 +9,107 @@ interface Props {
 const { title, date } = Astro.props;
 
 const formatted = new Date(date).toLocaleDateString('en-GB', {
-  day: '2-digit',
+  day: 'numeric',
   month: 'long',
   year: 'numeric',
 });
 ---
 
 <Layout title={`${title} — Letters`}>
-  <section class="section">
-    <article class="post">
-      <div class="card body-card">
-        <a class="back" href="/letters">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M19 12H6M11 18l-6-6 6-6" />
-          </svg>
-          <span class="tag">All letters</span>
-        </a>
+  <article class="post">
+    <header class="post-head">
+      <a class="link small back" href="/letters">All letters</a>
+      <h1 class="display post-title">{title}</h1>
+      <time class="small faint" datetime={date}>{formatted}</time>
+    </header>
 
-        <span class="tag muted">{formatted}</span>
-        <h1 class="h2 post-title">{title}</h1>
+    <div class="prose post-prose">
+      <slot />
+    </div>
 
-        <div class="prose post-prose">
-          <slot />
-        </div>
-      </div>
-
-      <aside class="card card-teal aside">
-        <p class="hand aside-note">Written by</p>
-        <p class="h3 aside-name">Fawehinmi Erioluwa</p>
-        <p class="body aside-body">
-          Product engineer in Lagos, Nigeria. Interfaces, backends, and the machine learning underneath.
-        </p>
-        <a class="btn btn-amber aside-btn" href="/contact">Get in touch</a>
-      </aside>
-    </article>
-  </section>
+    <footer class="byline">
+      <p class="muted">
+        Written by Fawehinmi Erioluwa, a product engineer in Lagos, Nigeria.
+      </p>
+      <a class="btn btn-quiet" href="/contact">Get in touch</a>
+    </footer>
+  </article>
 </Layout>
 
 <style>
-  /* Prose at φ², the byline at 1. Reading is the whole job of this page. */
   .post {
-    display: grid;
-    grid-template-columns: 2.618fr 1fr;
-    gap: var(--grid-gap);
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    max-width: 44rem;
   }
 
-  .body-card { gap: var(--sp-2); padding: var(--pad-lg); }
+  .post-head { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
 
-  .back {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    align-self: flex-start;
-    min-height: 40px;
-    text-decoration: none;
-    color: var(--ink-soft);
-    transition: color 0.18s ease, transform 0.18s ease;
-  }
+  .back { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); }
 
-  .back:hover { color: var(--ink); transform: translateX(-3px); }
+  .post-title { font-size: clamp(2.25rem, 1rem + 4vw, 3.75rem); }
 
-  .post-title { max-width: 24ch; }
-
-  .post-prose { margin-top: var(--sp-1); }
+  .post-prose { font-size: 1.125rem; }
 
   .post-prose :global(p) {
-    margin: 0 0 1.1em;
-    line-height: 1.72;
-    max-width: 66ch;
+    margin: 0 0 1.2em;
+    line-height: 1.7;
   }
 
   .post-prose :global(p:last-child) { margin-bottom: 0; }
 
   .post-prose :global(h2) {
-    font-family: var(--display);
     font-size: var(--fs-h3);
     font-weight: 700;
-    font-variation-settings: normal;
-    line-height: 1.24;
-    margin: 1.7em 0 0.5em;
+    font-stretch: 105%;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin: 2em 0 0.6em;
   }
 
   .post-prose :global(a) {
-    color: var(--live-ink);
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.2em;
   }
+
+  .post-prose :global(a:hover) { text-decoration-color: currentColor; }
 
   .post-prose :global(ul),
   .post-prose :global(ol) {
-    margin: 0 0 1.1em;
+    margin: 0 0 1.2em;
     padding-left: 1.2em;
-    line-height: 1.72;
+    line-height: 1.7;
   }
 
   .post-prose :global(li) { margin-bottom: 0.4em; }
 
   .post-prose :global(blockquote) {
-    margin: 1.3em 0;
-    padding: 4px 0 4px var(--sp-3);
-    border-left: 3px solid var(--amber);
-    font-family: var(--hand);
-    font-size: var(--fs-h3);
-    line-height: 1.4;
-    color: var(--ink-soft);
+    margin: 1.5em 0;
+    padding-left: 1.25rem;
+    border-left: 4px solid var(--yellow);
+    font-size: var(--fs-lead);
+    line-height: 1.45;
   }
 
   .post-prose :global(code) {
-    font-family: var(--mono);
+    font-family: ui-monospace, 'Cascadia Code', Menlo, monospace;
     font-size: 0.88em;
-    padding: 2px 6px;
-    border-radius: 5px;
-    background: var(--paper);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    background: var(--line);
   }
 
-  /* The byline follows the reader down a long post. */
-  .aside { position: sticky; top: calc(var(--head-h) + var(--sp-3)); }
-  .aside-note { opacity: 0.8; }
-  .aside-body { opacity: 0.84; margin-top: var(--sp-1); }
-  .aside-btn { align-self: flex-start; margin-top: var(--sp-3); }
-
-  @media (max-width: 899px) {
-    .post { grid-template-columns: 1fr; }
-    .aside { position: static; }
+  .byline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
   }
+
+  .byline p { margin: 0; }
 </style>
