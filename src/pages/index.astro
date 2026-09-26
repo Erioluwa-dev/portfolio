@@ -248,6 +248,13 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
 
   :global(body:has(.book-main)) { background: var(--desk); }
 
+  /* The book runs edge to edge, so the header drops its centred column
+     and lines up with the pages' outer margins. */
+  :global(body:has(.book-main) .header .bar) {
+    max-width: none;
+    padding-inline: max(16px, 4.236vw);
+  }
+
   :global(.book-main) { flex: 1; }
 
   .book {
@@ -291,7 +298,13 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
      size and gap is that unit times a power of φ. */
 
   .spread {
-    --u: min(1cqw, 1.85cqh);
+    /* Type and vertical rhythm follow --u, which can't outgrow the height.
+       Side margins follow --x, the width alone, so a wide screen is used
+       edge to edge instead of being sized like a narrow one. */
+    --u: min(1cqw, 2cqh);
+    --x: 1cqw;
+    --x3: calc(var(--x) * 2.618);
+    --x4: calc(var(--x) * 4.236);
     --g1: var(--u);
     --g2: calc(var(--u) * 1.618);
     --g3: calc(var(--u) * 2.618);
@@ -306,7 +319,7 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
     height: 100cqh;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: var(--g3) clamp(16px, 3cqw, 3rem);
+    padding: 0;
   }
 
   /* Margins follow the old book canon: the inner margin by the spine is
@@ -322,20 +335,18 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
   }
 
   .leaf.l {
-    padding: var(--g4) var(--g3) var(--g5) var(--g4);
-    border-radius: 6px 0 0 6px;
-    box-shadow: inset calc(var(--u) * -2.4) 0 calc(var(--u) * 2.2) calc(var(--u) * -1.8) var(--shade), -1px 1px 0 var(--line);
+    padding: var(--g4) var(--x3) var(--g4) var(--x4);
+    box-shadow: inset calc(var(--u) * -2.4) 0 calc(var(--u) * 2.2) calc(var(--u) * -1.8) var(--shade);
   }
 
   .leaf.r {
-    padding: var(--g4) var(--g4) var(--g5) var(--g3);
-    border-radius: 0 6px 6px 0;
-    box-shadow: inset calc(var(--u) * 2.4) 0 calc(var(--u) * 2.2) calc(var(--u) * -1.8) var(--shade), 1px 1px 0 var(--line);
+    padding: var(--g4) var(--x4) var(--g4) var(--x3);
+    box-shadow: inset calc(var(--u) * 2.4) 0 calc(var(--u) * 2.2) calc(var(--u) * -1.8) var(--shade);
   }
 
   .folio {
     position: absolute;
-    bottom: var(--g3);
+    bottom: var(--g2);
     font-size: var(--tS);
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -343,8 +354,8 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
     font-variant-numeric: tabular-nums;
   }
 
-  .leaf.l .folio { left: var(--g4); }
-  .leaf.r .folio { right: var(--g4); }
+  .leaf.l .folio { left: var(--x4); }
+  .leaf.r .folio { right: var(--x4); }
 
   /* Text rests on the golden line: one part of space above, φ below. */
   .golden { flex: 1; display: grid; grid-template-rows: 1fr auto 1.618fr; min-height: 0; }
@@ -373,7 +384,7 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
     text-wrap: balance;
   }
 
-  .body { margin: 0; font-family: var(--serif); font-size: var(--t0); line-height: 1.618; color: var(--ink-2); max-width: 32em; }
+  .body { margin: 0; font-family: var(--serif); font-size: var(--t0); line-height: 1.618; color: var(--ink-2); max-width: 40em; }
   .note { margin: 0; font-family: var(--hand); font-size: var(--t0); line-height: 1.4; color: var(--ink-2); }
   .sub { margin: 0; font-size: var(--t1); font-weight: 750; line-height: 1.15; letter-spacing: -0.01em; }
   .leaf .link { font-size: var(--t0); font-weight: 700; }
