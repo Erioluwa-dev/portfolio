@@ -1,189 +1,727 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Project from '../components/Project.astro';
-import { projects, layers, learning, letters, social } from '../data/site';
+import {
+  projects,
+  layers,
+  letters,
+  social,
+  preface,
+  principles,
+  statusLabel,
+  type Project,
+  type Featured,
+} from '../data/site';
 
-const recent = letters.slice(0, 2);
+type FeaturedProject = Project & { featured: Featured };
+
+const featured = projects.filter((p): p is FeaturedProject => p.featured !== undefined);
+
+const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+const numeral = (n: number) => roman[n - 1] ?? String(n);
+
+// Front matter is numbered in lower-case roman like a real book; the
+// chapters start again at 1. Chapter I (the layers) sits on page 1 and
+// each featured project takes the two pages after it.
+const chapters = featured.map((p, i) => ({
+  project: p,
+  chapter: numeral(i + 2),
+  page: 2 + i * 2,
+}));
+const lettersChapter = numeral(featured.length + 2);
+const lettersPage = 2 + featured.length * 2;
+
+// Spread indexes, for the contents page to jump to.
+const PREFACE = 1;
+const LAYERS = 2;
+const FIRST_PROJECT = 3;
+const LETTERS = FIRST_PROJECT + featured.length;
+const spreadCount = LETTERS + 1;
 
 const fmt = (d: string) =>
   new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const host = (url: string) => new URL(url).host.replace(/^www\./, '');
 ---
 
-<Layout title="Fawehinmi Erioluwa — Product Engineer">
-  <section class="hero" aria-labelledby="thesis">
-    <p class="hand">Hi — I'm Eri.</p>
-    <h1 class="display" id="thesis">I build whole products, not just the part you can see.</h1>
+<Layout title="Fawehinmi Erioluwa — Product Engineer" book>
+  <div class="book" id="book" style={`--n:${spreadCount}`}>
+    {Array.from({ length: spreadCount }, (_, i) => (
+      <span class="snap" style={`--i:${i}`} aria-hidden="true" />
+    ))}
 
-    <div class="intro">
-      <p class="lead">
-        Product engineer in Lagos, Nigeria. Interfaces first — that is where
-        I am deepest — then the API, the data, and the machine learning
-        underneath.
-      </p>
-      <div class="actions">
-        <a class="btn" href={`mailto:${social.email}`}>Email me</a>
-        <a class="btn btn-quiet" href="/projects">See the work</a>
+    <div class="stage">
+      <div class="viewport">
+        <div class="track" id="track">
+
+          <section class="spread" aria-label="Cover">
+            <div class="leaf l endpaper" data-first>
+              <span class="kicker">Collected work · 2026 edition</span>
+              <div class="golden"><div class="block">
+                <p class="note hello-cover">Hi, I'm Eri.</p>
+              </div></div>
+              <p class="hint">
+                <span class="hint-wide">Scroll to turn the page</span>
+                <span class="hint-narrow">Swipe to turn the page</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </p>
+            </div>
+            <div class="leaf r cover">
+              <span class="kicker">Fawehinmi Erioluwa · Product engineer · Lagos</span>
+              <div class="golden"><div class="block">
+                <h1 class="title">I build whole products, not just the part you can see.</h1>
+                <p class="body">Interfaces first, which is where I am deepest. Then the API, the data, and the machine learning underneath.</p>
+              </div></div>
+            </div>
+          </section>
+
+          <section class="spread" aria-label="Preface">
+            <div class="leaf l" data-first>
+              <span class="kicker">Preface</span>
+              <div class="golden"><div class="block">
+                <p class="hello">Hi, I'm Eri.</p>
+                <p class="pull">{preface.hook} <mark>{preface.hookMark}</mark>.</p>
+                <p class="body measure">{preface.body}</p>
+                <div class="sign measure"><span class="sign-name">Eri</span><span>Product engineer</span></div>
+              </div></div>
+              <span class="folio">ii · Preface</span>
+            </div>
+            <div class="leaf r">
+              <h2 class="kicker principles-head">How I work</h2>
+              <div class="principles">
+                {principles.map((p, i) => (
+                  <div class:list={['tile', { 'tile-dark p-lead': i === 0 }]}>
+                    <span class="p-num">{numeral(i + 1).toLowerCase()}.</span>
+                    <h3 class="sub push">{p.title}</h3>
+                    <p class="body">{p.body}</p>
+                  </div>
+                ))}
+                <a class="tile tile-yellow learn" href="/about">
+                  <span class="kicker">About</span>
+                  <span class="sub">Learn more</span>
+                  <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
+                </a>
+              </div>
+              <span class="folio">iii</span>
+            </div>
+          </section>
+
+          <section class="spread" aria-label="Contents and Chapter I">
+            <div class="leaf l" data-first>
+              <span class="kicker">Contents</span>
+              <div class="golden"><div class="block">
+                <ol class="toc">
+                  <li><a href="#book" data-go={PREFACE}><span class="ro"></span><span class="toc-name">Preface</span><span class="dots"></span><span class="pg">ii</span></a></li>
+                  <li><a href="#book" data-go={LAYERS}><span class="ro">I</span><span class="toc-name">The layers</span><span class="dots"></span><span class="pg">1</span></a></li>
+                  {chapters.map((c, i) => (
+                    <li><a href="#book" data-go={FIRST_PROJECT + i}><span class="ro">{c.chapter}</span><span class="toc-name">{c.project.name}</span><span class="dots"></span><span class="pg">{c.page}</span></a></li>
+                  ))}
+                  <li><a href="#book" data-go={LETTERS}><span class="ro">{lettersChapter}</span><span class="toc-name">Letters</span><span class="dots"></span><span class="pg">{lettersPage}</span></a></li>
+                  <li><a href="#book" data-go={LETTERS}><span class="ro"></span><span class="toc-name">Colophon</span><span class="dots"></span><span class="pg">{lettersPage + 1}</span></a></li>
+                  <li class="more"><a href="/projects"><span class="ro"></span><span class="toc-name">Every project, on its own page</span><span class="dots"></span><span class="pg" aria-hidden="true">→</span></a></li>
+                </ol>
+              </div></div>
+              <span class="folio">iv · Contents</span>
+            </div>
+            <div class="leaf r">
+              <span class="ch">Chapter I</span>
+              <div class="golden"><div class="block">
+                <h2 class="title">The layers</h2>
+                <p class="body">Top to bottom, the way a request travels: what someone touches first, then everything underneath that has to hold for it to work.</p>
+                <ol class="strata">
+                  {layers.map((l, i) => (
+                    <li>
+                      <span><b>{l.name}</b><span class="role">{l.role}</span></span>
+                      <span>{l.tools.join(', ')}</span>
+                      {i === 0 && <span class="tag" aria-hidden="true">the part you can see</span>}
+                    </li>
+                  ))}
+                </ol>
+              </div></div>
+              <span class="folio">1 · The layers</span>
+            </div>
+          </section>
+
+          {chapters.map(({ project: p, chapter, page }) => (
+            <section class="spread" aria-label={`Chapter ${chapter}, ${p.name}`}>
+              <div class="leaf l" data-first>
+                <span class="ch">Chapter {chapter}</span>
+                <div class="golden"><div class="block">
+                  <h2 class="title">{p.name}</h2>
+                  <p class="kicker">{p.kind}</p>
+                  <p class="body">{p.featured.story}</p>
+                  {p.featured.note && <p class="note">{p.featured.note}</p>}
+                </div></div>
+                <span class="folio">{page} · {p.name}</span>
+              </div>
+              <div class="leaf r">
+                <div class="plate">
+                  {p.image ? (
+                    <figure class="tile shot"><img src={p.image.src} alt={p.image.alt} loading="lazy" /></figure>
+                  ) : p.live ? (
+                    <a class="tile shot shot-link" href={p.live} target="_blank" rel="noopener noreferrer">
+                      <span class="browser" aria-hidden="true"><i></i><i></i><i></i></span>
+                      <span class="shot-host">{host(p.live)} <span aria-hidden="true">↗</span></span>
+                    </a>
+                  ) : (
+                    <div class="tile shot" aria-hidden="true"></div>
+                  )}
+                  <div class="tile tile-dark">
+                    <span class="kicker">{p.featured.headline.label}</span>
+                    {p.featured.headline.style === 'number' && <span class="big push">{p.featured.headline.value}</span>}
+                    {p.featured.headline.style === 'word' && <span class="sub push">{p.featured.headline.value}</span>}
+                    {p.featured.headline.style === 'quote' && <p class="quote push">{p.featured.headline.value}</p>}
+                    {p.featured.headline.detail && <span>{p.featured.headline.detail}</span>}
+                  </div>
+                  <div class="tile tile-yellow">
+                    <span class="kicker">Status</span>
+                    <span class:list={['status', { live: p.status === 'live' || p.status === 'shipped' }]} title={statusLabel[p.status]}>{p.featured.statusShort}</span>
+                    {p.live && <a class="link push" href={p.live} target="_blank" rel="noopener noreferrer">{p.featured.linkLabel} ↗</a>}
+                  </div>
+                  <div class="tile">
+                    <span class="kicker">{p.featured.list.label}</span>
+                    <ul class="chips">{p.featured.list.items.map((item) => <li>{item}</li>)}</ul>
+                  </div>
+                  <div class="tile">
+                    <span class="kicker">{p.featured.aside.label}</span>
+                    <span>{p.featured.aside.value}</span>
+                  </div>
+                </div>
+                <span class="folio">{page + 1}</span>
+              </div>
+            </section>
+          ))}
+
+          <section class="spread" aria-label={`Chapter ${lettersChapter}, Letters, and back cover`}>
+            <div class="leaf l" data-first>
+              <span class="ch">Chapter {lettersChapter}</span>
+              <div class="golden"><div class="block">
+                <h2 class="title">Letters</h2>
+                <ul class="letters">
+                  {letters.slice(0, 3).map((l) => (
+                    <li><a href={`/letters/${l.slug}`}><span class="date">{fmt(l.date)}</span><span class="sub">{l.title}</span></a></li>
+                  ))}
+                </ul>
+                <a class="link letters-all" href="/letters">All letters →</a>
+              </div></div>
+              <span class="folio">{lettersPage} · Letters</span>
+            </div>
+            <div class="leaf r back">
+              <span class="kicker">Back cover</span>
+              <div class="golden"><div class="block">
+                <h2 class="title">Tell me what it needs to do.</h2>
+                <p class="body">Open to product and full-stack roles, frontend-heavy work, and collaborations where the constraints are real.</p>
+                <a class="btn btn-yellow mail" href={`mailto:${social.email}`}>{social.email}</a>
+                <div class="contacts">
+                  <a href={social.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a href={social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
+                  <a href="/contact">Other ways to reach me</a>
+                </div>
+              </div></div>
+              <div class="colophon">
+                <span class="kicker">Colophon</span>
+                <p class="body">Set in Archivo, Newsreader and Kalam, proportioned by φ. Hand-built in Astro, with no framework runtime and no analytics.</p>
+              </div>
+              <span class="folio">{lettersPage + 1} · Colophon</span>
+            </div>
+          </section>
+
+        </div>
       </div>
     </div>
-
-    <figure class="strata" aria-labelledby="strata-caption">
-      <ol class="layers">
-        {layers.map((l, i) => (
-          <li class="layer" style={`--i:${i}`}>
-            <span class="layer-name">{l.name}</span>
-            <span class="layer-role">{l.role}</span>
-            <span class="layer-tools">{l.tools.join(", ")}</span>
-            {i === 0 && <span class="hand layer-note" aria-hidden="true">the part you can see</span>}
-          </li>
-        ))}
-      </ol>
-      <figcaption id="strata-caption" class="small muted">
-        The layers of a product and what I build each one with. Learning now: {learning.join(" and ")}.
-      </figcaption>
-    </figure>
-  </section>
-
-  <section class="section" aria-labelledby="work-heading">
-    <div class="section-head">
-      <h2 class="h2" id="work-heading">Things I've built</h2>
-      <a class="link" href="/projects">All projects</a>
-    </div>
-
-    <ul class="rows">
-      {projects.map((p) => <li><Project project={p} /></li>)}
-    </ul>
-  </section>
-
-  <section class="section" aria-labelledby="letters-heading">
-    <div class="section-head">
-      <h2 class="h2" id="letters-heading">Letters</h2>
-      <a class="link" href="/letters">Read all</a>
-    </div>
-
-    <ul class="rows">
-      {recent.map((l) => (
-        <li>
-          <a class="letter" href={`/letters/${l.slug}`}>
-            <span class="h3 letter-title">{l.title}</span>
-            <span class="small faint">{fmt(l.date)}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </section>
-
-  <section class="closing" aria-labelledby="contact-heading">
-    <h2 class="display closing-title" id="contact-heading">Tell me what it needs to do.</h2>
-    <p class="lead">
-      Open to product and full-stack roles, frontend-heavy work, and
-      collaborations where the constraints are real.
-    </p>
-    <div class="actions">
-      <a class="btn btn-yellow" href={`mailto:${social.email}`}>{social.email}</a>
-      <a class="btn btn-quiet" href="/contact">Other ways to reach me</a>
-    </div>
-  </section>
+  </div>
+  <span class="progress" id="book-progress" aria-hidden="true"></span>
 </Layout>
 
 <style>
-  .hero { display: flex; flex-direction: column; gap: 1.5rem; }
+  /* ═══ The book ══════════════════════════════════════════════
+     Vertical scroll drives the spreads sideways: the stage is pinned
+     while the tall wrapper scrolls past it, so the wheel, keyboard,
+     scrollbar and back button all keep working as normal. */
 
-  .hero .display { max-width: 15ch; }
-
-  .intro {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.75rem;
-    margin-top: 0.5rem;
+  /* Declared on html so scroll-padding can see it too; snapping lands
+     each spread exactly under the header. */
+  :global(html:has(.book-main)) {
+    --book-top: calc(var(--head-h) + 1px);
+    scroll-padding-top: var(--book-top);
+    scroll-snap-type: y proximity;
   }
 
-  .intro .lead { max-width: 30em; }
+  :global(body:has(.book-main)) { background: var(--desk); }
 
-  /* ═══ The cross-section ════════════════════════════════════
-     The one loud thing on the site. The headline claims the work goes
-     below the surface; this draws the surface and what sits under it. */
+  :global(.book-main) { flex: 1; }
 
-  .strata { margin: clamp(2rem, 1rem + 3vw, 4rem) 0 0; }
+  .book {
+    position: relative;
+    height: calc(var(--n) * (100dvh - var(--book-top)));
+  }
 
-  .layers {
-    margin: 0 0 1rem;
-    padding: 0;
-    list-style: none;
-    border-radius: var(--r-lg);
+  .snap {
+    position: absolute;
+    left: 0;
+    top: calc(var(--i) * (100dvh - var(--book-top)));
+    width: 1px;
+    height: 1px;
+    scroll-snap-align: start;
+  }
+
+  .stage {
+    position: sticky;
+    top: var(--book-top);
+    height: calc(100dvh - var(--book-top));
     overflow: hidden;
   }
 
-  .layer {
+  .viewport { height: 100%; container-type: size; overflow: hidden; }
+  .track { display: flex; height: 100%; will-change: transform; }
+
+  .progress {
+    position: fixed;
+    top: calc(var(--book-top) - 2px);
+    left: 0;
+    z-index: 1001;
+    height: 2px;
+    width: 100%;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  /* ═══ Golden system ═════════════════════════════════════════
+     φ = 1.618. One unit (--u) scales the book to the screen, and every
+     size and gap is that unit times a power of φ. */
+
+  .spread {
+    --u: min(1cqw, 1.85cqh);
+    --g1: var(--u);
+    --g2: calc(var(--u) * 1.618);
+    --g3: calc(var(--u) * 2.618);
+    --g4: calc(var(--u) * 4.236);
+    --g5: calc(var(--u) * 6.854);
+    --t0: max(12px, calc(var(--u) * 1.3));
+    --t1: calc(var(--t0) * 1.618);
+    --t2: calc(var(--t0) * 2.618);
+    --t3: calc(var(--t0) * 4.236);
+    --tS: max(10px, calc(var(--t0) / 1.618));
+    flex: 0 0 100cqw;
+    height: 100cqh;
     display: grid;
-    grid-template-columns: 11rem 11rem 1fr auto;
-    align-items: baseline;
-    gap: 0.25rem 1.5rem;
-    padding: 1.1rem 1.5rem;
-    background: var(--stratum-5);
-    animation: wipe 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-    animation-delay: calc(0.15s + var(--i) * 0.08s);
+    grid-template-columns: 1fr 1fr;
+    padding: var(--g3) clamp(16px, 3cqw, 3rem);
   }
 
-  .layer:nth-child(1) { background: var(--yellow); color: var(--on-yellow); padding-block: 1.6rem; }
-  .layer:nth-child(2) { background: var(--stratum-2); }
-  .layer:nth-child(3) { background: var(--stratum-3); }
-  .layer:nth-child(4) { background: var(--stratum-4); }
+  /* Margins follow the old book canon: the inner margin by the spine is
+     the smallest, and each step outward and down grows by φ. */
+  .leaf {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+  }
 
-  .layer-name {
+  .leaf.l {
+    padding: var(--g4) var(--g3) var(--g5) var(--g4);
+    border-radius: 6px 0 0 6px;
+    box-shadow: inset calc(var(--u) * -2.4) 0 calc(var(--u) * 2.2) calc(var(--u) * -1.8) var(--shade), -1px 1px 0 var(--line);
+  }
+
+  .leaf.r {
+    padding: var(--g4) var(--g4) var(--g5) var(--g3);
+    border-radius: 0 6px 6px 0;
+    box-shadow: inset calc(var(--u) * 2.4) 0 calc(var(--u) * 2.2) calc(var(--u) * -1.8) var(--shade), 1px 1px 0 var(--line);
+  }
+
+  .folio {
+    position: absolute;
+    bottom: var(--g3);
+    font-size: var(--tS);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .leaf.l .folio { left: var(--g4); }
+  .leaf.r .folio { right: var(--g4); }
+
+  /* Text rests on the golden line: one part of space above, φ below. */
+  .golden { flex: 1; display: grid; grid-template-rows: 1fr auto 1.618fr; min-height: 0; }
+  .golden > .block { grid-row: 2; display: flex; flex-direction: column; gap: var(--g2); }
+  .measure { max-width: 61.8%; }
+  .push { margin-top: auto; }
+
+  .kicker {
+    margin: 0;
+    font-size: var(--tS);
     font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .ch { font-family: var(--serif); font-style: italic; font-size: var(--t1); line-height: 1; color: var(--ink-2); }
+
+  .title {
+    margin: 0;
+    font-size: var(--t3);
+    font-weight: 850;
+    font-stretch: 118%;
+    line-height: 0.94;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .body { margin: 0; font-family: var(--serif); font-size: var(--t0); line-height: 1.618; color: var(--ink-2); max-width: 32em; }
+  .note { margin: 0; font-family: var(--hand); font-size: var(--t0); line-height: 1.4; color: var(--ink-2); }
+  .sub { margin: 0; font-size: var(--t1); font-weight: 750; line-height: 1.15; letter-spacing: -0.01em; }
+  .leaf .link { font-size: var(--t0); font-weight: 700; }
+
+  /* ── Cover ── */
+  .endpaper { background: var(--yellow); color: var(--on-yellow); }
+  .endpaper .kicker { color: var(--on-yellow); opacity: 0.75; }
+  .hello-cover { color: var(--on-yellow); font-size: var(--t2); line-height: 1.1; }
+
+  .hint {
+    display: flex;
+    align-items: center;
+    gap: var(--g1);
+    margin: 0;
+    font-size: var(--tS);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hint svg { width: var(--g3); height: var(--g3); animation: nudge 1.8s ease-in-out infinite; }
+  .hint-narrow { display: none; }
+  @keyframes nudge { 50% { transform: translateX(var(--g1)); } }
+
+  .cover { background: var(--dark); color: var(--on-dark); }
+  .cover .kicker { color: var(--on-dark); opacity: 0.65; }
+  .cover .body { color: var(--on-dark); opacity: 0.78; }
+
+  /* ── Preface ── */
+  .hello { margin: 0; font-family: var(--hand); font-size: var(--t2); line-height: 1; }
+
+  .pull {
+    margin: 0;
+    max-width: 76%;
+    font-size: calc(var(--t0) * 1.3);
+    font-weight: 750;
     font-stretch: 108%;
-    font-size: 1.0625rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
   }
 
-  .layer-role { color: var(--ink-2); font-size: var(--fs-sm); }
-  .layer:nth-child(1) .layer-role { color: inherit; opacity: 0.8; }
-
-  .layer-tools { font-size: 1rem; }
-
-  .layer-note {
-    color: inherit;
-    font-size: 1.1rem;
-    opacity: 0.8;
-    transform: rotate(-3deg);
+  /* Yellow is only ever a fill under dark text, so the phrase reads the
+     same in both themes. */
+  .pull mark {
+    padding: 0.02em 0.28em;
+    border-radius: 0.2em;
+    background: var(--yellow);
+    color: var(--on-yellow);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 
-  @keyframes wipe {
-    from { clip-path: inset(0 100% 0 0); }
-    to   { clip-path: inset(0 0 0 0); }
+  .sign { display: flex; align-items: center; gap: var(--g2); padding-top: var(--g2); border-top: 1px solid var(--line); }
+  .sign span { font-size: var(--tS); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .sign .sign-name { font-family: var(--hand); font-size: var(--t1); font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink); }
+
+  /* The principles plate is a golden rectangle cut φ : 1 both ways. The
+     biggest idea takes the biggest cell and the eye steps down in size
+     until it lands on Learn more. */
+  .principles-head { margin-bottom: var(--g2); }
+
+  .principles {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    gap: var(--g2);
+    grid-template-columns: 1.618fr 1fr;
+    grid-template-rows: 1.618fr 1fr;
   }
 
-  /* ═══ Letters ═══ */
+  .tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--g1);
+    min-height: 0;
+    margin: 0;
+    padding: var(--g2);
+    overflow: hidden;
+    background: var(--tile);
+    border: 1px solid var(--line);
+    border-radius: var(--g1);
+    color: var(--ink);
+    font-size: max(11px, calc(var(--t0) * 0.9));
+  }
 
-  .letter {
+  .tile .kicker { font-size: max(9px, calc(var(--tS) * 0.95)); }
+  .tile .body { font-size: max(12px, calc(var(--t0) * 0.92)); line-height: 1.5; }
+
+  .tile-yellow { background: var(--yellow); border-color: var(--yellow); color: var(--on-yellow); }
+  .tile-yellow .kicker { color: var(--on-yellow); opacity: 0.75; }
+  .tile-dark { background: var(--dark); border-color: var(--dark); color: var(--on-dark); }
+  .tile-dark .kicker, .tile-dark .body { color: var(--on-dark); opacity: 0.75; }
+
+  .p-num { font-family: var(--serif); font-style: italic; font-size: var(--t0); line-height: 1; color: var(--ink-3); }
+  .tile-dark .p-num { color: var(--on-dark); opacity: 0.6; }
+  .principles .sub { font-size: calc(var(--t1) * 0.82); }
+  .principles .p-lead .sub { font-size: calc(var(--t1) * 1.1); }
+  .principles .body { line-height: 1.45; }
+
+  .learn { justify-content: space-between; text-decoration: none; transition: transform 0.25s ease; }
+  .learn:hover { transform: translateY(calc(var(--u) * -0.3)); }
+  .learn .arrow { align-self: flex-end; width: var(--g4); height: var(--g4); }
+
+  /* ── Contents ── */
+  .toc { display: grid; gap: var(--g2); margin: 0; padding: 0; list-style: none; }
+
+  .toc a {
     display: flex;
     align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem 2rem;
-    flex-wrap: wrap;
-    padding: 1.5rem 0;
+    gap: var(--g1);
+    font-size: var(--t0);
+    font-weight: 600;
     text-decoration: none;
   }
 
-  .letter-title {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-decoration-color: transparent;
-    text-underline-offset: 0.2em;
-    transition: text-decoration-color 0.15s ease;
+  .toc a:hover .toc-name { text-decoration: underline; text-underline-offset: 4px; }
+  .toc .ro { flex: none; width: var(--g3); font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--ink-3); }
+  .toc .dots { flex: 1; border-bottom: 1.5px dotted var(--line-strong); transform: translateY(-0.25em); }
+  .toc .pg { font-weight: 400; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .toc .more .toc-name { color: var(--ink-2); }
+
+  /* ── Chapter I ── */
+  .strata { margin: 0; padding: 0; list-style: none; border-radius: 8px; overflow: hidden; }
+
+  .strata li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 38.2% 1fr;
+    gap: var(--g1);
+    padding: var(--g1) var(--g2);
+    font-size: max(11px, calc(var(--t0) * 0.82));
   }
 
-  .letter:hover .letter-title { text-decoration-color: currentColor; }
+  .strata b { display: block; font-size: max(12px, calc(var(--t0) * 0.92)); }
+  .strata .role { font-size: var(--tS); color: var(--ink-3); }
+  .strata li:nth-child(1) { background: var(--yellow); color: var(--on-yellow); }
+  .strata li:nth-child(1) .role { color: var(--on-yellow); opacity: 0.75; }
+  .strata li:nth-child(2) { background: var(--stratum-2); }
+  .strata li:nth-child(3) { background: var(--stratum-3); }
+  .strata li:nth-child(4) { background: var(--stratum-4); }
+  .strata li:nth-child(5) { background: var(--stratum-5); }
 
-  /* ═══ Closing ═══ */
+  .tag {
+    position: absolute;
+    right: var(--g2);
+    top: 50%;
+    transform: translateY(-50%) rotate(-3deg);
+    font-family: var(--hand);
+    font-size: var(--tS);
+  }
 
-  .closing { display: flex; flex-direction: column; gap: 1.5rem; }
-  .closing-title { font-size: clamp(2.25rem, 1rem + 4.5vw, 4.25rem); max-width: 14ch; }
-  .closing .btn-yellow { overflow-wrap: anywhere; }
+  /* ── Project plates ──
+     One golden grid for every chapter: the screenshot on the φ row, the
+     two facts under it split φ : 1. */
+  .plate {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    gap: var(--g1);
+    grid-template-columns: 1.618fr 1fr;
+    /* The facts row never clips; if the page is short, the screenshot gives way. */
+    grid-template-rows: minmax(0, 1.618fr) minmax(min-content, 1fr) auto;
+  }
 
-  @media (max-width: 859px) {
-    .layer { grid-template-columns: 1fr; padding: 1rem 1.25rem; }
-    .layer:nth-child(1) { padding-block: 1.25rem; }
-    .layer-note { justify-self: end; margin-top: 0.25rem; }
+  .shot {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    padding: 0;
+    background: repeating-linear-gradient(135deg, var(--tile-2) 0 8px, var(--tile) 8px 16px);
+  }
+
+  .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .shot-link { padding: var(--g2); text-decoration: none; color: var(--ink-2); }
+  .shot-link:hover .shot-host { text-decoration: underline; text-underline-offset: 4px; }
+  .shot-host { font-size: var(--t1); font-weight: 750; font-stretch: 108%; letter-spacing: -0.01em; color: var(--ink); }
+  .browser { display: flex; gap: 5px; }
+  .browser i { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); }
+
+  .big { font-size: var(--t2); font-weight: 850; font-stretch: 105%; line-height: 0.9; font-variant-numeric: tabular-nums; }
+  .quote { margin: 0; font-family: var(--serif); font-style: italic; font-size: calc(var(--t0) * 1.15); line-height: 1.35; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: calc(var(--u) * 0.4); margin: 0; padding: 0; list-style: none; }
+
+  .chips li {
+    padding: 0 calc(var(--u) * 0.7);
+    border: 1px solid var(--line-strong);
+    border-radius: 99px;
+    font-size: max(10px, calc(var(--tS) * 1.05));
+    line-height: 1.75;
+  }
+
+  .status { display: inline-flex; align-items: center; gap: 0.45em; font-weight: 700; }
+  .status::before { content: ""; width: 0.55em; height: 0.55em; border-radius: 50%; background: currentColor; }
+  .status.live::before { background: var(--live); }
+
+  /* ── Letters and back cover ── */
+  .letters { display: grid; gap: var(--g2); margin: 0; padding: 0; list-style: none; }
+  .letters a { display: grid; gap: calc(var(--u) * 0.4); padding-top: var(--g2); border-top: 1px solid var(--line); text-decoration: none; }
+  .letters a:hover .sub { text-decoration: underline; text-underline-offset: 4px; }
+  .letters .sub { font-size: calc(var(--t1) * 0.82); }
+  .letters-all { align-self: flex-start; }
+  .date { font-size: var(--tS); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+  .back { background: var(--dark); color: var(--on-dark); }
+  .back .kicker { color: var(--on-dark); opacity: 0.65; }
+  .back .body { color: var(--on-dark); opacity: 0.8; }
+  .back .title { font-size: calc(var(--t3) * 0.82); }
+  .back .folio { color: var(--on-dark); opacity: 0.65; }
+  .mail { align-self: flex-start; }
+  .contacts { display: flex; flex-wrap: wrap; gap: var(--g1) var(--g2); font-size: max(11px, calc(var(--t0) * 0.85)); }
+  .contacts a { color: var(--on-dark); opacity: 0.8; }
+  .contacts a:hover { opacity: 1; }
+
+  .colophon {
+    display: grid;
+    gap: calc(var(--u) * 0.4);
+    padding-top: var(--g2);
+    border-top: 1px solid color-mix(in oklab, var(--on-dark), transparent 75%);
+  }
+
+  .colophon .body { font-size: max(11px, calc(var(--t0) * 0.85)); }
+
+  .back :focus-visible, .cover :focus-visible { outline-color: var(--yellow); }
+
+  /* ═══ Phone: one page per screen, swiped sideways ═══════════ */
+  @media (max-width: 760px) {
+    :global(html:has(.book-main)) { scroll-snap-type: none; }
+
+    .book { height: auto; }
+    .snap { display: none; }
+    .stage { position: relative; top: 0; }
+    .viewport { container-type: normal; overflow: visible; }
+
+    .track {
+      gap: 12px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .spread { display: contents; --u: clamp(8px, 2.5vw, 11px); }
+
+    .leaf, .leaf.l, .leaf.r {
+      flex: 0 0 calc(100vw - 32px);
+      height: 100%;
+      padding: var(--g4) var(--g3) var(--g5);
+      overflow-y: auto;
+      border-radius: 8px;
+      box-shadow: 0 1px 0 var(--line);
+      scroll-snap-align: center;
+    }
+
+    .leaf.l .folio, .leaf.r .folio { left: auto; right: var(--g3); }
+    .measure, .pull { max-width: none; }
+    .hint-wide { display: none; }
+    .hint-narrow { display: inline; }
+    .principles { grid-template-columns: 1fr; grid-template-rows: none; }
+    .plate { grid-template-columns: 1fr; grid-template-rows: 11rem; }
   }
 </style>
+
+<script>
+  const book = document.getElementById('book');
+  const track = document.getElementById('track');
+  const bar = document.getElementById('book-progress');
+
+  if (book && track && bar) {
+    const firstPages = Array.from(track.querySelectorAll<HTMLElement>('[data-first]'));
+    const n = firstPages.length;
+    const phone = window.matchMedia('(max-width: 760px)');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const stage = track.closest<HTMLElement>('.stage');
+    let current = 0;
+
+    const pinned = () => {
+      const stageH = stage ? stage.offsetHeight : window.innerHeight;
+      const total = book.offsetHeight - stageH;
+      const stageTop = stage ? parseFloat(getComputedStyle(stage).top) || 0 : 0;
+      const p = total > 0 ? (stageTop - book.getBoundingClientRect().top) / total : 0;
+      return { p: Math.min(1, Math.max(0, p)), stageH, stageTop };
+    };
+
+    const render = () => {
+      if (phone.matches) {
+        const max = track.scrollWidth - track.clientWidth;
+        const p = max > 0 ? track.scrollLeft / max : 0;
+        bar.style.transform = `scaleX(${p})`;
+        const mid = track.scrollLeft + track.clientWidth / 2;
+        firstPages.forEach((pg, i) => {
+          if (pg.offsetLeft <= mid) current = i;
+        });
+        return;
+      }
+      const { p } = pinned();
+      const width = track.parentElement ? track.parentElement.clientWidth : window.innerWidth;
+      track.style.transform = `translate3d(${-p * (n - 1) * width}px, 0, 0)`;
+      bar.style.transform = `scaleX(${p})`;
+      current = Math.round(p * (n - 1));
+    };
+
+    const go = (i: number) => {
+      const target = Math.min(n - 1, Math.max(0, i));
+      const behavior: ScrollBehavior = reduce.matches ? 'auto' : 'smooth';
+      if (phone.matches) {
+        const page = firstPages[target];
+        if (page) track.scrollTo({ left: page.offsetLeft - 16, behavior });
+        return;
+      }
+      const { stageH, stageTop } = pinned();
+      const bookTop = book.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: bookTop - stageTop + target * stageH, behavior });
+    };
+
+    let queued = false;
+    const schedule = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        render();
+      });
+    };
+
+    track.querySelectorAll<HTMLElement>('[data-go]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        go(Number(link.dataset.go));
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const t = e.target;
+      if (t instanceof HTMLElement && t.closest('input, textarea, [role="dialog"]')) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(current + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(current - 1); }
+    });
+
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    track.addEventListener('scroll', schedule, { passive: true });
+    phone.addEventListener('change', () => {
+      track.style.transform = '';
+      schedule();
+    });
+    render();
+  }
+</script>

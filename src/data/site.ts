@@ -13,6 +13,23 @@ export type Project = {
   live?: string;
   /** A screenshot in /public, e.g. { src: "/projects/yems.png", alt: "…" }. */
   image?: { src: string; alt: string };
+  /** Present only on projects that get a spread in the book on the home page. */
+  featured?: Featured;
+};
+
+export type Fact = { label: string; value: string; detail?: string };
+
+/** What a project's spread needs beyond the card: a shorter story for the
+    left page and the facts for the plate on the right. */
+export type Featured = {
+  story: string;
+  note?: string;
+  /** The one fact worth the dark tile. */
+  headline: Fact & { style: "word" | "number" | "quote" };
+  list: { label: string; items: string[] };
+  aside: Fact;
+  statusShort: string;
+  linkLabel: string;
 };
 
 export const projects: Project[] = [
@@ -33,6 +50,19 @@ export const projects: Project[] = [
       { name: "Ikeola Ayomide" },
     ],
     live: "https://home.yeshuahigh.com",
+    featured: {
+      story:
+        "School management for places where the connection drops in the middle of registering a student. This is where I stopped owning only the interface: auth, the API, the Postgres schema, the sync engine, six containers and the deploy.",
+      note: "A teacher finishes what they started without ever learning the network state underneath.",
+      headline: { label: "Built for", value: "Offline-first", detail: "Six containers deep", style: "word" },
+      list: { label: "Stack", items: ["Next.js", "TypeScript", "Node.js", "PostgreSQL", "Redis", "Docker"] },
+      aside: {
+        label: "Built with",
+        value: "Osibanjo Damilare, Anthony Ochefu, Mohie Daniel, Ikeola Ayomide",
+      },
+      statusShort: "Live",
+      linkLabel: "Visit",
+    },
   },
   {
     slug: "flyaux",
@@ -46,6 +76,16 @@ export const projects: Project[] = [
     stack: [],
     collaborators: [{ name: "Osibanjo Damilare", url: "https://github.com/dev-dami" }],
     live: "https://ai.flyaux.com",
+    featured: {
+      story:
+        "Describe a trip in plain language and get back an itinerary you can actually compare: baggage rules, layovers, cancellation terms and fares, side by side, before anyone books. Built during my internship with Osibanjo Damilare.",
+      note: "Pre-launch for now, taking a waitlist rather than live bookings.",
+      headline: { label: "You type", value: "\u201cLagos to London next month, under $900, non-stop\u201d", style: "quote" },
+      list: { label: "Compared side by side", items: ["Baggage", "Layovers", "Cancellation", "Fares"] },
+      aside: { label: "Built with", value: "Osibanjo Damilare" },
+      statusShort: "Pre-launch",
+      linkLabel: "Join the waitlist",
+    },
   },
   {
     slug: "yeshua-high",
@@ -58,6 +98,15 @@ export const projects: Project[] = [
       "Yeshua High School has been running since 2005, and the site is where families meet it first: admissions and an application form, academics and results, the gallery and events, the school's mission, contact details and a way into the school portal.",
     stack: [],
     live: "https://www.yeshuahigh.com",
+    featured: {
+      story:
+        "The public website for a Christian co-educational secondary school in Sabo-Ojodu, Lagos, running since 2005. It is where families meet the school first: admissions, academics and results, the gallery and events, and a way into the school portal.",
+      headline: { label: "Running since", value: "2005", style: "number" },
+      list: { label: "What families find", items: ["Admissions", "Application form", "Results", "Gallery", "Events", "Portal"] },
+      aside: { label: "Where", value: "Sabo-Ojodu, Lagos" },
+      statusShort: "Shipped",
+      linkLabel: "Visit",
+    },
   },
   {
     slug: "portfolio",
@@ -67,20 +116,9 @@ export const projects: Project[] = [
     summary:
       "Hand-built in Astro. No framework runtime, no component library, no analytics watching you.",
     detail:
-      "Every page here compiles to plain HTML and CSS. JavaScript shows up in three places only: the menu, the search, and a clock.",
+      "Every page here compiles to plain HTML and CSS. JavaScript shows up in four places only: the menu, the search, a clock, and turning the pages of the book on the home page.",
     stack: ["Astro", "TypeScript", "CSS"],
     repo: "https://github.com/Erioluwa-dev",
-  },
-  {
-    slug: "todo-app",
-    name: "Todo App",
-    kind: "Fundamentals",
-    status: "archive",
-    summary: "The first thing that made state click. Kept because it is where this started.",
-    detail:
-      "A React and TypeScript task manager — create, read, update, delete, and the moment the shape of application state stopped being a mystery. It is not impressive. It is honest about where the line began.",
-    stack: ["React", "TypeScript"],
-    repo: "https://github.com/Erioluwa-dev/todo-app",
   },
 ];
 
@@ -104,9 +142,24 @@ export const layers: Layer[] = [
   { name: "Models", role: "What it learns", tools: ["Python", "OpenCV", "Graph ML"] },
 ];
 
-// Kept apart from the layers: listing Rust beside TypeScript would be a
-// claim I have not earned yet.
-export const learning = ["Rust", "systems programming"];
+/** The short version of the About page, for the preface on the home page. */
+export const preface = {
+  hook: "Self-taught, in Lagos. I got into code because I wanted to make a Roblox animation",
+  hookMark: "without learning to script",
+  body: "That did not work. A bootcamp later, the web stopped being something I opened and became something I could make. Now I care less about whether a thing demos well and more about whether it holds up.",
+};
+
+export type Principle = { title: string; body: string };
+
+// Ordered by weight: the first gets the largest cell of the golden plate.
+export const principles: Principle[] = [
+  {
+    title: "Built for the connection that drops",
+    body: "A demo only has to work once. I build for the school where the network cuts out halfway through a form.",
+  },
+  { title: "The whole product", body: "Interface first, then every layer it needs to stand on." },
+  { title: "Written for next year", body: "Code that still makes sense a year later, on a project nobody funded." },
+];
 
 export type Letter = {
   slug: string;

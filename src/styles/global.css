@@ -20,6 +20,17 @@
   --stratum-4:   #d2d4cd;
   --stratum-5:   #c7c9c1;
 
+  /* The book on the home page: paper for the leaves, tiles for the plates. */
+  --paper:       #fbfaf6;
+  --desk:        #efeee8;
+  --tile:        #ffffff;
+  --tile-2:      #eceee8;
+  --dark:        #15171a;
+  --on-dark:     #f6f6f3;
+  --shade:       rgba(21, 23, 26, 0.11);
+  --live:        #1d8a4a;
+
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --hand: 'Kalam', 'Segoe Print', cursive;
 
@@ -58,6 +69,15 @@ html[data-theme="dark"] {
   --stratum-3:   #25292e;
   --stratum-4:   #1f2227;
   --stratum-5:   #1a1c20;
+
+  --paper:       #1a1d21;
+  --desk:        #0e1013;
+  --tile:        #20242a;
+  --tile-2:      #2a2e34;
+  --dark:        #eceef0;
+  --on-dark:     #121417;
+  --shade:       rgba(0, 0, 0, 0.5);
+  --live:        #3fbf74;
 
   color-scheme: dark;
 }
