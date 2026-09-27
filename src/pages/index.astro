@@ -629,19 +629,34 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
       scrollbar-width: none;
     }
 
-    .spread { display: contents; --u: clamp(8px, 2.5vw, 11px); }
+    .spread {
+      display: contents;
+      --u: clamp(8px, 2.5vw, 11px);
+      /* Sized to the card, so the widest word always fits. */
+      --t3: clamp(2.25rem, 11vw, 3.25rem);
+    }
+
+    .title { overflow-wrap: anywhere; }
+
+    /* The golden line needs a tall page; on a phone card it just strands
+       the text between two gaps, so content starts near the top instead. */
+    .golden { flex: 0 0 auto; display: block; margin-block: var(--g3) var(--g4); }
+    .endpaper .golden, .cover .golden { flex: 1; display: flex; align-items: center; }
+    .strata li { grid-template-columns: 1fr; gap: 2px; }
+    .tag { position: static; justify-self: start; transform: rotate(-3deg); }
 
     .leaf, .leaf.l, .leaf.r {
       flex: 0 0 calc(100vw - 32px);
       height: 100%;
-      padding: var(--g4) var(--g3) var(--g5);
+      /* The bottom padding clears the floating island nav. */
+      padding: var(--g4) var(--g3) calc(var(--g5) + 64px);
       overflow-y: auto;
       border-radius: 8px;
       box-shadow: 0 1px 0 var(--line);
       scroll-snap-align: center;
     }
 
-    .leaf.l .folio, .leaf.r .folio { left: auto; right: var(--g3); }
+    .leaf.l .folio, .leaf.r .folio { left: auto; right: var(--g3); bottom: calc(var(--g2) + 64px); }
     .measure, .pull { max-width: none; }
     .hint-wide { display: none; }
     .hint-narrow { display: inline; }
@@ -661,7 +676,9 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
     const phone = window.matchMedia('(max-width: 760px)');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     const stage = track.closest<HTMLElement>('.stage');
+    const leaves = Array.from(track.querySelectorAll<HTMLElement>('.leaf'));
     let current = 0;
+    let leaf = 0;
 
     const pinned = () => {
       const stageH = stage ? stage.offsetHeight : window.innerHeight;
@@ -679,6 +696,9 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
         const mid = track.scrollLeft + track.clientWidth / 2;
         firstPages.forEach((pg, i) => {
           if (pg.offsetLeft <= mid) current = i;
+        });
+        leaves.forEach((pg, i) => {
+          if (pg.offsetLeft <= mid) leaf = i;
         });
         return;
       }
@@ -727,7 +747,19 @@ const host = (url: string) => new URL(url).host.replace(/^www\./, '');
     });
 
     window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
+    // A width change (rotation, the address bar, a resized window) keeps the
+    // old scrollLeft, which strands the track between two pages.
+    let resnap = 0;
+    window.addEventListener('resize', () => {
+      if (phone.matches) {
+        const page = leaves[leaf];
+        track.style.scrollSnapType = 'none';
+        if (page) track.scrollLeft = page.offsetLeft - 16;
+        cancelAnimationFrame(resnap);
+        resnap = requestAnimationFrame(() => { track.style.scrollSnapType = ''; });
+      }
+      schedule();
+    });
     track.addEventListener('scroll', schedule, { passive: true });
     phone.addEventListener('change', () => {
       track.style.transform = '';
