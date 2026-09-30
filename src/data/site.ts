@@ -50,6 +50,7 @@ export const projects: Project[] = [
       { name: "Ikeola Ayomide" },
     ],
     live: "https://home.yeshuahigh.com",
+    image: { src: "/projects/yems.jpg", alt: "The YEMS staff and student portal sign-in screen on a maroon back-to-school backdrop." },
     featured: {
       story:
         "School management for places where the connection drops in the middle of registering a student. This is where I stopped owning only the interface: auth, the API, the Postgres schema, the sync engine, six containers and the deploy.",
@@ -76,6 +77,7 @@ export const projects: Project[] = [
     stack: [],
     collaborators: [{ name: "Osibanjo Damilare", url: "https://github.com/dev-dami" }],
     live: "https://ai.flyaux.com",
+    image: { src: "/projects/flyaux.jpg", alt: "The Flyaux landing page: an airliner seen from above against a deep blue sky, with a Join the waitlist button." },
     featured: {
       story:
         "Describe a trip in plain language and get back an itinerary you can actually compare: baggage rules, layovers, cancellation terms and fares, side by side, before anyone books. Built during my internship with Osibanjo Damilare.",
@@ -98,6 +100,7 @@ export const projects: Project[] = [
       "Yeshua High School has been running since 2005, and the site is where families meet it first: admissions and an application form, academics and results, the gallery and events, the school's mission, contact details and a way into the school portal.",
     stack: [],
     live: "https://www.yeshuahigh.com",
+    image: { src: "/projects/yeshua-high.jpg", alt: "The Yeshua High School home page with the headline Jesus Our Perfect Example and a Register Your Child button." },
     featured: {
       story:
         "The public website for a Christian co-educational secondary school in Sabo-Ojodu, Lagos, running since 2005. It is where families meet the school first: admissions, academics and results, the gallery and events, and a way into the school portal.",
