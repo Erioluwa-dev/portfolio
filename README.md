@@ -41,4 +41,4 @@ public/         # static assets (brand.jpg, favicon.svg, icons.svg)
 
 ## Notes
 
-`prompt.md` in this repo is the original AI generation spec. The finished site diverged from it (Astro + serif theme rather than the React/terminal spec), so treat `prompt.md` as historical context, not current documentation.
+`prompt.md` in this repo is the original AI generation spec. The finished site diverged from it (Astro + serif theme rather than the React/terminal spec), so treat `prompt.md` as historical context, not current documentation
