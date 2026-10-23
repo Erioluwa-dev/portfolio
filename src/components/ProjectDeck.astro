@@ -1,0 +1,723 @@
+---
+import type { Project } from '../data/site';
+import { statusLabel } from '../data/site';
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+
+const statusShort: Record<Project['status'], string> = {
+  live: 'Live',
+  prelaunch: 'Waitlist',
+  shipped: 'Shipped',
+  private: 'Private',
+  archive: 'Early work',
+};
+
+const words = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+const num = (i: number) => String(i + 1).padStart(2, '0');
+const total = num(projects.length - 1);
+const countWord = words[projects.length - 1] ?? String(projects.length);
+
+const primaryLabel = (p: Project) => {
+  const label = p.featured?.linkLabel;
+  if (!label || label === 'Visit') return `Visit ${p.name}`;
+  return label;
+};
+---
+
+<section class="deck" id="deck" style={`--n:${projects.length}`} aria-labelledby="deck-title">
+  <div class="stage" data-stage>
+    <div class="info">
+      <div class="info-top">
+        <span class="kicker">Selected work</span>
+        <span class="kicker count" data-count>Deck of {total}</span>
+      </div>
+      <div class="bars" aria-hidden="true">
+        {projects.map(() => <span class="bar"><span class="bar-fill" data-bar></span></span>)}
+      </div>
+
+      <div class="panels">
+        <div class="panel intro" data-intro>
+          <h1 class="title" id="deck-title">Projects, <em>pieces made with diligence.</em></h1>
+          <p class="lede">
+            Each card holds one piece of work, taken from a first sketch to the
+            people who use it every day. Considered in the making, finished with
+            care, and built to hold up where it lives.
+          </p>
+          <p class="kicker hint"><span class="rule"></span>{countWord} cards, face down. Scroll to turn the first.</p>
+        </div>
+
+        {projects.map((p, i) => (
+          <article class="panel" data-panel aria-hidden="true" inert>
+            <span class="kicker">{num(i)} — {p.kind}</span>
+            <h2 class="name">{p.name}</h2>
+            <p class="summary">{p.summary}</p>
+            <p class="detail">{p.detail}</p>
+            <dl class="facts">
+              <dt class="kicker">Status</dt>
+              <dd><span class:list={['dot', `dot-${p.status}`]}></span>{statusLabel[p.status]}</dd>
+              {p.stack.length > 0 && (
+                <>
+                  <dt class="kicker">Stack</dt>
+                  <dd>{p.stack.join(', ')}</dd>
+                </>
+              )}
+              {p.collaborators && p.collaborators.length > 0 && (
+                <>
+                  <dt class="kicker">With</dt>
+                  <dd>{p.collaborators.map((c) => c.name).join(', ')}</dd>
+                </>
+              )}
+            </dl>
+            <div class="actions">
+              {p.live ? (
+                <a class="btn" href={p.live} target="_blank" rel="noopener noreferrer">
+                  {primaryLabel(p)}
+                  <svg class="cta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9" /></svg>
+                </a>
+              ) : p.repo && (
+                <a class="btn" href={p.repo} target="_blank" rel="noopener noreferrer">
+                  Read the code<span class="sr-only"> for {p.name}</span>
+                </a>
+              )}
+              {p.live && p.repo && (
+                <a class="link" href={p.repo} target="_blank" rel="noopener noreferrer">
+                  Read the code<span class="sr-only"> for {p.name}</span>
+                </a>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <nav class="controls" aria-label="Projects in the deck">
+        <button class="round" type="button" data-prev aria-label="Previous">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
+        </button>
+        <button class="round" type="button" data-next aria-label="Turn the next card">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+        </button>
+        <span class="jumps">
+          {projects.map((p, i) => (
+            <button class="jump" type="button" data-go={i + 1} aria-label={`Show ${p.name}`}>{num(i)}</button>
+          ))}
+        </span>
+      </nav>
+    </div>
+
+    <div class="table" data-table aria-hidden="true">
+      <div class="landing" data-landing>
+        <span class="kicker">The table</span>
+        <span class="kicker">Nothing turned yet</span>
+      </div>
+      <div class="deck-label"><span class="kicker">Deck</span><span class="kicker" data-left>{projects.length} left</span></div>
+      <p class="deck-hint" data-hint>Scroll to turn a card →</p>
+
+      <div class="block" data-block>
+        <span class="block-shadow"></span>
+        <span class="edge edge-top"></span>
+        <span class="edge edge-bottom"></span>
+        <span class="edge edge-left"></span>
+        <span class="edge edge-right"></span>
+        <span class="block-cap"></span>
+      </div>
+
+      {projects.map((p, i) => (
+        <div class="card" data-card>
+          <div class="face front">
+            {p.image ? (
+              <img class="shot" src={p.image.src} alt="" width="1600" height="1000" loading="lazy" decoding="async" />
+            ) : (
+              <div class="shot cover">
+                <span class="kicker">{p.kind}</span>
+                <span class="cover-title">{p.name}</span>
+              </div>
+            )}
+            <div class="strip">
+              <span class="card-name">{p.name}</span>
+              <span class="kicker">No. {num(i)} · {statusShort[p.status]}</span>
+            </div>
+          </div>
+          <div class="face back">
+            <div class="frame">
+              <div class="frame-inner">
+                <span class="idx idx-top">{num(i)}<i></i></span>
+                <span class="idx idx-bottom">{num(i)}<i></i></span>
+                <svg class="seal" viewBox="0 0 250 250">
+                  <defs><path id={`ring-${p.slug}`} d="M125,125 m-96,0 a96,96 0 1,1 192,0 a96,96 0 1,1 -192,0" /></defs>
+                  <circle cx="125" cy="125" r="118" fill="none" stroke="currentColor" stroke-width="2" />
+                  <circle cx="125" cy="125" r="78" fill="none" stroke="currentColor" stroke-width="1" />
+                  <text class="seal-ring"><textPath href={`#ring-${p.slug}`}>FAWEHINMI ERIOLUWA · SELECTED WORK · LAGOS · MADE WITH DILIGENCE ·</textPath></text>
+                  <text class="seal-mark" x="125" y="160" text-anchor="middle">E</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* The section only gets its scroll length once the script is running;
+     without it the intro stands alone and the full list below carries the work. */
+  .deck[data-ready] { height: calc(100dvh - var(--head-h) + var(--n) * 70dvh); }
+
+  .stage {
+    position: sticky;
+    top: var(--head-h);
+    display: grid;
+    grid-template-columns: minmax(0, 27rem) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    height: calc(100dvh - var(--head-h));
+    padding: clamp(1.5rem, 4vh, 3rem) 0;
+  }
+
+  .deck:not([data-ready]) .stage { position: static; height: auto; }
+  .deck:not([data-ready]) .table,
+  .deck:not([data-ready]) .controls,
+  .deck:not([data-ready]) .bars,
+  .deck:not([data-ready]) .count,
+  .deck:not([data-ready]) .hint { display: none; }
+
+  .kicker {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* ═══ Left: what the card on the table is ═══════════════════ */
+
+  .info { display: flex; flex-direction: column; gap: 1.25rem; min-height: 0; }
+
+  .info-top { display: flex; justify-content: space-between; align-items: baseline; }
+  .count { color: var(--ink); }
+
+  .bars { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 6px; }
+  .bar { position: relative; height: 2px; background: var(--line); overflow: hidden; }
+  .bar-fill { position: absolute; inset: 0; background: var(--ink); transform-origin: left; transform: scaleX(0); }
+
+  .panels { position: relative; flex: 1; min-height: 0; }
+
+  .panel {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    opacity: 0;
+  }
+
+  .deck:not([data-ready]) .panel { display: none; }
+  .deck:not([data-ready]) .intro { display: flex; position: static; opacity: 1; }
+  .deck[data-ready] .intro { opacity: 1; }
+
+  .title {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.75rem, 1.5rem + 4vw, 5.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .title em { display: block; color: var(--ink-2); }
+
+  .lede { margin: 0; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-2); max-width: 26em; text-wrap: pretty; }
+
+  .hint { display: flex; align-items: center; gap: 0.75rem; margin: 0.5rem 0 0; }
+  .rule { width: 2rem; height: 1px; background: currentColor; }
+
+  .name {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+
+  .summary { margin: 0; font-size: 1.125rem; line-height: 1.5; }
+  .detail { margin: 0; font-size: 0.9375rem; line-height: 1.6; color: var(--ink-2); }
+
+  .facts {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 0.5rem 1rem;
+    margin: 0.25rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-sm);
+  }
+
+  .facts dt { padding-top: 0.15em; }
+  .facts dd { margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+
+  .dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); }
+  .dot-live { background: var(--live); }
+  .dot-prelaunch { background: #b8860b; }
+
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-top: 0.5rem; }
+  .actions .btn { gap: 0.5rem; border-radius: 999px; padding: 0 1.4rem; }
+  .actions .link { font-weight: 500; }
+
+  .controls { display: flex; align-items: center; gap: 0.25rem; }
+  .jumps { display: flex; margin-left: 0.75rem; }
+
+  .round {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+
+  .round:hover { border-color: var(--ink); }
+
+  .jump {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink-3);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+  }
+
+  .jump:hover { color: var(--ink); }
+
+  .jump[aria-current='true'] {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 6px;
+  }
+
+  /* ═══ Right: the table, the deck and the cards ═══════════════ */
+
+  .table {
+    --w: 640px;
+    --h: 453px;
+    --deck-w: 160px;
+    --deck-h: 113px;
+    --d: 0px;
+    position: relative;
+    min-height: 0;
+  }
+
+  .landing {
+    position: absolute;
+    left: calc(50% - var(--w) / 2);
+    top: 4px;
+    width: var(--w);
+    height: var(--h);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 1.1rem 1.4rem;
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 14px;
+  }
+
+  .deck-label {
+    position: absolute;
+    right: 12px;
+    bottom: calc(28px + var(--deck-h) + 40px);
+    width: calc(var(--deck-w) + 24px);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .deck-hint {
+    position: absolute;
+    right: calc(var(--deck-w) + 48px);
+    bottom: 40px;
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    transition: opacity 0.2s ease;
+  }
+
+  .block,
+  .card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--w);
+    height: var(--h);
+    transform-style: preserve-3d;
+    transform-origin: 50% 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+
+  .block { z-index: 5; }
+
+  .block-shadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    box-shadow: 0 0 90px 30px var(--shade);
+  }
+
+  .edge { position: absolute; background: repeating-linear-gradient(to bottom, #f1ece0 0 9px, #b9b09a 9px 12px); }
+
+  .edge-top,
+  .edge-bottom {
+    left: 0;
+    width: var(--w);
+    height: var(--d);
+    transform-origin: 50% 0;
+    transform: translateZ(var(--d)) rotateX(-90deg);
+  }
+
+  .edge-top { top: 0; }
+  .edge-bottom { top: var(--h); }
+
+  .edge-left,
+  .edge-right {
+    top: 0;
+    width: var(--d);
+    height: var(--h);
+    transform-origin: 0 50%;
+    transform: translateZ(var(--d)) rotateY(90deg);
+    background: repeating-linear-gradient(to right, #f1ece0 0 9px, #b9b09a 9px 12px);
+  }
+
+  .edge-left { left: 0; }
+  .edge-right { left: var(--w); }
+
+  .block-cap {
+    position: absolute;
+    inset: 0;
+    border-radius: 4px;
+    background: #1c1a15;
+    transform: translateZ(var(--d));
+  }
+
+  .face {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    box-shadow: var(--card-shadow, none);
+  }
+
+  .front {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .shot {
+    display: block;
+    width: calc(100% - 24px);
+    height: auto;
+    aspect-ratio: 16 / 10;
+    margin: 12px 12px 0;
+    border-radius: 6px;
+    background: var(--tile-2);
+  }
+
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0 2.5rem;
+    box-sizing: border-box;
+  }
+
+  .cover-title { font-family: var(--serif); font-style: italic; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 0.95; }
+
+  .strip {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0 1.25rem;
+  }
+
+  .card-name { font-family: var(--serif); font-size: 1.75rem; line-height: 1; }
+
+  /* The back is the same ink and brass in both themes: it is the card's own
+     printing, not part of the page around it. */
+  .back {
+    transform: rotateY(180deg);
+    padding: 16px;
+    background-color: #1c1a15;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(201, 178, 120, 0.07) 0 1px, transparent 1px 11px),
+      repeating-linear-gradient(-45deg, rgba(201, 178, 120, 0.07) 0 1px, transparent 1px 11px);
+  }
+
+  .frame { height: 100%; padding: 7px; border: 2px solid #a08a52; border-radius: 8px; box-sizing: border-box; }
+
+  .frame-inner {
+    position: relative;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(160, 138, 82, 0.55);
+    border-radius: 4px;
+  }
+
+  .idx {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.25rem;
+    letter-spacing: 0.12em;
+    color: #d9c89a;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .idx i { display: block; width: 10px; height: 10px; background: #a08a52; transform: rotate(45deg); }
+  .idx-top { top: 16px; left: 18px; }
+  .idx-bottom { right: 18px; bottom: 16px; transform: rotate(180deg); }
+
+  .seal { width: min(250px, 55%); height: auto; color: #a08a52; }
+  .seal-ring { fill: #d9c89a; font-family: var(--sans); font-size: 12.5px; font-weight: 600; letter-spacing: 3.2px; }
+  .seal-mark { fill: #e9dfc4; font-family: var(--serif); font-style: italic; font-size: 112px; }
+
+  @media (max-width: 859px) {
+    .stage {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: minmax(0, 46fr) minmax(0, 54fr);
+      gap: 1rem;
+    }
+
+    .table { order: -1; }
+    .detail,
+    .facts { display: none; }
+    .lede { font-size: 1.0625rem; }
+    .deck-hint { display: none; }
+  }
+</style>
+
+<script>
+  const ease = (s: number) => (s < 0.5 ? 4 * s * s * s : 1 - Math.pow(-2 * s + 2, 3) / 2);
+  const clamp = (v: number) => Math.max(0, Math.min(1, v));
+  const lerp = (a: number, b: number, s: number) => a + (b - a) * s;
+
+  // The deck lies flat on the table, tilted back and turned a little, the way
+  // a real deck looks from where you sit.
+  const DECK_RX = 56;
+  const DECK_RZ = -22;
+  // How thick one card in the deck looks on screen, in px.
+  const CARD_THICKNESS = 14;
+  const STRIP_H = 56;
+
+  function setup(root: HTMLElement) {
+    const stage = root.querySelector<HTMLElement>('[data-stage]');
+    const table = root.querySelector<HTMLElement>('[data-table]');
+    const block = root.querySelector<HTMLElement>('[data-block]');
+    const intro = root.querySelector<HTMLElement>('[data-intro]');
+    const count = root.querySelector<HTMLElement>('[data-count]');
+    const left = root.querySelector<HTMLElement>('[data-left]');
+    const landing = root.querySelector<HTMLElement>('[data-landing]');
+    const hint = root.querySelector<HTMLElement>('[data-hint]');
+    if (!stage || !table || !block || !intro || !count || !left || !landing || !hint) return;
+
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-card]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
+    const bars = Array.from(root.querySelectorAll<HTMLElement>('[data-bar]'));
+    const jumps = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-go]'));
+    const n = cards.length;
+    const total = String(n).padStart(2, '0');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    root.dataset.ready = '';
+
+    const geo = { w: 640, h: 453, cx: 0, cy: 0, dx: 0, dy: 0, ds: 0.25, cardT: 56 };
+
+    const measure = () => {
+      const tw = table.clientWidth;
+      const th = table.clientHeight;
+      // Leave the bottom third of the table for the deck.
+      const fitByHeight = ((th * 0.66 - 12 - STRIP_H) * 16) / 10 + 24;
+      const w = Math.max(220, Math.floor(Math.min(640, tw, fitByHeight)));
+      const h = 12 + ((w - 24) * 10) / 16 + STRIP_H;
+      const deckW = Math.max(96, Math.min(160, w * 0.26));
+      const ds = deckW / w;
+      geo.w = w;
+      geo.h = h;
+      geo.ds = ds;
+      geo.cx = tw / 2;
+      geo.cy = h / 2 + 4;
+      geo.dx = tw - deckW / 2 - 24 - geo.cx;
+      geo.dy = th - (h * ds) / 2 - 28 - geo.cy;
+      geo.cardT = CARD_THICKNESS / ds;
+      table.style.setProperty('--w', `${w}px`);
+      table.style.setProperty('--h', `${h}px`);
+      table.style.setProperty('--deck-w', `${deckW}px`);
+      table.style.setProperty('--deck-h', `${h * ds}px`);
+    };
+
+    const progress = () => {
+      const scrollable = root.offsetHeight - stage.offsetHeight;
+      if (scrollable <= 0) return 0;
+      const stageTop = parseFloat(getComputedStyle(stage).top) || 0;
+      const scrolled = stageTop - root.getBoundingClientRect().top;
+      return clamp(scrolled / scrollable) * n;
+    };
+
+    const place = (x: number, y: number, rx: number, rz: number, sc: number, tz: number, ry: number) =>
+      `perspective(1800px) translate(${(geo.cx - geo.w / 2 + x).toFixed(1)}px, ${(geo.cy - geo.h / 2 + y).toFixed(1)}px) ` +
+      `rotateX(${rx.toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg) scale(${sc.toFixed(4)}) ` +
+      `translateZ(${tz.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg)`;
+
+    let lastActive = Number.NaN;
+
+    const render = () => {
+      const t = progress();
+      // tc is the card position: -1 is the closed deck, 0 is the first card up.
+      const tc = t - 1;
+      const step = Math.round(t);
+      const active = step - 1;
+      const snap = reduce.matches;
+      const inDeck = Math.max(0, n - 1 - tc);
+      const blockD = Math.max(0, inDeck - 1) * geo.cardT;
+
+      block.style.transform = place(geo.dx, geo.dy, DECK_RX, DECK_RZ, geo.ds, 0, 0);
+      block.style.setProperty('--d', `${blockD.toFixed(1)}px`);
+      block.style.opacity = inDeck > 1 ? '1' : '0';
+
+      cards.forEach((card, i) => {
+        const u = tc - i;
+        let tf = place(0, 0, 0, 0, 1, 0, 0);
+        let op = 1;
+        let z = 40;
+        let shadow = '0 30px 60px -28px var(--shade)';
+
+        if (u <= -2) {
+          // Under the top card: part of the block, not drawn on its own.
+          op = 0;
+          z = 0;
+        } else if (u <= -1 || (u < 0 && snap && u < -0.5)) {
+          // Top of the deck, face down, riding the block as it thins.
+          tf = place(geo.dx, geo.dy, DECK_RX, DECK_RZ, geo.ds, blockD + 2, 180);
+          z = 10;
+          shadow = 'none';
+        } else if (u < 0) {
+          // Drawn: lifts off the deck, stands up and arcs to the table,
+          // growing and flipping face up on the way.
+          const s = snap ? 1 : ease(clamp((u + 1 - 0.25) / 0.75));
+          const arc = Math.sin(Math.PI * s);
+          tf = place(
+            lerp(geo.dx, 0, s),
+            lerp(geo.dy, 0, s) - 90 * arc,
+            lerp(DECK_RX, 0, s),
+            lerp(DECK_RZ, 0, s),
+            lerp(geo.ds, 1, s),
+            lerp(blockD + 2, 0, s) + 260 * arc,
+            lerp(180, 0, s),
+          );
+          z = 60;
+          shadow = `0 ${(12 + 40 * arc).toFixed(0)}px ${(24 + 60 * arc).toFixed(0)}px -24px var(--shade)`;
+        } else if (u > 0 && u < 1) {
+          // Replaced: steps back and fades so the next card lands on a clear table.
+          const e = snap ? 1 : ease(clamp(u / 0.45));
+          tf = place(0, -e * 40, 0, 0, 1 - e * 0.12, 0, 0);
+          op = 1 - e;
+          z = 30;
+        } else if (u >= 1) {
+          op = 0;
+          z = 0;
+        }
+
+        card.style.transform = tf;
+        card.style.opacity = op.toFixed(3);
+        card.style.zIndex = String(z);
+        card.style.setProperty('--card-shadow', shadow);
+      });
+
+      panels.forEach((panel, i) => {
+        const near = 1 - Math.abs(tc - i);
+        panel.style.opacity = clamp(near * 2 - 1).toFixed(3);
+        panel.style.transform = `translateY(${((i - tc) * 28).toFixed(1)}px)`;
+      });
+      intro.style.opacity = clamp(1 - t * 2.2).toFixed(3);
+      intro.style.transform = `translateY(${(-t * 28).toFixed(1)}px)`;
+      landing.style.opacity = (clamp(1 - t * 1.6) * 0.9).toFixed(3);
+      hint.style.opacity = t < 0.05 ? '1' : '0';
+
+      bars.forEach((bar, i) => {
+        bar.style.transform = `scaleX(${clamp(tc - i + 1).toFixed(3)})`;
+      });
+
+      if (active !== lastActive) {
+        lastActive = active;
+        count.textContent = active < 0 ? `Deck of ${total}` : `${String(active + 1).padStart(2, '0')} / ${total}`;
+        left.textContent = `${n - 1 - active} left`;
+        panels.forEach((panel, i) => {
+          const on = i === active;
+          panel.inert = !on;
+          panel.setAttribute('aria-hidden', String(!on));
+        });
+        intro.inert = active >= 0;
+        intro.setAttribute('aria-hidden', String(active >= 0));
+        jumps.forEach((jump, i) => jump.setAttribute('aria-current', String(i === active)));
+      }
+    };
+
+    const goTo = (target: number) => {
+      const stepTo = Math.max(0, Math.min(n, target));
+      const scrollable = root.offsetHeight - stage.offsetHeight;
+      const stageTop = parseFloat(getComputedStyle(stage).top) || 0;
+      const rootTop = root.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: rootTop - stageTop + (scrollable * stepTo) / n,
+        behavior: reduce.matches ? 'auto' : 'smooth',
+      });
+    };
+
+    let queued = false;
+    const schedule = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        render();
+      });
+    };
+
+    root.querySelector('[data-prev]')?.addEventListener('click', () => goTo(Math.round(progress()) - 1));
+    root.querySelector('[data-next]')?.addEventListener('click', () => goTo(Math.round(progress()) + 1));
+    jumps.forEach((jump) => jump.addEventListener('click', () => goTo(Number(jump.dataset.go))));
+
+    window.addEventListener('scroll', schedule, { passive: true });
+    new ResizeObserver(() => {
+      measure();
+      schedule();
+    }).observe(table);
+    reduce.addEventListener('change', schedule);
+
+    measure();
+    render();
+  }
+
+  const deck = document.getElementById('deck');
+  if (deck) setup(deck);
+</script>

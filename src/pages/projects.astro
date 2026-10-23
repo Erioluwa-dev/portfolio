@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Project from '../components/Project.astro';
+import ProjectDeck from '../components/ProjectDeck.astro';
 import { projects, social } from '../data/site';
 ---
 
@@ -8,22 +9,18 @@ import { projects, social } from '../data/site';
   title="Projects — Fawehinmi Erioluwa"
   description="Offline-first systems, hand-built interfaces, and the small builds that taught me the fundamentals."
 >
-  <header class="page-head">
-    <h1 class="display" id="projects-heading">Three builds.</h1>
-    <p class="lead">
-      A platform that syncs when the network returns, the site you are
-      reading, and the small one that is here because it is where I
-      started. None of them are tutorials.
-    </p>
-    <p class="muted">
-      Everything public lives on
-      <a class="link" href={social.github} target="_blank" rel="noopener noreferrer">GitHub</a>.
-    </p>
-  </header>
+  <ProjectDeck projects={projects} />
 
-  <section aria-label="All projects">
+  <section class="section" aria-labelledby="all-heading">
+    <div class="page-head">
+      <h2 class="h2" id="all-heading">Every project, in full</h2>
+      <p class="muted">
+        Everything public lives on
+        <a class="link" href={social.github} target="_blank" rel="noopener noreferrer">GitHub</a>.
+      </p>
+    </div>
     <ul class="rows">
-      {projects.map((p) => <li><Project project={p} level={2} expanded /></li>)}
+      {projects.map((p) => <li><Project project={p} level={3} expanded /></li>)}
     </ul>
   </section>
 
