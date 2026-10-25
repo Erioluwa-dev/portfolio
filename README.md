@@ -1,7 +1,6 @@
 # Erioluwa Portfolio
 
 A minimalist, dark-themed personal portfolio for **Fawehinmi Erioluwa** — a self-taught product engineer based in Lagos, Nigeria — interfaces, backends, and applied machine learning.
-
 ## Stack
 
 - **Astro** `^7.0.6` — static site generator (zero client-side JavaScript by default)
