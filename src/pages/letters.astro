@@ -1,59 +1,94 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Arrow from '../components/Arrow.astro';
 import { letters } from '../data/site';
 
 const fmt = (d: string) =>
   new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const [latest, ...older] = letters;
 ---
 
 <Layout
   title="Letters — Fawehinmi Erioluwa"
   description="Notes on building solo, shipping under constraints, and the tools that earn their place."
 >
-  <header class="page-head">
-    <h1 class="display" id="letters-heading">Notes from inside the build.</h1>
-    <p class="lead">
-      Written while the work was still messy, not cleaned up afterwards.
-      Mostly about scope, constraints, and what actually shipped.
-    </p>
-  </header>
+  <div class="board">
+    <header class="w m-4 c-8 intro" style="--d:0">
+      <p class="w-label">Letters</p>
+      <h1 class="display intro-title" id="letters-heading">Notes from inside the build.</h1>
+      <p class="lead">
+        Written while the work was still messy, not cleaned up afterwards.
+        Mostly about scope, constraints, and what actually shipped.
+      </p>
+    </header>
 
-  <section aria-label="All letters">
-    <ul class="rows">
-      {letters.map((l) => (
-        <li>
-          <a class="letter" href={`/letters/${l.slug}`}>
-            <time class="small faint" datetime={l.date}>{fmt(l.date)}</time>
-            <h2 class="h2 letter-title">{l.title}</h2>
-            <p class="muted excerpt">{l.excerpt}</p>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </section>
+    <section class="w m-2 c-4 w-square w-dark count" style="--d:1" aria-label="How many letters">
+      <p class="w-label">Written so far</p>
+      <p class="w-big">{letters.length}</p>
+      <p class="w-text small w-foot">Last one {fmt(latest.date)}</p>
+    </section>
+
+    <section class="w m-2 c-4 w-square w-yellow topics" style="--d:2" aria-label="Topics">
+      <p class="w-label">About</p>
+      <ul class="topic-list w-foot">
+        <li>Scope</li>
+        <li>Constraints</li>
+        <li>Shipping</li>
+        <li>Tools</li>
+      </ul>
+    </section>
+
+    <a class="w m-4 c-8 r-2 letter featured" href={`/letters/${latest.slug}`} style="--d:3">
+      <Arrow />
+      <p class="w-label">Latest · <time datetime={latest.date}>{fmt(latest.date)}</time></p>
+      <h2 class="letter-title big">{latest.title}</h2>
+      <p class="w-text excerpt">{latest.excerpt}</p>
+      <span class="read w-foot">Read the letter <span aria-hidden="true">→</span></span>
+    </a>
+
+    {older.map((l, i) => (
+      <a class="w m-4 c-4 letter" href={`/letters/${l.slug}`} style={`--d:${4 + i}`}>
+        <Arrow />
+        <p class="w-label"><time datetime={l.date}>{fmt(l.date)}</time></p>
+        <h2 class="letter-title">{l.title}</h2>
+        <p class="w-text small">{l.excerpt}</p>
+      </a>
+    ))}
+
+    <a class="w m-4 c-12 w-ghost reply" href="/contact" style={`--d:${4 + older.length}`}>
+      <Arrow />
+      <p class="w-label">Write back</p>
+      <p class="w-hand w-foot">Disagree with one? Tell me.</p>
+    </a>
+  </div>
 </Layout>
 
 <style>
-  .page-head { display: flex; flex-direction: column; gap: 1.25rem; }
+  .intro { gap: 1.25rem; padding: clamp(1.5rem, 1rem + 2.5vw, 3rem); background: var(--paper); }
+  .intro-title { font-size: clamp(2.25rem, 1.2rem + 4vw, 4.25rem); max-width: 13ch; }
 
-  .letter {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 2.25rem 0;
-    text-decoration: none;
-  }
+  .count .w-big { margin-top: auto; font-size: clamp(3rem, 2rem + 4vw, 5rem); }
+  .count .w-foot { margin-top: 0; }
+
+  .topic-list { display: flex; flex-direction: column; margin-bottom: 0; padding: 0; list-style: none; font-weight: 700; font-stretch: 108%; font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.35rem); line-height: 1.25; }
+
+  .letter { background: var(--paper); }
 
   .letter-title {
-    max-width: 24ch;
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-decoration-color: transparent;
-    text-underline-offset: 0.18em;
-    transition: text-decoration-color 0.15s ease;
+    margin: 0;
+    padding-right: 2.5rem;
+    font-family: var(--serif);
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+    font-weight: 500;
+    line-height: 1.2;
+    text-wrap: balance;
   }
 
-  .letter:hover .letter-title { text-decoration-color: var(--yellow); }
+  .letter-title.big { font-size: clamp(2rem, 1.3rem + 2.6vw, 3.5rem); line-height: 1.05; max-width: 18ch; }
 
-  .excerpt { margin: 0; max-width: 38em; }
+  .featured { padding: clamp(1.5rem, 1rem + 2vw, 2.5rem); gap: 1.25rem; }
+  .excerpt { font-size: var(--fs-lead); max-width: 30em; }
+
+  .read { font-weight: 600; text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 3px; text-underline-offset: 0.35em; }
 </style>

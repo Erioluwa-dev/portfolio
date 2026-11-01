@@ -1,9 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Arrow from '../components/Arrow.astro';
+import Clock from '../components/Clock.astro';
 import { social } from '../data/site';
 
 const channels = [
-  { label: "Email", value: social.email, href: `mailto:${social.email}`, note: "Best for anything with detail." },
   { label: "GitHub", value: "Erioluwa-dev", href: social.github, note: "Code, issues, and what I am shipping." },
   { label: "Instagram", value: "stay.with.eri", href: social.instagram, note: "Less code, more life." },
 ];
@@ -20,87 +21,100 @@ const openTo = [
   title="Contact — Fawehinmi Erioluwa"
   description="Get in touch with Fawehinmi Erioluwa — product and full-stack roles, frontend-heavy work, and collaborations."
 >
-  <header class="page-head">
-    <h1 class="display" id="contact-heading">Say what you need built.</h1>
-    <p class="lead">
-      A role, contract work, or the project that has been sitting in your
-      notes app for a month. Send it over — I read everything and reply
-      within a day or two.
-    </p>
-    <div class="actions">
-      <a class="btn btn-yellow email" href={`mailto:${social.email}`}>{social.email}</a>
-    </div>
-  </header>
+  <div class="board">
+    <header class="w m-4 c-8 intro" style="--d:0">
+      <p class="w-label">Contact</p>
+      <h1 class="display intro-title" id="contact-heading">Say what you need built.</h1>
+      <p class="lead">
+        A role, contract work, or the project that has been sitting in your
+        notes app for a month. Send it over — I read everything and reply
+        within a day or two.
+      </p>
+    </header>
 
-  <div class="split">
-    <section class="section" aria-labelledby="open-heading">
-      <h2 class="h3" id="open-heading">I'm open to</h2>
-      <ul class="rows open-list">
+    <section class="w m-4 c-4 r-2 w-dark mail" style="--d:1" aria-labelledby="mail-heading">
+      <p class="w-label">Best for anything with detail</p>
+      <h2 class="w-title" id="mail-heading">Email</h2>
+      <p class="address">{social.email.split('@')[0]}<wbr />@{social.email.split('@')[1]}</p>
+      <p class="w-hand note">I read everything.</p>
+      <div class="mail-actions w-foot">
+        <a class="btn btn-yellow" href={`mailto:${social.email}`}>Write an email</a>
+        <button class="btn btn-ghost" type="button" data-copy={social.email}><span data-copy-label>Copy address</span></button>
+      </div>
+    </section>
+
+    <section class="w m-2 c-4 now" style="--d:2" aria-label="Time in Lagos">
+      <Clock />
+      <p class="w-label w-foot">Lagos · <span data-clock="time">--:--</span></p>
+      <p class="w-title small-title" data-clock="status">&nbsp;</p>
+    </section>
+
+    <section class="w m-2 c-4 w-square w-yellow reply" style="--d:3" aria-label="Reply time">
+      <p class="w-label">Reply time</p>
+      <p class="w-big">1–2</p>
+      <p class="w-text small w-foot">days, usually sooner</p>
+    </section>
+
+    <section class="w m-4 c-6 r-2 open" style="--d:4" aria-labelledby="open-heading">
+      <p class="w-label"><span class="dot" aria-hidden="true"></span> Available</p>
+      <h2 class="w-title" id="open-heading">I'm open to</h2>
+      <ul class="checks">
         {openTo.map((item) => <li>{item}</li>)}
       </ul>
-      <p class="small muted">Lagos, Nigeria — remote-friendly and used to working across timezones.</p>
+      <p class="w-text small w-foot">Lagos, Nigeria — remote-friendly and used to working across timezones.</p>
     </section>
 
-    <section class="section" aria-labelledby="channels-heading">
-      <h2 class="h3" id="channels-heading">Where to find me</h2>
-      <ul class="rows">
-        {channels.map((c) => (
-          <li>
-            <a
-              class="channel"
-              href={c.href}
-              target={c.href.startsWith('http') ? '_blank' : undefined}
-              rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            >
-              <span class="small faint">{c.label}</span>
-              <span class="channel-value">{c.value}</span>
-              <span class="small muted">{c.note}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
+    {channels.map((c, i) => (
+      <a class="w m-4 c-6 channel" href={c.href} target="_blank" rel="noopener noreferrer" style={`--d:${5 + i}`}>
+        <Arrow />
+        <p class="w-label">{c.label}</p>
+        <p class="w-title">{c.value}</p>
+        <p class="w-text small w-foot">{c.note}</p>
+      </a>
+    ))}
   </div>
 </Layout>
 
 <style>
-  .page-head { display: flex; flex-direction: column; gap: 1.25rem; }
-  .email { overflow-wrap: anywhere; }
+  .intro { gap: 1.25rem; padding: clamp(1.5rem, 1rem + 2.5vw, 3rem); background: var(--paper); }
+  .intro-title { font-size: clamp(2.25rem, 1.2rem + 4vw, 4.25rem); max-width: 12ch; }
 
-  .split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem 4rem;
-    align-items: start;
-  }
+  .mail { gap: 1rem; }
+  .address { margin: 0; font-size: clamp(1.25rem, 1rem + 1vw, 1.6rem); font-weight: 700; overflow-wrap: break-word; line-height: 1.2; }
+  .note { margin-top: auto; color: var(--yellow); }
+  .note + .w-foot { margin-top: 0.5rem; }
+  .mail-actions { display: flex; flex-direction: column; gap: 0.6rem; }
 
-  .split .section { gap: 1.25rem; }
-  .split .small.muted { margin: 0; }
+  .btn-ghost { background: transparent; color: var(--on-dark); border-color: color-mix(in srgb, var(--on-dark) 30%, transparent); }
+  .btn-ghost:hover { background: transparent; border-color: var(--on-dark); }
 
-  .open-list li { padding: 0.9rem 0; font-size: 1.125rem; }
+  .now { align-items: flex-start; }
+  .now :global(.clock) { max-width: clamp(4.5rem, 3rem + 5vw, 6.5rem); }
+  .now .w-foot + .w-title { margin-top: -0.4rem; }
+  .small-title { font-size: 1.125rem; }
 
-  .channel {
+  .reply .w-big { margin-top: auto; }
+  .reply .w-foot { margin-top: 0; }
+
+  .checks { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+
+  .checks li {
     display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    padding: 1rem 0;
-    text-decoration: none;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 1.0625rem;
   }
 
-  .channel-value {
-    font-size: 1.25rem;
-    font-weight: 600;
-    overflow-wrap: anywhere;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-decoration-color: var(--line-strong);
-    text-underline-offset: 0.2em;
-    transition: text-decoration-color 0.15s ease;
+  .checks li::before {
+    content: "";
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-top: 0.25rem;
+    border-radius: 50%;
+    background: var(--yellow) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315171a' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center / 70% no-repeat;
   }
 
-  .channel:hover .channel-value { text-decoration-color: currentColor; }
-
-  @media (max-width: 859px) {
-    .split { grid-template-columns: 1fr; }
-  }
+  .channel .w-title { padding-right: 2.5rem; overflow-wrap: anywhere; }
 </style>

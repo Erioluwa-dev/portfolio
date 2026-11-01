@@ -27,7 +27,7 @@ const year = new Date().getFullYear();
   </nav>
 
   <p class="meta small faint">
-    <span><span id="lagos-time">--:--</span> in Lagos</span>
+    <span><span data-clock="time">--:--</span> in Lagos</span>
     <span>© {year}</span>
   </p>
 </footer>
@@ -61,20 +61,3 @@ const year = new Date().getFullYear();
     .footer { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
   }
 </style>
-
-<script>
-  (function () {
-    const el = document.getElementById("lagos-time");
-    if (!el) return;
-
-    const fmt = new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Africa/Lagos",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    const tick = () => { el.textContent = fmt.format(new Date()); };
-    tick();
-    setInterval(tick, 20000);
-  })();
-</script>

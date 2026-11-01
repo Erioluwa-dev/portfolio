@@ -7,13 +7,10 @@ import CommandPalette from '../components/CommandPalette.astro';
 interface Props {
   title: string;
   description?: string;
-  /** The home page is a full-bleed book: no page column, no footer. */
-  book?: boolean;
 }
 
 const {
   title,
-  book = false,
   description = 'Fawehinmi Erioluwa — product engineer in Lagos, Nigeria. Interfaces, backends, and applied machine learning, built to hold up under real constraints.',
 } = Astro.props;
 
@@ -61,11 +58,54 @@ const path = Astro.url.pathname;
     <SiteHeader path={path} />
     <CommandPalette />
 
-    <main class:list={[book ? 'book-main' : 'page']} id="main">
+    <main class="page" id="main">
       <slot />
     </main>
 
-    {!book && <SiteFooter />}
+    <SiteFooter />
+
+    <script>
+      // Widgets share two small behaviours: anything marked data-clock shows
+      // the time in Lagos, and anything marked data-copy copies its value.
+      const zone = 'Africa/Lagos';
+      const timeFmt = new Intl.DateTimeFormat('en-GB', { timeZone: zone, hour: '2-digit', minute: '2-digit' });
+      const dayFmt = new Intl.DateTimeFormat('en-GB', { timeZone: zone, weekday: 'long', day: 'numeric', month: 'long' });
+      const partsFmt = new Intl.DateTimeFormat('en-GB', { timeZone: zone, hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+
+      const tick = () => {
+        const now = new Date();
+        const parts = Object.fromEntries(partsFmt.formatToParts(now).map((p) => [p.type, Number(p.value)]));
+        const h = parts.hour % 24;
+        const awake = h >= 8 && h < 24;
+        document.querySelectorAll<HTMLElement>('[data-clock]').forEach((el) => {
+          const kind = el.dataset.clock;
+          if (kind === 'time') el.textContent = timeFmt.format(now);
+          else if (kind === 'day') el.textContent = dayFmt.format(now);
+          else if (kind === 'status') el.textContent = awake ? 'Probably awake' : 'Probably asleep';
+          else if (kind === 'analog') {
+            el.style.setProperty('--h', String((h % 12) * 30 + parts.minute * 0.5));
+            el.style.setProperty('--m', String(parts.minute * 6 + parts.second * 0.1));
+            el.style.setProperty('--s', String(parts.second * 6));
+          }
+        });
+      };
+      tick();
+      setInterval(tick, 1000);
+
+      document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+        const label = btn.querySelector('[data-copy-label]') ?? btn;
+        const idle = label.textContent;
+        btn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(btn.dataset.copy ?? '');
+            label.textContent = 'Copied';
+          } catch {
+            label.textContent = 'Copy failed';
+          }
+          setTimeout(() => { label.textContent = idle; }, 1800);
+        });
+      });
+    </script>
   </body>
 </html>
 
