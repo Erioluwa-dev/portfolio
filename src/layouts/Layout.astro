@@ -7,13 +7,10 @@ import CommandPalette from '../components/CommandPalette.astro';
 interface Props {
   title: string;
   description?: string;
-  /** The home page is a full-bleed book: no page column, no footer. */
-  book?: boolean;
 }
 
 const {
   title,
-  book = false,
   description = 'Fawehinmi Erioluwa — product engineer in Lagos, Nigeria. Interfaces, backends, and applied machine learning, built to hold up under real constraints.',
 } = Astro.props;
 
@@ -61,11 +58,11 @@ const path = Astro.url.pathname;
     <SiteHeader path={path} />
     <CommandPalette />
 
-    <main class:list={[book ? 'book-main' : 'page']} id="main">
+    <main class="page" id="main">
       <slot />
     </main>
 
-    {!book && <SiteFooter />}
+    <SiteFooter />
   </body>
 </html>
 

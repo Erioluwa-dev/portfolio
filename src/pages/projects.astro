@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Project from '../components/Project.astro';
-import ProjectDeck from '../components/ProjectDeck.astro';
 import { projects, social } from '../data/site';
 ---
 
@@ -9,20 +8,18 @@ import { projects, social } from '../data/site';
   title="Projects — Fawehinmi Erioluwa"
   description="Offline-first systems, hand-built interfaces, and the small builds that taught me the fundamentals."
 >
-  <ProjectDeck projects={projects} />
+  <header class="page-head">
+    <p class="kicker">Projects · {projects.length} entries</p>
+    <h1 class="display">Every project, in full</h1>
+    <p class="lead">
+      Everything public lives on
+      <a class="link" href={social.github} target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
+  </header>
 
-  <section class="section" aria-labelledby="all-heading">
-    <div class="page-head">
-      <h2 class="h2" id="all-heading">Every project, in full</h2>
-      <p class="muted">
-        Everything public lives on
-        <a class="link" href={social.github} target="_blank" rel="noopener noreferrer">GitHub</a>.
-      </p>
-    </div>
-    <ul class="rows">
-      {projects.map((p) => <li><Project project={p} level={3} expanded /></li>)}
-    </ul>
-  </section>
+  <ol class="project-list" aria-label="Projects">
+    {projects.map((p, i) => <li><Project project={p} variant="full" level={2} index={i} /></li>)}
+  </ol>
 
   <section class="closing" aria-labelledby="projects-end">
     <h2 class="h2" id="projects-end">Want one built for you?</h2>
@@ -34,7 +31,8 @@ import { projects, social } from '../data/site';
 
 <style>
   .page-head { display: flex; flex-direction: column; gap: 1.25rem; }
-  .page-head .muted { margin: 0; }
+
+  .project-list { position: relative; margin: 0; padding: 0; list-style: none; border-bottom: 1px solid var(--line); }
 
   .closing { display: flex; flex-direction: column; align-items: flex-start; gap: 1.25rem; }
 </style>

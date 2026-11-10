@@ -13,23 +13,14 @@ export type Project = {
   live?: string;
   /** A screenshot in /public, e.g. { src: "/projects/yems.png", alt: "…" }. */
   image?: { src: string; alt: string };
-  /** Present only on projects that get a spread in the book on the home page. */
+  /** Present only on projects featured on the home page. */
   featured?: Featured;
 };
 
-export type Fact = { label: string; value: string; detail?: string };
-
-/** What a project's spread needs beyond the card: a shorter story for the
-    left page and the facts for the plate on the right. */
+/** The shorter story a project tells on the home page. */
 export type Featured = {
   story: string;
   note?: string;
-  /** The one fact worth the dark tile. */
-  headline: Fact & { style: "word" | "number" | "quote" };
-  list: { label: string; items: string[] };
-  aside: Fact;
-  statusShort: string;
-  linkLabel: string;
 };
 
 export const projects: Project[] = [
@@ -55,14 +46,40 @@ export const projects: Project[] = [
       story:
         "School management for places where the connection drops in the middle of registering a student. This is where I stopped owning only the interface: auth, the API, the Postgres schema, the sync engine, six containers and the deploy.",
       note: "A teacher finishes what they started without ever learning the network state underneath.",
-      headline: { label: "Built for", value: "Offline-first", detail: "Six containers deep", style: "word" },
-      list: { label: "Stack", items: ["Next.js", "TypeScript", "Node.js", "PostgreSQL", "Redis", "Docker"] },
-      aside: {
-        label: "Built with",
-        value: "Osibanjo Damilare, Anthony Ochefu, Mohie Daniel, Ikeola Ayomide",
-      },
-      statusShort: "Live",
-      linkLabel: "Visit",
+    },
+  },
+  {
+    slug: "deck",
+    name: "Deck",
+    kind: "Multi-agent orchestration",
+    status: "live",
+    summary:
+      "One place to run Claude Code, Codex, OpenCode and Antigravity side by side, handing work to each other in shared threads.",
+    detail:
+      "Deck is a workspace for multi-agent workflows: agent CLIs run together in shared threads, pass work between them in the open, and every reply, diff and approval lands in one place, whether that is a terminal, a desktop window or a phone. I contributed to Deck, built its mobile app, and wrote the OpenCode and Antigravity integrations.",
+    stack: [],
+    live: "https://deck-site-tawny.vercel.app/",
+    image: { src: "/projects/deck.jpg", alt: "The Deck landing page: the headline One deck for all your agents beside a woodblock print of travellers crossing a bridge in the rain." },
+    featured: {
+      story:
+        "A workspace for multi-agent workflows: agent CLIs run side by side in shared threads and hand work to each other in the open. I contributed to Deck, built its mobile app, and wrote the OpenCode and Antigravity integrations.",
+    },
+  },
+  {
+    slug: "skala",
+    name: "Skala",
+    kind: "Founding GTM engineer",
+    status: "live",
+    summary:
+      "Bot and abuse scoring that decides at signup, login or checkout whether to allow, challenge or block.",
+    detail:
+      "Skala scores every signup, login or checkout event for bot risk and returns allow, step-up or block, so fake signups and card testers are stopped at the gate instead of draining a free tier. I joined as the founding GTM engineer and developed the bots.",
+    stack: [],
+    live: "https://www.skalaio.dev/",
+    image: { src: "/projects/skala.jpg", alt: "The Skala landing page with the headline Stop bots from eating your free tier and a sample risk-score response showing a block decision." },
+    featured: {
+      story:
+        "Bot and abuse scoring that decides at signup, login or checkout whether to allow, challenge or block. I joined as the founding GTM engineer and developed the bots.",
     },
   },
   {
@@ -82,11 +99,6 @@ export const projects: Project[] = [
       story:
         "Describe a trip in plain language and get back an itinerary you can actually compare: baggage rules, layovers, cancellation terms and fares, side by side, before anyone books. Built during my internship with Osibanjo Damilare.",
       note: "Pre-launch for now, taking a waitlist rather than live bookings.",
-      headline: { label: "You type", value: "\u201cLagos to London next month, under $900, non-stop\u201d", style: "quote" },
-      list: { label: "Compared side by side", items: ["Baggage", "Layovers", "Cancellation", "Fares"] },
-      aside: { label: "Built with", value: "Osibanjo Damilare" },
-      statusShort: "Pre-launch",
-      linkLabel: "Join the waitlist",
     },
   },
   {
@@ -104,11 +116,6 @@ export const projects: Project[] = [
     featured: {
       story:
         "The public website for a Christian co-educational secondary school in Sabo-Ojodu, Lagos, running since 2005. It is where families meet the school first: admissions, academics and results, the gallery and events, and a way into the school portal.",
-      headline: { label: "Running since", value: "2005", style: "number" },
-      list: { label: "What families find", items: ["Admissions", "Application form", "Results", "Gallery", "Events", "Portal"] },
-      aside: { label: "Where", value: "Sabo-Ojodu, Lagos" },
-      statusShort: "Shipped",
-      linkLabel: "Visit",
     },
   },
   {
@@ -119,7 +126,7 @@ export const projects: Project[] = [
     summary:
       "Hand-built in Astro. No framework runtime, no component library, no analytics watching you.",
     detail:
-      "Every page here compiles to plain HTML and CSS. JavaScript shows up in four places only: the menu, the search, a clock, and turning the pages of the book on the home page.",
+      "Every page here compiles to plain HTML and CSS. JavaScript shows up in four places only: the menu, the search, a clock, and the previews that follow your cursor across the work.",
     stack: ["Astro", "TypeScript", "CSS"],
     repo: "https://github.com/Erioluwa-dev",
   },
@@ -144,6 +151,32 @@ export const layers: Layer[] = [
   { name: "Infrastructure", role: "What it runs on", tools: ["Docker", "Git"] },
   { name: "Models", role: "What it learns", tools: ["Python", "OpenCV", "Graph ML"] },
 ];
+
+export type Kit = { label: string; items: string[] };
+
+// Taken from the GitHub profile and the languages of the repos on it, so
+// nothing here is a tool I have only read about.
+export const kit: Kit[] = [
+  { label: "Languages", items: ["TypeScript", "Python", "Dart", "HTML", "CSS"] },
+  { label: "Frontend & mobile", items: ["React", "Next.js", "Astro", "Vue", "Nuxt", "Tailwind", "Flutter"] },
+  { label: "Backend & data", items: ["Node.js", "Bun", "Hono", "PostgreSQL", "MongoDB", "Redis", "Supabase"] },
+  { label: "Tools & design", items: ["Git", "GitHub", "Docker", "VS Code", "Figma"] },
+  { label: "Agents", items: ["Claude Code", "OpenCode"] },
+];
+
+export type Spec = { label: string; value: string };
+
+/** The laptop everything here is built on. */
+export const machine: { name: string; specs: Spec[] } = {
+  name: "HP Laptop 14",
+  specs: [
+    { label: "Processor", value: "Intel Core i3-1005G1, 2 cores, 4 threads" },
+    { label: "Memory", value: "8 GB" },
+    { label: "Graphics", value: "Intel UHD Graphics" },
+    { label: "Storage", value: "256 GB SK hynix NVMe SSD" },
+    { label: "System", value: "Windows 11" },
+  ],
+};
 
 /** The short version of the About page, for the preface on the home page. */
 export const preface = {

@@ -4,119 +4,240 @@ import { statusLabel } from '../data/site';
 
 interface Props {
   project: Project;
-  expanded?: boolean;
+  /** Home tells the shorter featured story; the projects page tells it in full. */
+  variant: 'feature' | 'full';
   /** Kept in step with the surrounding page so the outline never skips a level. */
-  level?: 2 | 3;
+  level: 2 | 3;
+  index: number;
 }
 
-const { project: p, expanded = false, level = 3 } = Astro.props;
+const { project: p, variant, level, index } = Astro.props;
 const Heading = `h${level}` as 'h2' | 'h3';
+
+const roman = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
+const numeral = roman[index] ?? String(index + 1);
+
+const host = (url: string) => new URL(url).host.replace(/^www\./, '');
+const href = p.live ?? p.repo;
+const address = href ? host(href) : p.kind;
+
+const lead = variant === 'feature' && p.featured ? p.featured.story : p.summary;
+const credits = p.collaborators?.map((c) => c.name) ?? [];
+const Row = href ? 'a' : 'div';
 ---
 
-<article class:list={["project", { "has-image": p.image }]}>
-  <div class="text">
-    <Heading class="h2 name">{p.name}</Heading>
-    <p class="small faint meta">{p.kind}, {statusLabel[p.status].toLowerCase()}</p>
+<Row
+  class="work"
+  id={variant === 'full' ? p.slug : undefined}
+  href={href}
+  target={href ? '_blank' : undefined}
+  rel={href ? 'noopener noreferrer' : undefined}
+  data-work
+>
+  <span class="numeral w-num" aria-hidden="true">{numeral}.</span>
 
-    <p class="summary">{p.summary}</p>
-    {expanded && <p class="muted detail">{p.detail}</p>}
-
-    {p.stack.length > 0 && (
-      <p class="small muted stack">
-        <span class="sr-only">Built with </span>{p.stack.join(", ")}
-      </p>
+  <span class="w-main">
+    <Heading class="w-name">
+      {p.name}
+      {href && (
+        <svg class="w-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9" /></svg>
+      )}
+    </Heading>
+    <span class="w-lead">{lead}</span>
+    {variant === 'full' && <span class="w-detail">{p.detail}</span>}
+    {variant === 'full' && (p.stack.length > 0 || credits.length > 0) && (
+      <span class="w-meta">
+        {p.stack.length > 0 && <span>{p.stack.join(', ')}</span>}
+        {credits.length > 0 && <span>Built with {credits.join(', ')}</span>}
+      </span>
     )}
+  </span>
 
-    {p.collaborators && p.collaborators.length > 0 && (
-      <p class="small muted collaborators">
-        Built with{" "}
-        {p.collaborators.map((c, i, arr) => (
-          <>
-            {i > 0 && (i === arr.length - 1 ? " and " : ", ")}
-            {c.url ? (
-              <a class="link" href={c.url} target="_blank" rel="noopener noreferrer">{c.name}</a>
-            ) : (
-              c.name
-            )}
-          </>
-        ))}
-      </p>
+  <span class="w-side">
+    <span class="kicker">{p.kind}</span>
+    <span class:list={['status', `status-${p.status}`]}>{statusLabel[p.status]}</span>
+  </span>
+
+  <span class="peek" aria-hidden="true">
+    <span class="chrome">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="address">{address}</span>
+    </span>
+    {p.image ? (
+      <img src={p.image.src} alt="" width="1600" height="1000" loading="lazy" decoding="async" />
+    ) : (
+      <span class="fallback">
+        <span class="fallback-name">{p.name}</span>
+        {p.slug === 'portfolio' && <span class="hand fallback-note">you're looking at it</span>}
+      </span>
     )}
-
-    {(p.repo || p.live) && (
-      <p class="links">
-        {p.live && (
-          <a class="link" href={p.live} target="_blank" rel="noopener noreferrer">
-            Open {p.name}
-            <svg class="cta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M7 17L17 7M8 7h9v9" />
-            </svg>
-          </a>
-        )}
-        {p.repo && (
-          <a class="link" href={p.repo} target="_blank" rel="noopener noreferrer">
-            Read the code<span class="sr-only"> for {p.name}</span>
-          </a>
-        )}
-      </p>
-    )}
-  </div>
-
-  {p.image && (
-    <figure class="media">
-      <img src={p.image.src} alt={p.image.alt} loading="lazy" decoding="async" />
-    </figure>
-  )}
-</article>
+  </span>
+</Row>
 
 <style>
-  .project {
+  .work {
     display: grid;
-    gap: 1.5rem 3rem;
-    padding: 2.5rem 0;
+    grid-template-columns: 3rem minmax(0, 1fr) minmax(0, 14rem);
+    gap: 0.5rem 2rem;
+    align-items: baseline;
+    padding: 1.75rem 0;
+    border-top: 1px solid var(--line);
+    color: inherit;
+    text-decoration: none;
   }
 
-  .project.has-image { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; }
+  .w-num { font-size: 1.25rem; line-height: 1; color: var(--ink-3); transition: color 0.2s ease; }
 
-  .text { display: flex; flex-direction: column; gap: 0.75rem; }
+  .w-main { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
 
-  .meta { margin: 0; }
-
-  .summary {
-    margin: 0.5rem 0 0;
-    font-size: var(--fs-lead);
-    line-height: 1.45;
-    max-width: 34em;
+  .w-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: clamp(1.75rem, 1rem + 3vw, 3rem);
+    font-weight: 800;
+    font-stretch: 112%;
+    line-height: 1;
+    letter-spacing: -0.025em;
   }
 
-  .detail { margin: 0; max-width: 38em; }
+  .w-arrow { flex: none; opacity: 0; transform: translate(-4px, 4px); transition: opacity 0.2s ease, transform 0.2s ease; }
 
-  .stack { margin: 0.5rem 0 0; }
+  .w-lead { max-width: 40em; color: var(--ink-2); text-wrap: pretty; }
+  .w-detail { max-width: 40em; font-family: var(--serif); font-size: 1.0625rem; line-height: 1.618; color: var(--ink-2); }
+  .w-meta { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; font-size: var(--fs-sm); color: var(--ink-3); }
 
-  .collaborators { margin: 0; }
+  .w-side { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; text-align: right; }
 
-  .cta-icon { display: inline-block; margin-left: 0.25em; vertical-align: -0.1em; transition: transform 0.15s ease; }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--ink-2);
+  }
 
-  .links a:hover .cta-icon { transform: translate(2px, -2px); }
+  .status::before { content: ""; width: 0.55em; height: 0.55em; border-radius: 50%; background: var(--ink-3); }
+  .status-live::before, .status-shipped::before { background: var(--live); }
+  .status-prelaunch::before { background: var(--yellow); box-shadow: 0 0 0 1px var(--ink); }
+
+  /* The highlight is a yellow underline under the name, never yellow text. */
+  a.work:hover .w-name, a.work:focus-visible .w-name {
+    text-decoration: underline;
+    text-decoration-color: var(--yellow);
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.12em;
+  }
+
+  a.work:hover .w-num, a.work:focus-visible .w-num { color: var(--ink); }
+  a.work:hover .w-arrow, a.work:focus-visible .w-arrow { opacity: 1; transform: none; }
+
+  /* ── The preview ──
+     Positioned against the list, not the row, so the script can move it
+     with the cursor. Without the script it rests at the list's right edge. */
+  .peek {
+    position: absolute;
+    z-index: 10;
+    left: var(--peek-x, auto);
+    right: var(--peek-right, 0);
+    top: var(--peek-y, 0);
+    width: min(28rem, 42vw);
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-lg);
+    background: var(--tile);
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.96) rotate(-2deg);
+    transform-origin: top left;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  a.work:hover .peek, a.work:focus-visible .peek { opacity: 1; transform: rotate(-1.5deg); }
+
+  .chrome {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.75rem;
+    background: var(--tile-2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dots { position: absolute; left: 0.75rem; display: flex; gap: 5px; }
+  .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); }
+
+  .address {
+    max-width: 60%;
+    padding: 0 0.75rem;
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--tile);
+    color: var(--ink-3);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .peek img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+
+  .fallback {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    aspect-ratio: 16 / 10;
+    background: var(--dark);
+    color: var(--on-dark);
+  }
+
+  .fallback::after { content: ""; position: absolute; inset: auto 0 0; height: 5px; background: var(--yellow); }
+  .fallback-name { font-size: 2.25rem; font-weight: 800; font-stretch: 118%; letter-spacing: -0.025em; }
+  .fallback-note { color: var(--on-dark); opacity: 0.75; font-size: 1rem; }
 
   @media (prefers-reduced-motion: reduce) {
-    .cta-icon { transition: none; }
+    .peek, a.work:hover .peek, a.work:focus-visible .peek { transform: none; }
   }
 
-  .links { display: flex; gap: 1.5rem; margin: 0; font-weight: 500; }
-
-  .media {
-    margin: 0;
-    border-radius: var(--r-lg);
-    overflow: hidden;
-    border: 1px solid var(--line);
-    background: var(--surface);
+  /* Touch screens never hover, so the preview would never show; the list
+     stays plain text there and the row is just the link. */
+  @media (hover: none) {
+    .peek { display: none; }
   }
 
-  .media img { width: 100%; height: auto; }
-
-  @media (max-width: 859px) {
-    .project.has-image { grid-template-columns: 1fr; }
-    .media { order: -1; }
+  @media (max-width: 719px) {
+    .work { grid-template-columns: 2rem minmax(0, 1fr); }
+    .w-side { grid-column: 2; flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 1rem; text-align: left; }
   }
 </style>
+
+<script>
+  // The preview trails the cursor so it reads as a glance at the site, not
+  // a panel that covers the list. It is kept inside the list's width.
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+  document.querySelectorAll<HTMLElement>('[data-work]').forEach((row) => {
+    const peek = row.querySelector<HTMLElement>('.peek');
+    const list = row.offsetParent;
+    if (!peek || !(list instanceof HTMLElement)) return;
+
+    row.addEventListener('pointermove', (e) => {
+      if (!fine.matches) return;
+      const box = list.getBoundingClientRect();
+      const w = peek.offsetWidth;
+      const h = peek.offsetHeight;
+      const x = Math.min(e.clientX - box.left + 28, box.width - w);
+      const y = e.clientY - box.top - h / 2;
+      peek.style.setProperty('--peek-x', `${Math.max(0, x)}px`);
+      peek.style.setProperty('--peek-right', 'auto');
+      peek.style.setProperty('--peek-y', `${y}px`);
+    });
+  });
+</script>
